@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Ona Polisi unified admin control center." />
+  <title>Admin Control Center — Ona Polisi</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="apple-touch-icon" href="/favicon-512.png" />
+  <style>
+    :root {
+      --bg: #F8F6F0;
+      --surface: #FFFFFF;
+      --text: #0F1419;
+      --muted: #5B6470;
+      --border: rgba(226, 232, 240, 0.9);
+      --primary: #074023;
+      --primary-hover: #05331C;
+      --alert: #C8102E;
+      --highlight: #F2A900;
+      --sidebar-w: 270px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .top-rule { display: none; }
+
+    /* Admin Layout Frame */
+    .admin-frame {
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    /* Side Panel */
+    .admin-sidebar {
+      width: var(--sidebar-w);
+      background: #0F1419;
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-head {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .brand-logo-white {
+      height: 34px;
+      width: auto;
+      object-fit: contain;
+      align-self: flex-start;
+    }
+
+    .admin-role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(7, 64, 35, 0.4);
+      border: 1px solid rgba(118, 214, 158, 0.3);
+      color: #76D69E;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      align-self: flex-start;
+    }
+
+    .sidebar-nav {
+      padding: 16px 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-category-header {
+      padding: 12px 10px 6px;
+      color: #8B949E;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 11px 14px;
+      color: #94A3B8;
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-align: left;
+      transition: all 0.18s ease;
+    }
+
+    .nav-btn:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateX(2px);
+    }
+
+    .nav-btn.is-active {
+      color: #FFFFFF;
+      background: #074023;
+      box-shadow: 0 4px 14px rgba(7, 64, 35, 0.4);
+    }
+
+    .nav-btn-inner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-count-badge {
+      padding: 2px 7px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+    }
+
+    .sidebar-footer {
+      padding: 18px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.82rem;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sidebar-footer a {
+      color: #8B949E;
+      transition: color 0.2s;
+    }
+    .sidebar-footer a:hover {
+      color: #FFFFFF;
+    }
+
+    /* Main Content Area */
+    .admin-main {
+      flex: 1;
+      padding: 40px 48px;
+      max-width: 1200px;
+      overflow-y: auto;
+    }
+
+    .view-panel {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+    .view-panel.is-active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Typography & Headers */
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #E6F4EA;
+      border: 1px solid rgba(19, 78, 46, 0.15);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #134E2E;
+      margin-bottom: 12px;
+    }
+    .live-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #0B6B3A;
+      box-shadow: 0 0 0 3px rgba(11, 107, 58, 0.2);
+    }
+    .live-pill-sep { color: #A7D7B5; }
+    .live-pill-text {
+      color: #134E2E;
+      font-weight: 600;
+    }
+
+    .view-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+    }
+    .view-header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(2rem, 3.5vw, 2.6rem);
+      letter-spacing: -0.05em;
+      font-weight: 850;
+      color: #0F1419;
+    }
+    .view-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+      max-width: 650px;
+      line-height: 1.5;
+    }
+
+    /* Filter Chips */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      padding: 7px 16px;
+      border: 1px solid #CBD5E1;
+      background: #FFFFFF;
+      color: #475569;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.18s ease;
+    }
+    .filter-chip:hover {
+      border-color: #94A3B8;
+      color: #0F1419;
+    }
+    .filter-chip.is-active {
+      background: #074023;
+      color: #FFFFFF;
+      border-color: #074023;
+    }
+
+    /* Cards / Queue Items */
+    .queue {
+      display: grid;
+      gap: 16px;
+    }
+
+    .item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: center;
+      padding: 24px 28px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(15, 20, 25, 0.04);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+    .item:hover {
+      border-color: rgba(7, 64, 35, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(15, 20, 25, 0.08);
+    }
+
+    .item h2 {
+      margin: 0 0 6px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #0F1419;
+    }
+    .item-meta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .item-meta strong {
+      color: #1E293B;
+    }
+
+    .credential-card {
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: #F8F9FA;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 0.82rem;
+      color: #1E293B;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .button {
+      min-height: 42px;
+      padding: 0 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      font-size: 0.84rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-approve {
+      color: #166534;
+      border: 1px solid #BBF7D0;
+      background: #DCFCE7;
+    }
+    .button-approve:hover {
+      background: #BBF7D0;
+    }
+
+    .button-reject {
+      color: #DC2626;
+      border: 1px solid #FECACA;
+      background: #FEE2E2;
+    }
+    .button-reject:hover {
+      background: #FCA5A5;
+      color: #991B1B;
+    }
+
+    .button-primary {
+      color: #FFFFFF;
+      background: var(--primary);
+      border: none;
+      box-shadow: 0 4px 12px rgba(7, 64, 35, 0.2);
+    }
+    .button-primary:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 6px 16px rgba(7, 64, 35, 0.3);
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge-status.pending { background: #FDF0D5; color: #8A5300; }
+    .badge-status.approved { background: #DCFCE7; color: #166534; }
+    .badge-status.rejected { background: #FEE2E2; color: #DC2626; }
+    .badge-status.lawyer { background: #DCFCE7; color: #166534; }
+    .badge-status.journalist { background: #E2E8F0; color: #334155; }
+    .badge-status.admin { background: #F3E8FF; color: #6B21A8; }
+
+    /* Manual Verification Card */
+    .manual-box {
+      margin-bottom: 24px;
+      padding: 26px 30px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(15, 20, 25, 0.04);
+    }
+    .manual-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #0F1419;
+    }
+    .manual-box p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .manual-form {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .manual-form input, .manual-form select {
+      padding: 10px 16px;
+      border: 1px solid #CBD5E1;
+      border-radius: 10px;
+      background: #FFFFFF;
+      font-size: 0.9rem;
+    }
+    .manual-form input {
+      flex: 1;
+      min-width: 240px;
+    }
+    .manual-form input:focus, .manual-form select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 20px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .message.is-visible { display: block; }
+    .message.error { color: #8D0C20; background: #FBE4E7; border: 1px solid #F4C2C9; }
+    .message.success { color: #166534; background: #DCFCE7; border: 1px solid #BBF7D0; }
+
+    .empty {
+      padding: 60px 24px;
+      border: 1px dashed #CBD5E1;
+      color: var(--muted);
+      background: #FFFFFF;
+      border-radius: 18px;
+      text-align: center;
+    }
+    .empty strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #0F1419;
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    @media (max-width: 860px) {
+      .admin-frame { flex-direction: column; }
+      .admin-sidebar { width: 100%; height: auto; position: static; }
+      .admin-main { padding: 24px; }
+      .item { grid-template-columns: 1fr; }
+      .actions { justify-content: flex-start; }
+    }
+  </style>
+  <link rel="stylesheet" href="/motion.css" />
+</head>
+<body>
+  <div class="top-rule" aria-hidden="true"></div>
+
+  <div class="admin-frame">
+    <!-- Admin Left Navigation Side Panel -->
+    <aside class="admin-sidebar" aria-label="Admin Navigation Panel">
+      <div class="sidebar-head">
+        <a href="/" aria-label="Ona Polisi public home">
+          <img class="brand-logo-white" src="/logo-white.svg" alt="Ona Polisi" onerror="this.onerror=null;this.src='/logo-white.png';" />
+        </a>
+        <div class="admin-role-badge">🛡️ Admin Control Panel</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-category-header">Oversight & Verification</div>
+        <button type="button" class="nav-btn is-active" data-view="verification">
+          <span class="nav-btn-inner"><span>⚖️</span> Applications & LSK</span>
+          <span class="nav-count-badge" id="badge-verif-count">0</span>
+        </button>
+
+        <button type="button" class="nav-btn" data-view="users">
+          <span class="nav-btn-inner"><span>👥</span> User Accounts</span>
+          <span class="nav-count-badge" id="badge-users-count">0</span>
+        </button>
+
+        <div class="nav-category-header" style="margin-top: 10px;">Incidents & Moderation</div>
+        <button type="button" class="nav-btn" data-view="cases">
+          <span class="nav-btn-inner"><span>📁</span> Case Workflow</span>
+          <span class="nav-count-badge" id="badge-cases-count">0</span>
+        </button>
+
+        <button type="button" class="nav-btn" data-view="evidence">
+          <span class="nav-btn-inner"><span>📸</span> Evidence Files</span>
+          <span class="nav-count-badge" id="badge-evidence-count">0</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="/" target="_blank">🌐 View Citizen Portal ↗</a>
+        <a href="/login" id="signout-link">🔒 Switch / Sign Out</a>
+      </div>
+    </aside>
+
+    <!-- Main Content Work Area -->
+    <main class="admin-main">
+      <div class="message" id="global-message" role="alert"></div>
+
+      <!-- VIEW 1: APPLICANTS & VERIFICATION QUEUE -->
+      <section class="view-panel is-active" id="view-verification">
+        <div class="view-header">
+          <div>
+            <div class="live-pill">
+              <span class="live-pill-dot"></span>
+              <span>Accreditation Queue</span>
+              <span class="live-pill-sep">·</span>
+              <span class="live-pill-text">Advocate Verification</span>
+            </div>
+            <h1>Verification Applications</h1>
+            <p>Review submitted credentials from legal practitioners (LSK numbers) and press journalists. Approve to grant immediate access to protected case records.</p>
+          </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-bar">
+          <button type="button" class="filter-chip is-active" data-verif-filter="Pending">Pending Review</button>
+          <button type="button" class="filter-chip" data-verif-filter="Approved">Approved</button>
+          <button type="button" class="filter-chip" data-verif-filter="Rejected">Rejected</button>
+          <button type="button" class="filter-chip" data-verif-filter="All">All Applications</button>
+        </div>
+
+        <section class="queue" id="verification-queue" aria-live="polite">
+          <div class="empty">Loading applications…</div>
+        </section>
+      </section>
+
+      <!-- VIEW 2: ALL USER ACCOUNTS & DIRECT VERIFICATION -->
+      <section class="view-panel" id="view-users">
+        <div class="view-header">
+          <div>
+            <div class="live-pill">
+              <span class="live-pill-dot"></span>
+              <span>Account Governance</span>
+              <span class="live-pill-sep">·</span>
+              <span class="live-pill-text">User Records</span>
+            </div>
+            <h1>Registered Accounts</h1>
+            <p>Directly inspect registered platform accounts and manually promote or verify lawyers, journalists, or administrators.</p>
+          </div>
+        </div>
+
+        <!-- Direct Manual Verification Box -->
+        <div class="manual-box">
+          <h3>⚡ Quick Manual Verify / Role Promotion</h3>
+          <p>Instantly assign a role and mark verified without waiting for formal credential upload (useful for testing or direct onboarding).</p>
+          <form id="manual-verify-form" class="manual-form">
+            <input type="email" id="manual-email" placeholder="Enter user's email address" required />
+            <select id="manual-role" required>
+              <option value="lawyer">Promote to Lawyer (Verified)</option>
+              <option value="journalist">Promote to Journalist (Verified)</option>
+              <option value="admin">Promote to Administrator</option>
+              <option value="public">Reset to Citizen (Public)</option>
+            </select>
+            <button type="submit" class="button button-primary">Apply Role & Verify&nbsp; →</button>
+          </form>
+        </div>
+
+        <section class="queue" id="users-queue" aria-live="polite">
+          <div class="empty">Loading user accounts…</div>
+        </section>
+      </section>
+
+      <!-- VIEW 3: CASE WORKFLOW -->
+      <section class="view-panel" id="view-cases">
+        <div class="view-header">
+          <div>
+            <div class="live-pill">
+              <span class="live-pill-dot"></span>
+              <span>Timeline Engine</span>
+              <span class="live-pill-sep">·</span>
+              <span class="live-pill-text">Case Progression</span>
+            </div>
+            <h1>Move Cases Forward</h1>
+            <p>Audit state changes recorded on the public timeline. Advance cases from Filed to Under review, Escalated, or Resolved.</p>
+          </div>
+        </div>
+
+        <section class="queue" id="cases-queue" aria-live="polite">
+          <div class="empty">Loading cases…</div>
+        </section>
+      </section>
+
+      <!-- VIEW 4: EVIDENCE MODERATION -->
+      <section class="view-panel" id="view-evidence">
+        <div class="view-header">
+          <div>
+            <div class="live-pill">
+              <span class="live-pill-dot"></span>
+              <span>Evidence Moderation</span>
+              <span class="live-pill-sep">·</span>
+              <span class="live-pill-text">Integrity & Scans</span>
+            </div>
+            <h1>Evidence Files & Malware Scans</h1>
+            <p>Review submitted photos and video evidence before they are linked to the case timeline. Raw binaries remain securely isolated.</p>
+          </div>
+        </div>
+
+        <section class="queue" id="evidence-queue" aria-live="polite">
+          <div class="empty">Loading evidence queue…</div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Immediate Admin Gate Guard
+    (async function guardAdminPage() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (!res.ok) {
+          window.location.replace('/login?next=' + encodeURIComponent(window.location.pathname));
+          return;
+        }
+        const data = await res.json();
+        if (!data.user || data.user.role !== 'admin') {
+          if (data.user && data.user.role === 'lawyer') {
+            window.location.replace('/lawyer/available');
+          } else {
+            window.location.replace('/');
+          }
+        }
+      } catch (e) {
+        window.location.replace('/login');
+      }
+    })();
+
+    // State & Elements
+    let currentView = 'verification';
+    let currentVerifFilter = 'Pending';
+    const messageEl = document.getElementById('global-message');
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[c]));
+    }
+    function formatDate(value) {
+      if (!value) return 'N/A';
+      return new Intl.DateTimeFormat('en-KE', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+    }
+    function formatBytes(bytes) {
+      const v = Number(bytes);
+      return v < 1024 * 1024 ? `${Math.round(v / 1024)} KB` : `${(v / (1024 * 1024)).toFixed(1)} MB`;
+    }
+    function showMessage(text, kind = 'error') {
+      messageEl.textContent = text;
+      messageEl.className = `message ${kind} is-visible`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => { messageEl.classList.remove('is-visible'); }, 7000);
+    }
+
+    // Tab / Category Switcher (Side Panel)
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const viewPanels = document.querySelectorAll('.view-panel');
+
+    function switchView(viewName) {
+      currentView = viewName;
+      navButtons.forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.view === viewName);
+      });
+      viewPanels.forEach(panel => {
+        panel.classList.toggle('is-active', panel.id === `view-${viewName}`);
+      });
+
+      // Load specific view data
+      if (viewName === 'verification') loadVerifications();
+      else if (viewName === 'users') loadUsers();
+      else if (viewName === 'cases') loadCases();
+      else if (viewName === 'evidence') loadEvidence();
+    }
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => switchView(btn.dataset.view));
+    });
+
+    // --- 1. VERIFICATION APPLICATIONS CONTROLLER ---
+    const verifQueue = document.getElementById('verification-queue');
+    const verifFilterChips = document.querySelectorAll('[data-verif-filter]');
+    const verifBadgeCount = document.getElementById('badge-verif-count');
+
+    verifFilterChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        verifFilterChips.forEach(c => c.classList.remove('is-active'));
+        chip.classList.add('is-active');
+        currentVerifFilter = chip.dataset.verifFilter;
+        loadVerifications();
+      });
+    });
+
+    async function loadVerifications() {
+      try {
+        const res = await fetch(`/api/admin/verification?status=${encodeURIComponent(currentVerifFilter)}`);
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload.error || 'Failed to load verification applications.');
+        renderVerifications(payload.requests);
+        if (currentVerifFilter === 'Pending') {
+          verifBadgeCount.textContent = payload.requests.length;
+        }
+      } catch (err) {
+        verifQueue.innerHTML = `<div class="empty"><strong>Error:</strong> ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderVerifications(items) {
+      if (!items.length) {
+        verifQueue.innerHTML = `
+          <div class="empty">
+            <div style="font-size: 2.2rem; margin-bottom: 8px;">✓</div>
+            <strong>No applications found in this category.</strong>
+            <p>There are currently no verification requests under "${escapeHtml(currentVerifFilter)}".</p>
+          </div>
+        `;
+        return;
+      }
+
+      verifQueue.innerHTML = items.map(req => {
+        const isPending = req.review_status === 'Pending';
+        const roleIcon = req.requested_role === 'lawyer' ? '⚖️' : '📰';
+        const statusClass = req.review_status.toLowerCase();
+
+        return `
+          <article class="item" data-id="${escapeHtml(req.id)}">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <h2>${escapeHtml(req.email)}</h2>
+                <span class="badge-status ${statusClass}">${escapeHtml(req.review_status)}</span>
+              </div>
+              <div class="item-meta">
+                <span>Role: <strong>${roleIcon} ${escapeHtml(req.requested_role)}</strong></span>
+                <span>Type: <strong>${escapeHtml(req.credential_type)}</strong></span>
+                <span>Submitted: ${escapeHtml(formatDate(req.created_at))}</span>
+                ${req.reviewed_at ? `<span>Reviewed: ${escapeHtml(formatDate(req.reviewed_at))}</span>` : ''}
+              </div>
+              <div class="credential-card">
+                <span>📋 <strong>Reference:</strong> ${escapeHtml(req.credential_number)}</span>
+                ${req.organization ? `<span>🏢 <strong>Org / Chamber:</strong> ${escapeHtml(req.organization)}</span>` : ''}
+              </div>
+              ${req.review_note ? `<div style="margin-top: 6px; font-size: 0.8rem; color: var(--muted);"><strong>Review note:</strong> ${escapeHtml(req.review_note)}</div>` : ''}
+            </div>
+
+            <div class="actions">
+              ${isPending ? `
+                <button type="button" class="button button-approve" data-action="Approved">✓ Approve Access</button>
+                <button type="button" class="button button-reject" data-action="Rejected">✕ Reject</button>
+              ` : `
+                <button type="button" class="button" data-action="Approved" style="font-size: 0.75rem;">Re-Approve</button>
+                <button type="button" class="button button-reject" data-action="Rejected" style="font-size: 0.75rem;">Reject</button>
+              `}
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    verifQueue.addEventListener('click', async (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      const item = btn.closest('[data-id]');
+      const reqId = item.dataset.id;
+      const nextStatus = btn.dataset.action;
+
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/admin/verification/${encodeURIComponent(reqId)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ review_status: nextStatus })
+        });
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload.error || 'Review submission failed.');
+        showMessage(`Application #${reqId} marked as ${nextStatus}!`, 'success');
+        await loadVerifications();
+      } catch (err) {
+        showMessage(err.message);
+        btn.disabled = false;
+      }
+    });
+
+    // --- 2. USER ACCOUNTS CONTROLLER ---
+    const usersQueue = document.getElementById('users-queue');
+    const manualForm = document.getElementById('manual-verify-form');
+    const usersBadgeCount = document.getElementById('badge-users-count');
+
+    async function loadUsers() {
+      try {
+        const res = await fetch('/api/admin/users');
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload.error || 'Failed to load user accounts.');
+        usersBadgeCount.textContent = payload.users.length;
+        renderUsers(payload.users);
+      } catch (err) {
+        usersQueue.innerHTML = `<div class="empty"><strong>Error:</strong> ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderUsers(users) {
+      if (!users.length) {
+        usersQueue.innerHTML = '<div class="empty"><strong>No users registered yet.</strong></div>';
+        return;
+      }
+
+      usersQueue.innerHTML = users.map(u => {
+        const roleBadge = u.role === 'lawyer' ? 'badge-status lawyer' : u.role === 'admin' ? 'badge-status admin' : 'badge-status';
+        return `
+          <article class="item">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <h2>${escapeHtml(u.email)}</h2>
+                <span class="${roleBadge}">${escapeHtml(u.role)}</span>
+                <span class="badge-status ${u.verification_status === 'verified' ? 'approved' : 'pending'}">${escapeHtml(u.verification_status)}</span>
+              </div>
+              <div class="item-meta">
+                <span>Account ID: <strong>#${escapeHtml(u.id)}</strong></span>
+                <span>Registered: ${escapeHtml(formatDate(u.created_at))}</span>
+                <span>Last login: ${escapeHtml(formatDate(u.last_login_at))}</span>
+              </div>
+            </div>
+            <div class="actions">
+              <button type="button" class="button" onclick="prefillUser('${escapeHtml(u.email)}')">⚡ Modify Role</button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    window.prefillUser = function(email) {
+      document.getElementById('manual-email').value = email;
+      document.getElementById('manual-email').focus();
+    };
+
+    manualForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('manual-email').value;
+      const role = document.getElementById('manual-role').value;
+      const submitBtn = manualForm.querySelector('button[type="submit"]');
+
+      submitBtn.disabled = true;
+      try {
+        const res = await fetch('/api/admin/users/manual-verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, role })
+        });
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload.error || 'Failed to update user.');
+        showMessage(payload.message, 'success');
+        manualForm.reset();
+        await loadUsers();
+      } catch (err) {
+        showMessage(err.message);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    // --- 3. CASE WORKFLOW CONTROLLER ---
+    const casesQueue = document.getElementById('cases-queue');
+    const casesBadgeCount = document.getElementById('badge-cases-count');
+    const nextStatuses = {
+      Filed: ['Under review', 'Rejected'],
+      'Under review': ['Escalated', 'Resolved', 'Ignored', 'Rejected'],
+      Escalated: ['Resolved', 'Ignored', 'Rejected'],
+      Resolved: [],
+      Ignored: [],
+      Rejected: []
+    };
+
+    async function loadCases() {
+      try {
+        const res = await fetch('/api/admin/cases');
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload.error || 'Failed to load case queue.');
+        casesBadgeCount.textContent = payload.cases.length;
+        renderCases(payload.cases);
+      } catch (err) {
+        casesQueue.innerHTML = `<div class="empty"><strong>Error:</strong> ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderCases(cases) {
+      if (!cases.length) {
+        casesQueue.innerHTML = '<div class="empty"><strong>No cases recorded yet.</strong></div>';
+        return;
+      }
+
+      casesQueue.innerHTML = cases.map(c => {
+        const actions = (nextStatuses[c.status] || []).map(st => `
+          <button type="button" class="button" data-case-status="${escapeHtml(st)}">Mark ${escapeHtml(st)}</button>
+        `).join('');
+
+        return `
+          <article class="item" data-case-id="${escapeHtml(c.case_id)}">
+            <div>
+              <h2>${escapeHtml(c.case_id)} <span class="badge-status ${c.status === 'Resolved' ? 'approved' : 'pending'}">${escapeHtml(c.status)}</span></h2>
+              <div class="item-meta">
+                <span>Category: <strong>${escapeHtml(c.category)}</strong></span>
+                <span>Location: <strong>${escapeHtml(c.location)}</strong></span>
+                <span>Reporter: <strong>${escapeHtml(c.reporter_kind)}</strong></span>
+                <span>Evidence: <strong>${c.evidence_count} file(s)</strong></span>
+                <span>Updated: ${escapeHtml(formatDate(c.updated_at))}</span>
+              </div>
+            </div>
+            <div class="actions">
+              ${actions || '<span class="item-meta">Terminal state</span>'}
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    casesQueue.addEventListener('click', async (e) => {
+      const btn = e.target.closest('button[data-case-status]');
+      if (!btn) return;
+      const item = btn.closest('[data-case-id]');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/api/admin/cases/${encodeURIComponent(item.dataset.caseId)}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: btn.dataset.caseStatus })
+        });
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload.error || 'Failed to update case.');
+        showMessage(`Case ${item.dataset.caseId} moved to ${btn.dataset.caseStatus}!`, 'success');
+        await loadCases();
+      } catch (err) {
+        showMessage(err.message);
+        btn.disabled = false;
+      }
+    });
+
+    // --- 4. EVIDENCE CONTROLLER ---
+    const evidenceQueue = document.getElementById('evidence-queue');
+    const evidenceBadgeCount = document.getElementById('badge-evidence-count');
+
+    async function loadEvidence() {
+      try {
+        const res = await fetch('/api/admin/evidence?status=Pending');
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload.error || 'Failed to load evidence files.');
+        evidenceBadgeCount.textContent = payload.evidence.length;
+        renderEvidence(payload.evidence);
+      } catch (err) {
+        evidenceQueue.innerHTML = `<div class="empty"><strong>Error:</strong> ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderEvidence(items) {
+      if (!items.length) {
+        evidenceQueue.innerHTML = '<div class="empty"><strong>No pending evidence files.</strong> All files have been reviewed.</div>';
+        return;
+      }
+
+      evidenceQueue.innerHTML = items.map(ev => `
+        <article class="item" data-id="${escapeHtml(ev.id)}">
+          <div>
+            <h2>${escapeHtml(ev.original_name)}</h2>
+            <div class="item-meta">
+              <span>Case: <strong>${escapeHtml(ev.case_id)}</strong></span>
+              <span>Type: <strong>${escapeHtml(ev.mime_type)}</strong></span>
+              <span>Size: <strong>${escapeHtml(formatBytes(ev.size_bytes))}</strong></span>
+              <span>Security Scan: <strong>${escapeHtml(ev.security_scan_status)}</strong></span>
+              <span>Metadata: <strong>${escapeHtml(ev.metadata_status)}</strong></span>
+              <span>Uploaded: ${escapeHtml(formatDate(ev.created_at))}</span>
+            </div>
+            <div class="credential-card" style="font-size: 0.72rem; margin-top: 8px;">SHA-256: ${escapeHtml(ev.sha256)}</div>
+          </div>
+          <div class="actions">
+            <a class="button" href="/api/evidence/${encodeURIComponent(ev.id)}/download">Download</a>
+            <button type="button" class="button button-approve" data-ev-status="Approved">Approve</button>
+            <button type="button" class="button button-reject" data-ev-status="Rejected">Reject</button>
+            <button type="button" class="button" data-ev-status="Quarantined">Quarantine</button>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    evidenceQueue.addEventListener('click', async (e) => {
+      const btn = e.target.closest('button[data-ev-status]');
+      if (!btn) return;
+      const item = btn.closest('[data-id]');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/api/admin/evidence/${item.dataset.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ moderation_status: btn.dataset.evStatus })
+        });
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload.error || 'Failed to moderate evidence.');
+        showMessage(`Evidence #${item.dataset.id} marked as ${btn.dataset.evStatus}!`, 'success');
+        await loadEvidence();
+      } catch (err) {
+        showMessage(err.message);
+        btn.disabled = false;
+      }
+    });
+
+    // Initial Data Fetch
+    loadVerifications();
+    loadUsers();
+    loadCases();
+    loadEvidence();
+  </script>
+  <script src="/motion.js" defer></script>
+</body>
+</html>

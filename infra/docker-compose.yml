@@ -1,0 +1,82 @@
+services:
+  postgres:
+    profiles: ["container-db"]
+    image: postgis/postgis:16-3.4
+    container_name: ona-polisi-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ona_polisi
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ona_polisi"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: ona-polisi-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    profiles: ["s3"]
+    image: minio/minio:latest
+    container_name: ona-polisi-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadminpassword
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio-init:
+    profiles: ["s3"]
+    image: quay.io/minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command: >-
+      "mc alias set local http://minio:9000 minioadmin minioadminpassword
+      && mc mb --ignore-existing local/ona-polisi-evidence
+      && mc anonymous set none local/ona-polisi-evidence"
+
+  clamav:
+    image: clamav/clamav:latest
+    container_name: ona-polisi-clamav
+    restart: unless-stopped
+    ports:
+      - "3310:3310"
+    volumes:
+      - clamav_data:/var/lib/clamav
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  clamav_data:

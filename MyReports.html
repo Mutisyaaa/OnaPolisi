@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My reports - Ona Polisi</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="apple-touch-icon" href="/favicon-512.png" />
+  <style>
+    :root {
+      --bg: #F8F6F0;
+      --surface: #FFFFFF;
+      --text: #0F1419;
+      --muted: #5B6470;
+      --border: rgba(226, 232, 240, 0.9);
+      --primary: #074023;
+      --primary-hover: #05331C;
+      --alert: #C8102E;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+
+    .top-rule { display: none; }
+
+    .container {
+      width: min(1080px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .nav-wrapper {
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 80px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      display: block;
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .nav-links a {
+      color: #475569;
+      padding: 8px 16px;
+      border-radius: 999px;
+      transition: all 180ms ease;
+    }
+    .nav-links a:hover {
+      color: var(--text);
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    .nav-links a.active {
+      color: var(--text);
+      background: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(15, 20, 25, 0.06);
+    }
+
+    main {
+      padding: 48px 0 100px;
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #E6F4EA;
+      border: 1px solid rgba(19, 78, 46, 0.15);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #134E2E;
+      margin-bottom: 16px;
+    }
+    .live-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #0B6B3A;
+      box-shadow: 0 0 0 3px rgba(11, 107, 58, 0.2);
+      animation: pulseDot 2s infinite ease-in-out;
+    }
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+    }
+    .live-pill-sep { color: #A7D7B5; }
+    .live-pill-text {
+      color: #134E2E;
+      font-weight: 600;
+    }
+
+    h1, h2, p { margin-top: 0; }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+      line-height: 1.1;
+      letter-spacing: -0.05em;
+      font-weight: 850;
+      color: #0F1419;
+    }
+
+    .intro {
+      margin-bottom: 48px;
+    }
+
+    .intro p {
+      max-width: 680px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.1rem;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .message.is-visible { display: block; }
+    .error { color: #8D0C20; background: #FBE4E7; border: 1px solid #F4C2C9; }
+
+    .queue {
+      display: grid;
+      gap: 18px;
+    }
+
+    .item {
+      padding: 32px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(15,20,25,0.04);
+      position: relative;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .item:hover {
+      border-color: rgba(7, 64, 35, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15,20,25,0.08);
+    }
+
+    .item-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .item h2 {
+      margin: 0 0 12px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #0F1419;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .meta span {
+      display: flex;
+      flex-direction: column;
+      font-weight: 700;
+      color: #1E293B;
+    }
+
+    .meta span::before {
+      content: "DETAIL";
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+    }
+
+    .meta span:nth-child(1)::before { content: "CATEGORY"; }
+    .meta span:nth-child(2)::before { content: "LOCATION"; }
+    .meta span:nth-child(3)::before { content: "DATE"; }
+
+    .status {
+      padding: 6px 14px;
+      color: #334155;
+      background: #E2E8F0;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .description {
+      margin: 24px 0;
+      padding: 20px 24px;
+      color: #1E293B;
+      font-size: 0.95rem;
+      font-weight: 500;
+      white-space: pre-wrap;
+      background: #F8F9FA;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      line-height: 1.6;
+    }
+
+    .contact {
+      margin-top: 24px;
+      padding: 22px 24px;
+      border-left: 4px solid #CBD5E1;
+      background: #F8F9FA;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+    }
+
+    .contact:has(.actions) {
+      border-left: 4px solid var(--primary);
+      background: #ECFDF5;
+      border-color: #A7F3D0;
+    }
+
+    .contact strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #0F1419;
+      letter-spacing: -0.02em;
+    }
+    
+    .contact:has(.actions) strong {
+      color: #064E3B;
+    }
+
+    .contact p {
+      margin: 0;
+      color: #475569;
+      font-size: 0.92rem;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 22px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      transition: all 180ms ease;
+    }
+
+    .approve {
+      color: #FFFFFF;
+      border: none;
+      background: var(--primary);
+      box-shadow: 0 4px 12px rgba(7, 64, 35, 0.2);
+    }
+    .approve:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(7, 64, 35, 0.28);
+    }
+
+    .decline {
+      color: #DC2626;
+      border: 1px solid #FECACA;
+      background: #FEE2E2;
+    }
+    .decline:hover {
+      background: #FCA5A5;
+      color: #991B1B;
+      transform: translateY(-2px);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .empty {
+      padding: 80px 32px;
+      border: 1px dashed #CBD5E1;
+      color: var(--muted);
+      background: #FFFFFF;
+      border-radius: 20px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .empty strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #0F1419;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    /* WhatsApp-Style Case Chat UI */
+    .chat-container {
+      margin-top: 24px;
+      padding: 0 !important;
+      border: 1px solid #D1D7DB;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #EFEAE2;
+      box-shadow: 0 10px 28px rgba(15, 20, 25, 0.06);
+      display: flex;
+      flex-direction: column;
+      animation: reveal 240ms ease-out;
+    }
+    .wa-chat-header {
+      background: #F0F2F5;
+      padding: 12px 18px;
+      border-bottom: 1px solid #D1D7DB;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .wa-header-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #00A884;
+      color: #FFFFFF;
+      display: grid;
+      place-items: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      box-shadow: 0 2px 5px rgba(0, 168, 132, 0.25);
+    }
+    .wa-header-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .wa-header-title {
+      font-weight: 800;
+      font-size: 0.98rem;
+      color: #111B21;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .wa-header-status {
+      font-size: 0.76rem;
+      color: #667781;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 1px;
+    }
+    .wa-online-dot {
+      width: 7px;
+      height: 7px;
+      background: #25D366;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.2);
+    }
+    .wa-header-badge {
+      font-size: 0.74rem;
+      font-weight: 750;
+      color: #008069;
+      background: #D9FDD3;
+      padding: 4px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+      border: 1px solid rgba(0, 168, 132, 0.2);
+    }
+    .wa-case-pill {
+      font-size: 0.74rem;
+      background: #E2E8F0;
+      color: #1E293B;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 750;
+      margin-left: 6px;
+    }
+    .chat-thread {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 240px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding: 18px 16px;
+      background: #EFEAE2;
+      background-image: 
+        radial-gradient(#d5cdc4 0.8px, transparent 0.8px),
+        radial-gradient(#d5cdc4 0.8px, #EFEAE2 0.8px);
+      background-size: 26px 26px;
+      background-position: 0 0, 13px 13px;
+    }
+    .chat-empty {
+      padding: 24px 20px;
+      text-align: center;
+      color: #54656F;
+      font-size: 0.88rem;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      border: 1px dashed #CBD5E1;
+      margin: auto 0;
+      box-shadow: 0 1px 3px rgba(11, 20, 26, 0.08);
+    }
+    .chat-bubble {
+      max-width: 76%;
+      padding: 8px 12px 6px 12px;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      word-break: break-word;
+      position: relative;
+    }
+    /* Right bubble: Messages I am sending (Applicant) */
+    .chat-bubble.mine {
+      align-self: flex-end !important;
+      margin-left: auto !important;
+      margin-right: 0 !important;
+      background: #D9FDD3;
+      color: #111B21;
+      border-radius: 12px 12px 2px 12px;
+      box-shadow: 0 1px 1.5px rgba(11, 20, 26, 0.16);
+      border: 1px solid rgba(0, 168, 132, 0.15);
+    }
+    /* Left bubble: Messages received from Advocate */
+    .chat-bubble.theirs {
+      align-self: flex-start !important;
+      margin-right: auto !important;
+      margin-left: 0 !important;
+      background: #FFFFFF;
+      color: #111B21;
+      border-radius: 12px 12px 12px 2px;
+      box-shadow: 0 1px 1.5px rgba(11, 20, 26, 0.16);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    .chat-bubble-sender {
+      font-size: 0.73rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .chat-bubble.mine .chat-bubble-sender {
+      color: #065F46;
+    }
+    .chat-bubble.theirs .chat-bubble-sender {
+      color: #008069;
+    }
+    .chat-bubble-text {
+      color: #111B21;
+      font-size: 0.92rem;
+      white-space: pre-wrap;
+    }
+    .chat-bubble-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.68rem;
+      color: #667781;
+      margin-top: 3px;
+    }
+    .chat-bubble.mine .chat-bubble-footer {
+      color: #557064;
+    }
+    .wa-ticks {
+      color: #53BDEB;
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: -2.5px;
+    }
+    .chat-form {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 14px;
+      background: #F0F2F5;
+      border-top: 1px solid #D1D7DB;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 11px 18px;
+      border-radius: 24px;
+      border: 1px solid #D1D7DB;
+      background: #FFFFFF;
+      font-size: 0.92rem;
+      color: #111B21;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .chat-input:focus {
+      border-color: #00A884;
+      box-shadow: 0 0 0 2px rgba(0, 168, 132, 0.2);
+    }
+    .chat-send-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50% !important;
+      background: #00A884 !important;
+      color: #FFFFFF !important;
+      border: none !important;
+      display: grid !important;
+      place-items: center !important;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0, 168, 132, 0.35) !important;
+      transition: all 0.18s ease;
+      padding: 0 !important;
+    }
+    .chat-send-btn:hover {
+      background: #008f6f !important;
+      transform: scale(1.06) !important;
+    }
+    .chat-send-btn:active {
+      transform: scale(0.94) !important;
+    }
+
+    @media (max-width: 680px) {
+      .container { width: min(100% - 24px, 1080px); }
+      .nav-links {
+        display: flex;
+        gap: 6px;
+      }
+      .nav-links a {
+        padding: 6px 12px;
+        font-size: 0.82rem;
+        border-radius: 999px;
+      }
+      .nav-links a.active {
+        background: #074023;
+        color: #FFFFFF !important;
+      }
+      .nav-links a:not(.active) {
+        background: #F1F5F9;
+        color: #475569;
+      }
+      
+      .intro h1 { font-size: clamp(1.9rem, 7vw, 2.4rem); margin-bottom: 10px; }
+      .intro p { font-size: 0.95rem; }
+      
+      .item { padding: 18px 16px; border-radius: 18px; }
+      .item-head { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .status { display: inline-block; }
+      .meta { display: grid; grid-template-columns: 1fr; gap: 8px; }
+      .description { padding: 14px 16px; margin: 16px 0; font-size: 0.92rem; }
+      .contact { padding: 16px; border-radius: 12px; }
+      .actions { flex-direction: column; align-items: stretch; gap: 10px; margin-top: 14px; }
+      .actions .button { width: 100%; min-height: 48px; justify-content: center; font-size: 0.95rem; }
+      
+      /* Mobile WhatsApp Chat */
+      .chat-container { border-radius: 16px; margin-top: 20px; }
+      .wa-chat-header { padding: 10px 14px; }
+      .wa-header-avatar { width: 36px; height: 36px; font-size: 1.1rem; }
+      .wa-header-title { font-size: 0.92rem; }
+      .chat-thread { padding: 12px 10px; min-height: 240px; max-height: 380px; }
+      .chat-bubble { max-width: 90%; font-size: 0.9rem; padding: 8px 10px 6px; }
+      .chat-form { padding: 8px 10px; gap: 8px; }
+      .chat-input { font-size: 16px !important; padding: 9px 14px; min-height: 42px; }
+      .chat-send-btn { width: 42px; height: 42px; }
+    }
+  </style>
+  <link rel="stylesheet" href="/motion.css" />
+</head>
+<body>
+  <div class="top-rule"></div>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="/">
+          <img class="brand-logo" src="/logo.svg" alt="Ona Polisi" onerror="this.onerror=null;this.src='/logo.png';" />
+        </a>
+        <div class="nav-links">
+          <a class="active" href="/my-reports">My reports</a>
+          <a href="/report">Make a report</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+  
+  <main>
+    <div class="container">
+      <div class="intro">
+        <div class="live-pill">
+          <span class="live-pill-dot"></span>
+          <span>Citizen Portal</span>
+          <span class="live-pill-sep">·</span>
+          <span class="live-pill-text">Private Workspace</span>
+        </div>
+        <h1>Reports you submitted.</h1>
+        <p>See your own case details and decide whether a verified lawyer may receive the contact detail you chose to encrypt.</p>
+      </div>
+      
+      <div class="message error" id="message" role="alert"></div>
+      
+      <section class="queue" id="queue" aria-live="polite">
+        <div class="empty">Loading your reports...</div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const queue = document.getElementById('queue');
+    const message = document.getElementById('message');
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
+    }
+    function formatDate(value) {
+      return new Intl.DateTimeFormat('en-KE', { dateStyle: 'medium' }).format(new Date(value));
+    }
+    function formatTime(value) {
+      if (!value) return '';
+      return new Intl.DateTimeFormat('en-KE', { timeStyle: 'short', dateStyle: 'short' }).format(new Date(value));
+    }
+    function showError(text) {
+      message.textContent = text;
+      message.classList.add('is-visible');
+      queue.innerHTML = '<div class="empty"><strong>Reports unavailable.</strong>Sign in to view reports linked to your account.</div>';
+    }
+
+    function requestBlock(item) {
+      const requests = item.contact_requests || [];
+      const pending = requests.find((request) => request.status === 'Pending');
+      if (pending) {
+        return `<div class="contact"><strong>A verified lawyer is requesting contact.</strong><p>Approve only if you are comfortable being contacted about this case.</p><div class="actions"><button class="button approve" data-decision="Approved" data-request="${escapeHtml(pending.id)}">Approve contact</button><button class="button decline" data-decision="Declined" data-request="${escapeHtml(pending.id)}">Decline</button></div></div>`;
+      }
+      if (item.contact_status === 'Approved') return '<div class="contact"><strong>Contact access approved.</strong><p>The assigned verified lawyer may now view the encrypted contact detail.</p></div>';
+      if (item.contact_status === 'Declined') return '<div class="contact"><strong>Contact access declined.</strong><p>No lawyer can view the encrypted contact detail unless you choose to share it again.</p></div>';
+      if (item.contact_status === 'Available') return '<div class="contact"><strong>Encrypted contact detail is ready.</strong><p>A verified lawyer may request access, and you will decide here.</p></div>';
+      return '<div class="contact"><strong>No lawyer contact detail attached.</strong><p>You can still receive help through the case record and evidence you choose to share.</p></div>';
+    }
+
+    async function loadChatMessages(caseId, threadEl) {
+      try {
+        const res = await fetch(`/api/cases/${encodeURIComponent(caseId)}/messages`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Could not load messages');
+        if (!data.messages.length) {
+          threadEl.innerHTML = '<div class="chat-empty">No messages yet. Send a message to start direct communication with the assigned lawyer.</div>';
+          return;
+        }
+        threadEl.innerHTML = data.messages.map(m => {
+          // On Citizen Reports page:
+          // The Applicant is YOU (RIGHT / .mine).
+          // The Advocate is the other party (LEFT / .theirs).
+          const isMine = m.sender_role === 'applicant';
+          const cleanSenderName = escapeHtml(String(m.sender_name || '').replace(/Counsel/g, 'Advocate'));
+          const senderLabel = isMine ? 'You (Applicant)' : `⚖️ ${cleanSenderName}`;
+          return `
+            <div class="chat-bubble ${isMine ? 'mine' : 'theirs'}">
+              <div class="chat-bubble-sender">
+                ${senderLabel}
+              </div>
+              <div class="chat-bubble-text">${escapeHtml(m.message)}</div>
+              <div class="chat-bubble-footer">
+                <span>${escapeHtml(formatTime(m.created_at))}</span>
+                ${isMine ? '<span class="wa-ticks">✓✓</span>' : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+        threadEl.scrollTop = threadEl.scrollHeight;
+      } catch (err) {
+        threadEl.innerHTML = `<div class="chat-empty" style="color: #DC2626;">${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function render(reports) {
+      if (!reports.length) {
+        queue.innerHTML = '<div class="empty"><strong>No account-linked reports yet.</strong>Sign in before reporting if you want to manage confidential lawyer contact requests and messages.</div>';
+        return;
+      }
+      queue.innerHTML = reports.map((item) => `
+        <article class="item" data-case="${escapeHtml(item.case_id)}">
+          <div class="item-head">
+            <div>
+              <h2>${escapeHtml(item.case_id)}</h2>
+              <div class="meta">
+                <span>${escapeHtml(item.category)}</span>
+                <span>${escapeHtml(item.location)}</span>
+                <span>Filed ${escapeHtml(formatDate(item.created_at))}</span>
+              </div>
+            </div>
+            <span class="status">${escapeHtml(item.status)}</span>
+          </div>
+          <p class="description">${escapeHtml(item.description)}</p>
+          ${requestBlock(item)}
+          <div style="margin-top: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <button class="button" style="background: #FFFFFF; border: 1.5px solid #CBD5E1; color: #0F1419;" data-chat-toggle>💬 Case Dialogue / Messages</button>
+            <a href="/case/${encodeURIComponent(item.case_id)}/receipt" target="_blank" class="button" style="background: #FFFFFF; border: 1.5px solid #CBD5E1; color: #074023; font-size: 0.88rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">📄 Official Receipt</a>
+            <a href="/case/${encodeURIComponent(item.case_id)}" class="button" style="background: transparent; color: var(--muted); font-size: 0.88rem;">Track public case record →</a>
+          </div>
+          <div class="chat-container" data-chat-container style="display: none;">
+            <div class="wa-chat-header">
+              <div class="wa-header-avatar" aria-hidden="true">⚖️</div>
+              <div class="wa-header-info">
+                <div class="wa-header-title">
+                  <span>Assigned Legal Advocate</span>
+                  <span class="wa-case-pill">${escapeHtml(item.case_id)}</span>
+                </div>
+                <div class="wa-header-status">
+                  <span class="wa-online-dot"></span>
+                  <span>Confidential Dialogue · LSK Pro-bono Legal Aid</span>
+                </div>
+              </div>
+              <div class="wa-header-badge">Advocate Channel</div>
+            </div>
+            <div class="chat-thread" data-chat-thread>
+              <div class="chat-empty">Loading conversation...</div>
+            </div>
+            <form class="chat-form" data-chat-form>
+              <input type="text" class="chat-input" placeholder="Type a response or question for the advocate..." required />
+              <button type="submit" class="chat-send-btn" aria-label="Send message" title="Send message">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+              </button>
+            </form>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    async function load() {
+      try {
+        const response = await fetch('/api/my-reports');
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Sign in to view your reports.');
+        render(payload.reports);
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    // Auto-poll active chat if open
+    setInterval(() => {
+      document.querySelectorAll('[data-chat-container]').forEach(container => {
+        if (container.style.display !== 'none') {
+          const card = container.closest('[data-case]');
+          if (card) {
+            const thread = container.querySelector('[data-chat-thread]');
+            loadChatMessages(card.dataset.case, thread);
+          }
+        }
+      });
+    }, 1500);
+
+    queue.addEventListener('submit', async (event) => {
+      const form = event.target.closest('[data-chat-form]');
+      if (!form) return;
+      event.preventDefault();
+      const card = form.closest('[data-case]');
+      if (!card) return;
+      const input = form.querySelector('.chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const submitBtn = form.querySelector('button');
+      submitBtn.disabled = true;
+      try {
+        const response = await fetch(`/api/cases/${encodeURIComponent(card.dataset.case)}/messages`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text, sender_role: 'applicant' })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Failed to send message');
+        input.value = '';
+        const thread = card.querySelector('[data-chat-thread]');
+        await loadChatMessages(card.dataset.case, thread);
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    queue.addEventListener('click', async (event) => {
+      const card = event.target.closest('[data-case]');
+      if (!card) return;
+      const caseId = card.dataset.case;
+
+      const chatToggle = event.target.closest('[data-chat-toggle]');
+      if (chatToggle) {
+        const chatContainer = card.querySelector('[data-chat-container]');
+        const isHidden = chatContainer.style.display === 'none';
+        chatContainer.style.display = isHidden ? 'block' : 'none';
+        chatToggle.textContent = isHidden ? '✕ Close messages' : '💬 Case Dialogue / Messages';
+        if (isHidden) {
+          const thread = chatContainer.querySelector('[data-chat-thread]');
+          loadChatMessages(caseId, thread);
+        }
+        return;
+      }
+
+      const button = event.target.closest('[data-decision]');
+      if (!button) return;
+      button.disabled = true;
+      try {
+        const response = await fetch(`/api/my-reports/${encodeURIComponent(caseId)}/contact-requests/${encodeURIComponent(button.dataset.request)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ decision: button.dataset.decision })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'The contact request could not be updated.');
+        load();
+      } catch (error) {
+        showError(error.message);
+        button.disabled = false;
+      }
+    });
+
+    load();
+  </script>
+  <script src="/motion.js" defer></script>
+</body>
+</html>

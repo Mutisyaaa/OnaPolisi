@@ -1,0 +1,21 @@
+{
+  "name": "ona-polisi",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ona Polisi citizen police accountability tracker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "admin:create": "node scripts/create-admin.js",
+    "test:smoke": "node scripts/smoke-test.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1143.0",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "multer": "^2.4.0",
+    "pg": "^8.16.3",
+    "sharp": "^0.35.5"
+  }
+}

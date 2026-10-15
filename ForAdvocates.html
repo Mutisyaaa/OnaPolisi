@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Legal Advocates & Counsel — Ona Polisi</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="apple-touch-icon" href="/favicon-512.png" />
+  <style>
+    :root {
+      --bg: #F8F6F0;
+      --surface: #FFFFFF;
+      --text: #0F1419;
+      --muted: #5B6470;
+      --border: rgba(226, 232, 240, 0.9);
+      --primary: #074023;
+      --primary-hover: #05331C;
+      --primary-subtle: #E6F4EA;
+      --alert: #C8102E;
+      --highlight: #F2A900;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+
+    .container {
+      width: min(1140px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    /* Nav */
+    .nav-wrapper {
+      background: rgba(248, 246, 240, 0.95);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 80px;
+    }
+    .brand-logo {
+      height: 38px;
+      width: auto;
+      display: block;
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: #475569;
+      font-size: 0.92rem;
+      font-weight: 650;
+      transition: color 180ms ease;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 0 22px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      transition: all 180ms ease;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+    }
+    .button.primary {
+      background: var(--primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(7, 64, 35, 0.2);
+    }
+    .button.primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(7, 64, 35, 0.3);
+    }
+    .button.secondary {
+      background: #FFFFFF;
+      color: #0F1419;
+      border-color: #CBD5E1;
+    }
+    .button.secondary:hover {
+      border-color: #0F1419;
+      transform: translateY(-2px);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 72px 0 60px;
+      text-align: center;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: #E6F4EA;
+      border: 1px solid rgba(19, 78, 46, 0.15);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 750;
+      color: #134E2E;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 22px;
+    }
+    .live-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #0B6B3A;
+      box-shadow: 0 0 0 3px rgba(11, 107, 58, 0.25);
+    }
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      line-height: 1.12;
+      font-weight: 850;
+      letter-spacing: -0.04em;
+      color: #0F1419;
+      margin: 0 0 20px;
+    }
+    .hero-accent { color: var(--primary); }
+    .hero p {
+      font-size: 1.18rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0 auto 36px;
+      max-width: 720px;
+      font-weight: 450;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Key Trust Stats */
+    .trust-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding: 32px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(15, 20, 25, 0.03);
+      margin: 40px auto 80px;
+    }
+    .trust-stat strong {
+      display: block;
+      font-size: 1.8rem;
+      font-weight: 850;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .trust-stat span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    /* Process Grid */
+    .section-title {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 48px;
+    }
+    .section-title h2 {
+      font-size: 2.2rem;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+      margin: 0 0 12px;
+    }
+    .section-title p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin: 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-bottom: 90px;
+    }
+    .feature-card {
+      padding: 34px 28px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(15, 20, 25, 0.03);
+      transition: all 200ms ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(15, 20, 25, 0.06);
+      border-color: rgba(7, 64, 35, 0.25);
+    }
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      background: var(--primary-subtle);
+      color: var(--primary);
+      margin-bottom: 22px;
+    }
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
+    }
+    .feature-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* Stepper */
+    .stepper-card {
+      background: #171D24;
+      color: #FFFFFF;
+      border-radius: 24px;
+      padding: 56px 48px;
+      margin-bottom: 90px;
+    }
+    .stepper-card h2 {
+      font-size: 2.2rem;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+      text-align: center;
+    }
+    .stepper-card p.subtitle {
+      text-align: center;
+      color: #94A3B8;
+      font-size: 1.05rem;
+      margin: 0 auto 48px;
+      max-width: 600px;
+    }
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      position: relative;
+    }
+    .step-item {
+      position: relative;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px 20px;
+    }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #FFFFFF;
+      font-weight: 850;
+      display: grid;
+      place-items: center;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+    .step-item h4 {
+      font-size: 1.05rem;
+      font-weight: 750;
+      margin: 0 0 8px;
+    }
+    .step-item p {
+      font-size: 0.88rem;
+      color: #94A3B8;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* CTA Bottom */
+    .cta-card {
+      text-align: center;
+      background: linear-gradient(135deg, #074023 0%, #032413 100%);
+      color: #FFFFFF;
+      padding: 64px 32px;
+      border-radius: 24px;
+      margin-bottom: 100px;
+      box-shadow: 0 20px 50px rgba(7, 64, 35, 0.25);
+    }
+    .cta-card h2 {
+      font-size: 2.4rem;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+    .cta-card p {
+      font-size: 1.1rem;
+      color: #A7D7B5;
+      max-width: 620px;
+      margin: 0 auto 36px;
+    }
+    .cta-card .button {
+      background: #FFFFFF;
+      color: #074023;
+      font-size: 1.02rem;
+      padding: 0 32px;
+      min-height: 52px;
+    }
+    .cta-card .button:hover {
+      background: #F8F9FA;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 860px) {
+      .trust-strip, .grid-3, .steps-row { grid-template-columns: 1fr; }
+      .stepper-card { padding: 32px 20px; }
+      .hero { padding: 40px 0; }
+    }
+    @media (max-width: 600px) {
+      .container { width: min(100% - 24px, 1120px); }
+      .nav { min-height: 64px; }
+      .hero h1 { font-size: clamp(2rem, 7vw, 2.6rem); margin-bottom: 14px; }
+      .hero p { font-size: 1rem; margin-bottom: 24px; }
+      .hero-actions { flex-direction: column; width: 100%; gap: 10px; }
+      .hero-actions .button { width: 100%; min-height: 48px; }
+      .trust-strip { padding: 20px 16px; margin: 24px auto 50px; gap: 16px; }
+      .feature-card { padding: 24px 20px; }
+      .cta-card { padding: 40px 20px; margin-bottom: 60px; }
+      .cta-card h2 { font-size: clamp(1.6rem, 6vw, 2.2rem); }
+      .cta-card p { font-size: 1rem; margin-bottom: 24px; }
+      .cta-card .button { width: 100%; min-height: 48px; }
+    }
+  </style>
+  <link rel="stylesheet" href="/motion.css" />
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="/">
+          <img class="brand-logo" src="/logo.svg" alt="Ona Polisi" onerror="this.onerror=null;this.src='/logo.png';" />
+        </a>
+        <div class="nav-links">
+          <a href="/">← Citizen Home</a>
+          <a href="/login" id="advocate-login-link">Sign in</a>
+          <a href="/verification" class="button primary" id="advocate-apply-btn">Apply as Advocate →</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+      <section class="hero">
+        <div class="live-pill">
+          <span class="live-pill-dot"></span>
+          <span>Pro-Bono Legal Assistance · LSK Verification</span>
+        </div>
+        <h1>Lend your legal voice.<br><span class="hero-accent">Defend citizen rights.</span></h1>
+        <p>Join verified Law Society of Kenya (LSK) advocates providing pro-bono guidance, bail hearing support, and legal representation to citizens reporting police misconduct.</p>
+        <div class="hero-actions">
+          <a href="/verification" class="button primary" id="hero-apply-btn" style="padding: 0 28px; min-height: 50px;">Apply as an Advocate →</a>
+          <a href="/login" class="button secondary" id="hero-signin-btn" style="padding: 0 24px; min-height: 50px;">Sign in to Workspace</a>
+        </div>
+      </section>
+
+      <section class="trust-strip">
+        <div class="trust-stat">
+          <strong>100% Verified</strong>
+          <span>Exclusively certified LSK members with active practicing credentials.</span>
+        </div>
+        <div class="trust-stat">
+          <strong>Protected Privacy</strong>
+          <span>Citizen contact information is encrypted and released only upon explicit consent.</span>
+        </div>
+        <div class="trust-stat">
+          <strong>In-App Dialogue</strong>
+          <span>Direct, real-time consultation feed with case applicants to gather facts safely.</span>
+        </div>
+      </section>
+
+      <div class="section-title">
+        <h2>How the Advocate Network Works</h2>
+        <p>Built for clarity, ethical compliance, and seamless pro-bono caseload management.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Browse Case Marketplace</h3>
+          <p>Inspect incoming misconduct records across Nairobi and nationwide counties. Filter by category (unlawful detention, extortion, assault, bribery).</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>Claim & Protect Dossiers</h3>
+          <p>Claim a case to unlock full incident narratives and attached evidence files. Release cases cleanly if caseload prevents follow-through.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>Direct Case Consultation</h3>
+          <p>Use our built-in confidential messaging to ask clarifying questions, advise on OB numbers, and request consent for confidential phone contact.</p>
+        </div>
+      </div>
+
+      <section class="stepper-card">
+        <h2>Advocate Accreditation Process</h2>
+        <p class="subtitle">Four simple steps to join the verified legal aid roster on Ona Polisi.</p>
+        <div class="steps-row">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <h4>Create an Account</h4>
+            <p>Sign up with your email and password as standard authentication credentials.</p>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <h4>Submit LSK Profile</h4>
+            <p>Provide your LSK Roll Number, practice firm/chambers, and admission details.</p>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <h4>Legal Review</h4>
+            <p>Our administrative oversight team verifies status against official LSK credentials.</p>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <h4>Access Casework</h4>
+            <p>Once approved, your account immediately unlocks the live Advocate Workspace.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-card">
+        <h2>Stand for Justice. Support a Citizen Today.</h2>
+        <p>Every report verified and supported by counsel moves Kenya closer to true police accountability and constitutional dignity.</p>
+        <a href="/verification" class="button" id="cta-apply-btn">Submit Advocate Application →</a>
+      </section>
+    </div>
+  </main>
+  <script>
+    (async function() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.user) {
+            const user = data.user;
+            const applyBtn = document.getElementById('advocate-apply-btn');
+            const loginLink = document.getElementById('advocate-login-link');
+            const heroApplyBtn = document.getElementById('hero-apply-btn');
+            const heroSigninBtn = document.getElementById('hero-signin-btn');
+            const ctaApplyBtn = document.getElementById('cta-apply-btn');
+
+            if (user.role === 'lawyer' && user.verification_status === 'verified') {
+              if (applyBtn) {
+                applyBtn.href = '/lawyer/available';
+                applyBtn.textContent = 'Go to Casework →';
+              }
+              if (loginLink) {
+                loginLink.href = '/lawyer/my-cases';
+                loginLink.textContent = 'My Cases';
+              }
+              if (heroApplyBtn) {
+                heroApplyBtn.href = '/lawyer/available';
+                heroApplyBtn.textContent = 'Open Case Marketplace →';
+              }
+              if (heroSigninBtn) {
+                heroSigninBtn.href = '/lawyer/my-cases';
+                heroSigninBtn.textContent = 'View My Caseload';
+              }
+              if (ctaApplyBtn) {
+                ctaApplyBtn.href = '/lawyer/available';
+                ctaApplyBtn.textContent = 'Go to Case Marketplace →';
+              }
+            } else if (user.verification_status === 'pending') {
+              if (applyBtn) {
+                applyBtn.href = '/verification';
+                applyBtn.textContent = 'Status: Pending Review';
+              }
+            }
+          }
+        }
+      } catch (_) {}
+    })();
+  </script>
+  <script src="/motion.js" defer></script>
+</body>
+</html>
+

@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sign in to an Ona Polisi account." />
+  <title>Sign in — Ona Polisi</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="apple-touch-icon" href="/favicon-512.png" />
+  <style>
+    :root { 
+      --bg: #F7F5F0; 
+      --surface: #FFFFFF; 
+      --text: #0F1419; 
+      --muted: #5B6470; 
+      --border: #DDD9CF; 
+      --primary: #0B6B3A; 
+      --alert: #C8102E; 
+      --highlight: #F2A900;
+      --ink-soft: #171D24;
+      --state-filed: #5B7FA6;
+      --state-review: #E0A100;
+      --state-resolved: #1E8A4C;
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body { 
+      margin: 0; 
+      color: #0F1419; 
+      background: #F8F6F0; 
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
+      line-height: 1.55; 
+      min-height: 100vh;
+    }
+    
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    
+    .top-rule { display: none; }
+    
+    .container { 
+      width: min(1060px, calc(100% - 40px)); 
+      margin: 0 auto; 
+    }
+    
+    .site-nav { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      min-height: 80px; 
+      border-bottom: none; 
+      background: transparent;
+      padding-top: 10px;
+    }
+    
+    .brand { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 10px; 
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .brand:hover { opacity: 0.88; }
+    
+    .brand-logo { 
+      display: block; 
+      height: 38px; 
+      width: auto; 
+      object-fit: contain; 
+    }
+    
+    .back-link { 
+      color: #475569; 
+      font-size: 0.9rem; 
+      font-weight: 700; 
+      transition: color 0.2s;
+    }
+    
+    .back-link:hover {
+      color: #074023;
+    }
+    
+    main { 
+      display: grid; 
+      place-items: center; 
+      min-height: calc(100vh - 90px); 
+      padding: 50px 0 70px; 
+      position: relative;
+    }
+    
+    .bg-glow {
+      position: absolute;
+      top: 50%;
+      right: 25%;
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, rgba(243, 228, 202, 0.55) 0%, rgba(248, 246, 240, 0) 70%);
+      transform: translate(50%, -50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+    
+    .auth-layout { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 60px; 
+      align-items: center; 
+      width: 100%; 
+      position: relative;
+      z-index: 1;
+    }
+    
+    .intro { max-width: 440px; }
+    
+    /* Live Pill */
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #E6F4EA;
+      border: none;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 750;
+      color: #134E2E;
+      margin-bottom: 22px;
+    }
+    .live-pulse-dot {
+      width: 7px;
+      height: 7px;
+      background: #0B6B3A;
+      border-radius: 50%;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .live-pill-tag {
+      color: #134E2E;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+    }
+    .live-pill-sep { color: #A7D7B5; }
+    .live-pill-text {
+      color: #134E2E;
+      font-weight: 600;
+    }
+    
+    h1, h2, p { margin-top: 0; }
+    
+    h1 { 
+      margin: 0 0 18px; 
+      font-size: clamp(2.4rem, 4.5vw, 3.2rem); 
+      line-height: 1.1; 
+      letter-spacing: -0.05em; 
+      font-weight: 900;
+      color: #0F1419;
+    }
+    
+    .hero-title-accent {
+      color: #074023;
+    }
+    
+    .intro p { 
+      color: #475569; 
+      font-size: 1.1rem; 
+      line-height: 1.55;
+      font-weight: 450;
+      margin-bottom: 26px;
+    }
+    
+    .intro-note { 
+      padding: 20px 22px; 
+      color: #1E293B; 
+      background: #FFFFFF; 
+      border: 1px solid rgba(226, 232, 240, 0.9); 
+      border-left: 4px solid #074023; 
+      border-radius: 14px; 
+      font-size: 0.88rem; 
+      line-height: 1.5;
+      font-weight: 500;
+      box-shadow: 0 4px 14px rgba(15,20,25,0.03);
+    }
+    
+    .intro-note strong {
+      color: #0F1419;
+      font-weight: 750;
+    }
+
+    .auth-trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #64748B;
+    }
+    .auth-trust-row span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    /* Clean White Card */
+    .auth-card { 
+      position: relative;
+      padding: 34px 34px 30px; 
+      border: 1px solid rgba(226, 232, 240, 0.9); 
+      background: #FFFFFF; 
+      border-radius: 20px; 
+      box-shadow: 0 20px 44px rgba(15, 20, 25, 0.04), 0 2px 6px rgba(15, 20, 25, 0.02); 
+    }
+    
+    .tabs { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 4px; 
+      margin-bottom: 26px; 
+      padding: 4px; 
+      background: #F1F5F9; 
+      border-radius: 12px; 
+    }
+    
+    .tab { 
+      padding: 10px 12px; 
+      color: #64748B; 
+      border: 0; 
+      background: transparent; 
+      border-radius: 8px; 
+      font-size: 0.88rem; 
+      font-weight: 700; 
+      transition: all 180ms ease;
+    }
+    
+    .tab:hover:not(.is-active) {
+      color: #0F1419;
+      background: rgba(255, 255, 255, 0.6);
+    }
+    
+    .tab.is-active { 
+      color: #0F1419; 
+      background: #FFFFFF; 
+      box-shadow: 0 2px 6px rgba(15, 20, 25, 0.06); 
+      font-weight: 800;
+    }
+    
+    .auth-card h2 { 
+      margin-bottom: 6px; 
+      font-size: 1.6rem; 
+      letter-spacing: -0.04em; 
+      font-weight: 850;
+      color: #0F1419;
+    }
+    
+    .auth-card .subcopy { 
+      margin-bottom: 22px; 
+      color: #64748B; 
+      font-size: 0.92rem; 
+      font-weight: 500;
+    }
+    
+    .field { 
+      display: grid; 
+      gap: 7px; 
+      margin-bottom: 18px; 
+    }
+    
+    label { 
+      font-size: 0.85rem; 
+      font-weight: 750; 
+      color: #1E293B;
+    }
+    
+    input { 
+      width: 100%; 
+      padding: 12px 16px; 
+      color: #0F1419; 
+      border: 1.5px solid #CBD5E1; 
+      border-radius: 10px; 
+      background: #FFFFFF; 
+      font-size: 0.95rem; 
+      transition: all 160ms ease;
+    }
+    
+    input:focus { 
+      border-color: #074023; 
+      outline: 3px solid rgba(7, 64, 35, 0.15); 
+    }
+    
+    .password-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    .password-input-wrapper input {
+      padding-right: 46px;
+    }
+    .password-toggle-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748B;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 160ms ease;
+    }
+    .password-toggle-btn:hover {
+      color: #0F1419;
+      background: rgba(15, 20, 25, 0.06);
+    }
+    .password-toggle-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    
+    /* Password Strength & Match Indicator */
+    .password-checker {
+      display: none;
+      margin-top: -6px;
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      animation: slideIn 0.2s ease;
+    }
+    .password-checker.is-active {
+      display: block;
+    }
+    .password-strength-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #64748B;
+      margin-bottom: 6px;
+    }
+    .password-strength-label {
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+    }
+    .password-strength-bar {
+      height: 5px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .password-strength-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.25s ease, background-color 0.25s ease;
+    }
+    .password-rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .password-rule-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #64748B;
+      font-size: 0.78rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .password-rule-item.valid {
+      color: #0B6B3A;
+      font-weight: 700;
+    }
+    .rule-icon {
+      display: inline-block;
+      width: 14px;
+      text-align: center;
+    }
+    .confirm-match-hint {
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-top: 4px;
+      display: none;
+    }
+    .confirm-match-hint.match {
+      display: block;
+      color: #0B6B3A;
+    }
+    .confirm-match-hint.mismatch {
+      display: block;
+      color: #C8102E;
+    }
+    
+    .button { 
+      display: inline-flex; 
+      align-items: center; 
+      justify-content: center; 
+      width: 100%; 
+      min-height: 48px; 
+      padding: 0 24px; 
+      color: #FFFFFF; 
+      border: 0; 
+      border-radius: 12px; 
+      background: #074023; 
+      box-shadow: 0 2px 8px rgba(7, 64, 35, 0.2); 
+      font-weight: 750; 
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+      transition: all 180ms ease;
+      margin-top: 8px;
+    }
+    
+    .button:hover { 
+      background: #05331C; 
+      transform: translateY(-1px); 
+      box-shadow: 0 4px 14px rgba(7, 64, 35, 0.3);
+    }
+    
+    .button:active {
+      background: #032413;
+      transform: translateY(1px);
+    }
+    
+    .button:disabled {
+      opacity: 0.65;
+      pointer-events: none;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .button:focus-visible, .tab:focus-visible, a:focus-visible, input:focus-visible { 
+      outline: 3px solid rgba(7, 64, 35, 0.2); 
+      outline-offset: 3px; 
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .status { 
+      display: none; 
+      margin-top: 20px; 
+      padding: 14px 16px; 
+      border-radius: 10px; 
+      font-size: 0.88rem; 
+      font-weight: 650;
+    }
+    
+    .status.is-visible { 
+      display: block; 
+      animation: slideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    
+    .status.success { 
+      color: #07542d; 
+      background: #d9f0e1; 
+      border: 1px solid rgba(11, 107, 58, 0.2);
+    }
+    
+    .status.error { 
+      color: #8d0c20; 
+      background: #fde8d8; 
+      border: 1px solid rgba(200, 16, 46, 0.2);
+    }
+    
+    .role-note { 
+      margin-top: 24px; 
+      color: var(--muted); 
+      font-size: 0.8rem; 
+      font-weight: 650;
+      background: rgba(15, 20, 25, 0.03);
+      border: 1px solid rgba(15, 20, 25, 0.06);
+      padding: 12px 14px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .auth-footer-prompt {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(15, 20, 25, 0.08);
+      text-align: center;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .auth-footer-prompt a {
+      color: var(--primary);
+      font-weight: 750;
+      text-decoration: underline;
+      margin-left: 4px;
+    }
+    .auth-footer-prompt a:hover {
+      color: var(--primary-hover);
+    }
+
+    .active-session-banner {
+      display: none;
+      margin-bottom: 20px;
+      padding: 16px 20px;
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      border-radius: 14px;
+      color: #064E3B;
+      font-size: 0.9rem;
+      animation: slideIn 0.3s ease;
+    }
+    .active-session-banner.is-visible { display: block; }
+    .active-session-banner a {
+      font-weight: 750;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 800px) { 
+      .auth-layout { grid-template-columns: 1fr; gap: 32px; max-width: 520px; margin: 0 auto; } 
+      .intro { max-width: none; } 
+      .bg-glow { right: 50%; top: 30%; }
+    }
+    
+    @media (max-width: 600px) { 
+      .container { width: min(100% - 24px, 1040px); } 
+      main { padding-top: 24px; padding-bottom: 60px; }
+      nav.site-nav { flex-wrap: wrap; gap: 12px; min-height: 60px; }
+      .intro h1 { font-size: clamp(1.8rem, 6.5vw, 2.4rem); margin-bottom: 12px; }
+      .intro p { font-size: 0.95rem; margin-bottom: 18px; }
+      .intro-note { padding: 14px 16px; border-radius: 12px; }
+      .auth-card { padding: 22px 16px; border-radius: 18px; } 
+      .tabs { margin-bottom: 20px; }
+      .tab { min-height: 44px; font-size: 0.9rem; }
+      .form-group input, .form-group select { font-size: 16px !important; min-height: 48px; box-sizing: border-box; }
+      .toggle-password-btn { width: 44px; height: 44px; }
+      .button { min-height: 50px; font-size: 1rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="/motion.css" />
+</head>
+<body>
+  <div class="container">
+    <nav class="site-nav" aria-label="Account navigation">
+      <a class="brand" href="/">
+        <img class="brand-logo" src="/logo.svg" alt="Ona Polisi" />
+      </a>
+      <div style="display: flex; gap: 24px; align-items: center;">
+        <a class="back-link" href="/verification" style="color: #074023; font-weight: 750;">Lawyer verification</a>
+        <a class="back-link" href="/">← Back to home</a>
+      </div>
+    </nav>
+  </div>
+  
+  <main>
+    <div class="bg-glow"></div>
+    <div class="container">
+      <div class="auth-layout">
+        <div class="intro">
+          <div class="live-pill" id="intro-eyebrow">
+            <span class="live-pulse-dot"></span>
+            <span class="live-pill-tag">SECURE ACCESS</span>
+            <span class="live-pill-sep">·</span>
+            <span class="live-pill-text">Single Sign-In · Unified Portal</span>
+          </div>
+          <h1 id="intro-heading">One account.<br>Every step in <span class="hero-title-accent">one place.</span></h1>
+          <p id="intro-desc">Sign in securely to track reported cases, manage confidential legal requests, or access pro-bono advocate tools.</p>
+          
+          <div class="intro-note" id="intro-note">
+            <strong>Smart Role Routing:</strong> Whether you are a citizen managing your reports, a certified legal advocate, or an administrator, one sign-in routes you directly to your workspace.
+          </div>
+
+          <div class="auth-trust-row">
+            <span>🛡️ End-to-end encrypted</span>
+            <span>·</span>
+            <span>⚖️ Verified LSK Advocates</span>
+            <span>·</span>
+            <span>🔒 Zero IP retention</span>
+          </div>
+        </div>
+        
+        <section class="auth-card" aria-label="Account access">
+          <!-- Active Session Notice -->
+          <div class="active-session-banner" id="active-session">
+            <span id="active-session-text">You are already signed in.</span>
+            <div style="margin-top: 8px;">
+              <a href="#" id="active-session-link">Go to workspace →</a>
+              <span style="margin: 0 8px; color: #94A3B8;">|</span>
+              <a href="#" id="signout-btn" style="color: #64748B;">Sign out / Switch account</a>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <button class="tab is-active" type="button" data-mode="login">Sign in</button>
+            <button class="tab" type="button" data-mode="register">Create account</button>
+          </div>
+          
+          <h2 id="auth-title">Welcome back.</h2>
+          <p class="subcopy" id="auth-copy">Sign in to continue to your account.</p>
+          
+          <form id="auth-form">
+            <div class="field">
+              <label for="email">Email address</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="name@domain.com" required />
+            </div>
+
+            <div class="field">
+              <label for="password">Password</label>
+              <div class="password-input-wrapper">
+                <input id="password" name="password" type="password" autocomplete="current-password" minlength="8" placeholder="Minimum 8 characters" required />
+                <button type="button" class="password-toggle-btn" id="toggle-password" aria-label="Show password" title="Show password" tabindex="-1">
+                  <svg class="eye-icon" viewBox="0 0 24 24">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg class="eye-off-icon" viewBox="0 0 24 24" style="display: none;">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Password strength indicator (register mode only) -->
+            <div class="password-checker" id="password-checker">
+              <div class="password-strength-header">
+                <span>Password strength:</span>
+                <span class="password-strength-label" id="strength-label">Too short</span>
+              </div>
+              <div class="password-strength-bar">
+                <div class="password-strength-fill" id="strength-fill"></div>
+              </div>
+              <div class="password-rule-list">
+                <div class="password-rule-item" id="rule-length">
+                  <span class="rule-icon">○</span>
+                  <span>At least 8 characters</span>
+                </div>
+                <div class="password-rule-item" id="rule-mix">
+                  <span class="rule-icon">○</span>
+                  <span>Includes letters and numbers</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Confirm Password Field (register mode only) -->
+            <div class="field" id="confirm-password-field" style="display: none;">
+              <label for="confirm-password">Confirm password</label>
+              <div class="password-input-wrapper">
+                <input id="confirm-password" name="confirm_password" type="password" autocomplete="new-password" minlength="8" placeholder="Re-enter your password" />
+                <button type="button" class="password-toggle-btn" id="toggle-confirm-password" aria-label="Show password" title="Show password" tabindex="-1">
+                  <svg class="eye-icon" viewBox="0 0 24 24">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg class="eye-off-icon" viewBox="0 0 24 24" style="display: none;">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                </button>
+              </div>
+              <div class="confirm-match-hint" id="confirm-match-hint"></div>
+            </div>
+
+            <button class="button" type="submit" id="submit-button">Sign in&nbsp; →</button>
+          </form>
+
+          <!-- Clean Footer Prompt -->
+          <div class="auth-footer-prompt" id="auth-footer-prompt">
+            Are you a lawyer? <a href="/for-advocates">Apply as an advocate →</a>
+          </div>
+
+          <div class="status" id="status" role="status"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+  
+  <script>
+    const form = document.getElementById('auth-form');
+    const status = document.getElementById('status');
+    const title = document.getElementById('auth-title');
+    const copy = document.getElementById('auth-copy');
+    const submitButton = document.getElementById('submit-button');
+    const password = document.getElementById('password');
+    const confirmPasswordField = document.getElementById('confirm-password-field');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const passwordChecker = document.getElementById('password-checker');
+    const strengthFill = document.getElementById('strength-fill');
+    const strengthLabel = document.getElementById('strength-label');
+    const ruleLength = document.getElementById('rule-length');
+    const ruleMix = document.getElementById('rule-mix');
+    const confirmMatchHint = document.getElementById('confirm-match-hint');
+
+    const activeSession = document.getElementById('active-session');
+    const activeSessionText = document.getElementById('active-session-text');
+    const activeSessionLink = document.getElementById('active-session-link');
+    const signoutBtn = document.getElementById('signout-btn');
+
+    let mode = 'login';
+
+    // Password Visibility Toggle ("Eye Ball")
+    function setupPasswordToggle(buttonId, inputId) {
+      const btn = document.getElementById(buttonId);
+      const input = document.getElementById(inputId);
+      if (!btn || !input) return;
+
+      btn.addEventListener('click', () => {
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        const eyeIcon = btn.querySelector('.eye-icon');
+        const eyeOffIcon = btn.querySelector('.eye-off-icon');
+        if (eyeIcon) eyeIcon.style.display = isPassword ? 'none' : 'block';
+        if (eyeOffIcon) eyeOffIcon.style.display = isPassword ? 'block' : 'none';
+        btn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+        btn.setAttribute('title', isPassword ? 'Hide password' : 'Show password');
+      });
+    }
+    setupPasswordToggle('toggle-password', 'password');
+    setupPasswordToggle('toggle-confirm-password', 'confirm-password');
+
+    // Password Checker & Strength Calculation
+    function evaluatePasswordStrength(val) {
+      const lenMet = val.length >= 8;
+      const hasLetter = /[a-zA-Z]/.test(val);
+      const hasNumber = /[0-9]/.test(val);
+      const hasSpecial = /[^a-zA-Z0-9]/.test(val);
+      const mixMet = hasLetter && hasNumber;
+
+      if (ruleLength) {
+        ruleLength.classList.toggle('valid', lenMet);
+        ruleLength.querySelector('.rule-icon').textContent = lenMet ? '✓' : '○';
+      }
+      if (ruleMix) {
+        ruleMix.classList.toggle('valid', mixMet);
+        ruleMix.querySelector('.rule-icon').textContent = mixMet ? '✓' : '○';
+      }
+
+      if (!strengthFill || !strengthLabel) return;
+
+      if (!val) {
+        strengthFill.style.width = '0%';
+        strengthLabel.textContent = 'Too short';
+        strengthLabel.style.color = '#64748B';
+        return;
+      }
+
+      let score = 0;
+      if (lenMet) score += 1;
+      if (mixMet) score += 1;
+      if (hasSpecial) score += 1;
+      if (val.length >= 12) score += 1;
+
+      if (val.length < 8) {
+        strengthFill.style.width = '25%';
+        strengthFill.style.backgroundColor = '#EF4444';
+        strengthLabel.textContent = 'Too short';
+        strengthLabel.style.color = '#DC2626';
+      } else if (score <= 1) {
+        strengthFill.style.width = '50%';
+        strengthFill.style.backgroundColor = '#F59E0B';
+        strengthLabel.textContent = 'Fair';
+        strengthLabel.style.color = '#D97706';
+      } else if (score === 2) {
+        strengthFill.style.width = '75%';
+        strengthFill.style.backgroundColor = '#10B981';
+        strengthLabel.textContent = 'Good';
+        strengthLabel.style.color = '#059669';
+      } else {
+        strengthFill.style.width = '100%';
+        strengthFill.style.backgroundColor = '#074023';
+        strengthLabel.textContent = 'Strong';
+        strengthLabel.style.color = '#074023';
+      }
+    }
+
+    // Live Password Match Check
+    function checkPasswordMatch() {
+      if (mode !== 'register') return;
+      const confirmVal = confirmPasswordInput.value;
+      const passVal = password.value;
+      if (!confirmMatchHint) return;
+
+      if (!confirmVal) {
+        confirmMatchHint.className = 'confirm-match-hint';
+        confirmMatchHint.textContent = '';
+        return;
+      }
+
+      if (confirmVal === passVal) {
+        confirmMatchHint.className = 'confirm-match-hint match';
+        confirmMatchHint.textContent = '✓ Passwords match';
+      } else {
+        confirmMatchHint.className = 'confirm-match-hint mismatch';
+        confirmMatchHint.textContent = '⚠ Passwords do not match';
+      }
+    }
+
+    password.addEventListener('input', () => {
+      if (mode === 'register') {
+        if (password.value.length > 0) {
+          passwordChecker.classList.add('is-active');
+        } else {
+          passwordChecker.classList.remove('is-active');
+        }
+        evaluatePasswordStrength(password.value);
+        if (confirmPasswordInput.value) checkPasswordMatch();
+      }
+    });
+
+    confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('mode') === 'register') {
+      setMode('register');
+    }
+
+    function setMode(newMode) {
+      mode = newMode;
+      document.querySelectorAll('[data-mode]').forEach((item) => {
+        item.classList.toggle('is-active', item.dataset.mode === mode);
+      });
+      password.autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+      status.className = 'status';
+
+      if (mode === 'login') {
+        title.textContent = 'Welcome back.';
+        copy.textContent = 'Sign in to access your reports, caseload, or administration.';
+        submitButton.innerHTML = 'Sign in&nbsp; →';
+        if (confirmPasswordField) confirmPasswordField.style.display = 'none';
+        if (confirmPasswordInput) {
+          confirmPasswordInput.required = false;
+          confirmPasswordInput.value = '';
+        }
+        if (passwordChecker) passwordChecker.classList.remove('is-active');
+        if (confirmMatchHint) {
+          confirmMatchHint.className = 'confirm-match-hint';
+          confirmMatchHint.textContent = '';
+        }
+        const promptEl = document.getElementById('auth-footer-prompt');
+        if (promptEl) promptEl.innerHTML = 'Are you a lawyer? <a href="/for-advocates">Apply as an advocate →</a>';
+      } else {
+        title.textContent = 'Create an account.';
+        copy.textContent = 'Enter your email and create a secure password to get started.';
+        submitButton.innerHTML = 'Create account&nbsp; →';
+        if (confirmPasswordField) confirmPasswordField.style.display = 'grid';
+        if (confirmPasswordInput) confirmPasswordInput.required = true;
+        if (password.value.length > 0 && passwordChecker) {
+          passwordChecker.classList.add('is-active');
+          evaluatePasswordStrength(password.value);
+        }
+        const promptEl = document.getElementById('auth-footer-prompt');
+        if (promptEl) promptEl.innerHTML = 'Prefer not to sign up? <a href="/report">Report anonymously →</a>';
+      }
+    }
+
+    document.querySelectorAll('[data-mode]').forEach((tab) => {
+      tab.addEventListener('click', () => setMode(tab.dataset.mode));
+    });
+
+    async function checkCurrentSession() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.user) {
+          activeSession.classList.add('is-visible');
+          const roleLabel = data.user.role === 'lawyer' ? 'Legal Advocate' : (data.user.role === 'admin' ? 'Administrator' : 'Citizen');
+          activeSessionText.innerHTML = `Signed in as <strong>${escapeHtml(data.user.email)}</strong> (${roleLabel})`;
+
+          if (data.user.role === 'lawyer') {
+            activeSessionLink.textContent = 'Open Lawyer Workspace →';
+            activeSessionLink.href = '/lawyer/available';
+          } else if (data.user.role === 'admin') {
+            activeSessionLink.textContent = 'Open Admin Panel →';
+            activeSessionLink.href = '/admin';
+          } else {
+            activeSessionLink.textContent = 'Open My Reports →';
+            activeSessionLink.href = '/my-reports';
+          }
+        }
+      } catch (e) {}
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
+    }
+
+    if (signoutBtn) {
+      signoutBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+          await fetch('/api/auth/logout', { method: 'POST' });
+          activeSession.classList.remove('is-visible');
+          status.textContent = 'Signed out successfully.';
+          status.className = 'status success is-visible';
+        } catch (e) {}
+      });
+    }
+
+    checkCurrentSession();
+    
+    form.addEventListener('submit', async (event) => { 
+      event.preventDefault(); 
+      status.className = 'status'; 
+
+      const formData = Object.fromEntries(new FormData(form));
+
+      if (mode === 'register') {
+        if (!formData.password || formData.password.length < 8) {
+          status.textContent = 'Password must be at least 8 characters long.';
+          status.classList.add('error', 'is-visible');
+          password.focus();
+          return;
+        }
+        if (formData.password !== formData.confirm_password) {
+          status.textContent = 'Passwords do not match. Please verify your confirmation password.';
+          status.classList.add('error', 'is-visible');
+          confirmPasswordInput.focus();
+          return;
+        }
+      }
+
+      submitButton.disabled = true; 
+      try { 
+        const response = await fetch(`/api/auth/${mode === 'login' ? 'login' : 'register'}`, { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify({ email: formData.email, password: formData.password }) 
+        }); 
+        const payload = await response.json(); 
+        if (!response.ok) throw new Error(payload.error || 'The account request failed.'); 
+
+        const user = payload.user;
+        const nextParam = urlParams.get('next');
+        const decodedNext = nextParam ? decodeURIComponent(nextParam) : null;
+
+        let roleWelcome = 'Signed in successfully!';
+        let targetDestination = '/my-reports';
+
+        if (user.role === 'lawyer') {
+          roleWelcome = 'Welcome Advocate! Opening Lawyer Workspace...';
+          if (decodedNext && !decodedNext.startsWith('/admin')) {
+            targetDestination = decodedNext;
+          } else {
+            targetDestination = '/lawyer/available';
+          }
+        } else if (user.role === 'admin') {
+          roleWelcome = 'Welcome Administrator! Opening Admin Center...';
+          targetDestination = (decodedNext && decodedNext.startsWith('/admin')) ? decodedNext : '/admin';
+        } else if (user.verification_status === 'pending') {
+          roleWelcome = 'Your advocate application is under review. Opening status page...';
+          targetDestination = '/verification';
+        } else {
+          roleWelcome = `${mode === 'login' ? 'Signed in' : 'Account created'} successfully! Opening your reports...`;
+          targetDestination = (decodedNext && !decodedNext.startsWith('/admin')) ? decodedNext : '/my-reports';
+        }
+
+        status.textContent = roleWelcome; 
+        status.classList.add('success', 'is-visible'); 
+
+        setTimeout(() => {
+          window.location.href = targetDestination;
+        }, 700);
+
+      } catch (error) { 
+        status.textContent = error.message; 
+        status.classList.add('error', 'is-visible'); 
+      } finally { 
+        submitButton.disabled = false; 
+      } 
+    });
+  </script>
+  <script src="/motion.js" defer></script>
+</body>
+</html>

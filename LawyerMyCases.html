@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My cases — Ona Polisi</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="apple-touch-icon" href="/favicon-512.png" />
+  <style>
+    :root {
+      --bg: #F8F6F0;
+      --surface: #FFFFFF;
+      --text: #0F1419;
+      --muted: #5B6470;
+      --border: rgba(226, 232, 240, 0.9);
+      --primary: #074023;
+      --primary-hover: #05331C;
+      --alert: #C8102E;
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+    
+    .top-rule { display: none; }
+    
+    .container {
+      width: min(1120px, 100% - 48px);
+      margin: 0 auto;
+    }
+    
+    .nav-wrapper {
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 80px;
+    }
+    
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    
+    .brand-logo {
+      display: block;
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+    
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+    
+    .nav-links a {
+      color: #475569;
+      padding: 8px 16px;
+      border-radius: 999px;
+      transition: all 180ms ease;
+    }
+    .nav-links a:hover {
+      color: var(--text);
+      background: rgba(0, 0, 0, 0.04);
+    }
+    
+    .nav-links a.active {
+      color: var(--text);
+      background: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(15, 20, 25, 0.06);
+    }
+
+    /* Advocate User Avatar Dropdown */
+    .user-menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    .avatar-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 999px;
+      padding: 4px 12px 4px 5px;
+      cursor: pointer;
+      font-family: inherit;
+      color: #0F1419;
+      transition: all 0.18s ease;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    }
+
+    .avatar-btn:hover {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    .avatar-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #074023 0%, #0B6B3A 100%);
+      color: #FFFFFF;
+      display: grid;
+      place-items: center;
+      font-size: 0.88rem;
+      font-weight: 750;
+      flex-shrink: 0;
+      box-shadow: 0 2px 4px rgba(7, 64, 35, 0.2);
+    }
+
+    .avatar-meta {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      line-height: 1.15;
+    }
+
+    .avatar-name {
+      font-size: 0.84rem;
+      font-weight: 750;
+      color: #0F1419;
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .avatar-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #0B6B3A;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .avatar-badge-dot {
+      width: 5px;
+      height: 5px;
+      background: #10B981;
+      border-radius: 50%;
+    }
+
+    .avatar-chevron {
+      color: #64748B;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .user-menu.open .avatar-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Dropdown popover */
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 260px;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.04);
+      padding: 8px;
+      display: none;
+      flex-direction: column;
+      z-index: 1000;
+      animation: dropdownFadeIn 0.15s ease-out forwards;
+    }
+
+    .user-menu.open .dropdown-menu {
+      display: flex;
+    }
+
+    @keyframes dropdownFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dropdown-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #F8FAFC;
+      border-radius: 10px;
+      margin-bottom: 6px;
+    }
+
+    .dropdown-avatar-lg {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #074023 0%, #0B6B3A 100%);
+      color: #FFFFFF;
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .dropdown-user-text {
+      overflow: hidden;
+    }
+
+    .dropdown-user-title {
+      font-size: 0.85rem;
+      font-weight: 750;
+      color: #0F1419;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dropdown-user-email {
+      font-size: 0.74rem;
+      color: #64748B;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: #F1F5F9;
+      margin: 4px 0;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: #334155;
+      text-decoration: none;
+      font-size: 0.86rem;
+      font-weight: 600;
+      transition: all 0.15s ease;
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .dropdown-item:hover {
+      background: #F1F5F9;
+      color: #0F1419;
+    }
+
+    .dropdown-item-icon {
+      font-size: 1rem;
+      line-height: 1;
+      width: 20px;
+      display: inline-flex;
+      justify-content: center;
+    }
+
+    .dropdown-item.signout-item {
+      color: #DC2626;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .dropdown-item.signout-item:hover {
+      background: #FEE2E2;
+      color: #B91C1C;
+    }
+
+    .login-fallback-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 16px;
+      background: #074023;
+      color: #FFFFFF;
+      font-size: 0.86rem;
+      font-weight: 700;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: background 0.18s;
+    }
+    .login-fallback-btn:hover {
+      background: #0B6B3A;
+    }
+    
+    main { padding: 48px 0 100px; }
+    
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #E6F4EA;
+      border: 1px solid rgba(19, 78, 46, 0.15);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #134E2E;
+      margin-bottom: 16px;
+    }
+    .live-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #0B6B3A;
+      box-shadow: 0 0 0 3px rgba(11, 107, 58, 0.2);
+      animation: pulseDot 2s infinite ease-in-out;
+    }
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+    }
+    .live-pill-sep { color: #A7D7B5; }
+    .live-pill-text {
+      color: #134E2E;
+      font-weight: 600;
+    }
+    
+    h1, h2, p { margin-top: 0; }
+    
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+      line-height: 1.1;
+      letter-spacing: -0.05em;
+      font-weight: 850;
+      color: #0F1419;
+    }
+    
+    .intro p {
+      max-width: 680px;
+      margin: 0 0 40px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+    
+    .message {
+      display: none;
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: var(--surface);
+      box-shadow: 0 4px 12px rgba(15,20,25,0.05);
+    }
+    .message.is-visible { display: block; }
+    .message.error {
+      color: #8D0C20;
+      background: #FBE4E7;
+      border: 1px solid #F4C2C9;
+    }
+    
+    .queue { display: grid; gap: 18px; }
+    
+    .item {
+      position: relative;
+      padding: 32px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(15, 20, 25, 0.04);
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+    .item:hover {
+      border-color: rgba(7, 64, 35, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 20, 25, 0.08);
+    }
+    
+    .item-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .item h2 {
+      margin: 0 0 14px;
+      font-size: clamp(1.25rem, 3vw, 1.45rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #0F1419;
+    }
+    
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .meta-item { display: flex; flex-direction: column; gap: 4px; }
+    .meta-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: #64748B;
+    }
+    .meta-value {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #1E293B;
+    }
+    
+    .status {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .status[data-status="Filed"] { color: #334155; background: #E2E8F0; }
+    .status[data-status="Under review"] { color: #8A5300; background: #FDF0D5; }
+    .status[data-status="Escalated"] { color: #8D3D0F; background: #FDE8D8; }
+    .status[data-status="Resolved"] { color: #166534; background: #DCFCE7; }
+    
+    .description-area {
+      background: #F8F9FA;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .description-area h3 {
+      margin: 0 0 8px;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748B;
+      font-weight: 700;
+    }
+    .description {
+      margin: 0;
+      color: #1E293B;
+      font-size: 0.95rem;
+      font-weight: 500;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 22px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      transition: all 180ms ease;
+    }
+    
+    .button.primary {
+      background: var(--primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(7, 64, 35, 0.2);
+    }
+    .button.primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(7, 64, 35, 0.3);
+    }
+    .button.primary:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(7, 64, 35, 0.2);
+    }
+    
+    .button.secondary {
+      background: #FFFFFF;
+      color: #1E293B;
+      border: 1px solid #CBD5E1;
+    }
+    .button.secondary:hover {
+      border-color: #94A3B8;
+      background: #F8F9FA;
+      transform: translateY(-2px);
+    }
+    
+    .button.tertiary {
+      background: transparent;
+      color: #64748B;
+    }
+    .button.tertiary:hover {
+      color: #DC2626;
+      background: #FEE2E2;
+    }
+    
+    .contact-state {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.84rem;
+      font-weight: 650;
+      color: #64748B;
+    }
+    .contact-state.pending { color: #B45309; }
+    .contact-state.declined { color: #DC2626; }
+    
+    .contact-output {
+      display: none;
+      margin-top: 20px;
+      padding: 16px 20px;
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      border-left: 4px solid var(--primary);
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #064E3B;
+      animation: reveal 300ms ease-out;
+    }
+    .contact-output:not(:empty) { display: block; }
+    /* Case Stage Progression Bar */
+    .stage-progression-box {
+      margin-top: 20px;
+      padding: 16px 20px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .stage-progression-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .stage-progression-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      font-weight: 750;
+      color: #0F1419;
+    }
+
+    .stage-current-pill {
+      font-size: 0.74rem;
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      padding: 2px 10px;
+      border-radius: 999px;
+      color: #475569;
+    }
+
+    .stage-steps-track {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .track-step {
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: #F1F5F9;
+      color: #94A3B8;
+      transition: all 0.2s ease;
+    }
+
+    .track-step.done {
+      background: #DCFCE7;
+      color: #166534;
+    }
+
+    .track-step.active {
+      background: #074023;
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(7, 64, 35, 0.25);
+    }
+
+    .track-step.active.escalated {
+      background: #D97706;
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(217, 119, 6, 0.25);
+    }
+
+    .track-step.active.resolved {
+      background: #10B981;
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+    }
+
+    .track-arrow {
+      color: #CBD5E1;
+      font-size: 0.76rem;
+    }
+
+    .stage-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-top: 1px dashed #E2E8F0;
+      padding-top: 12px;
+    }
+
+    .stage-action-prompt-text {
+      font-size: 0.82rem;
+      color: #64748B;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .btn-advance-escalate {
+      background: #FFFBEB;
+      color: #B45309;
+      border: 1.5px solid #FCD34D;
+      font-size: 0.84rem;
+      font-weight: 750;
+      padding: 7px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+    .btn-advance-escalate:hover {
+      background: #FEF3C7;
+      border-color: #F59E0B;
+      transform: translateY(-1px);
+    }
+
+    .btn-advance-resolve {
+      background: #ECFDF5;
+      color: #047857;
+      border: 1.5px solid #6EE7B7;
+      font-size: 0.84rem;
+      font-weight: 750;
+      padding: 7px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+    .btn-advance-resolve:hover {
+      background: #D1FAE5;
+      border-color: #10B981;
+      transform: translateY(-1px);
+    }
+
+    .stage-resolved-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #DCFCE7;
+      color: #166534;
+      font-size: 0.84rem;
+      font-weight: 750;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid #86EFAC;
+    }
+
+    /* Advance Stage Modal */
+    .stage-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: reveal 0.15s ease-out;
+    }
+    .stage-modal-card {
+      background: #FFFFFF;
+      border-radius: 18px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+      width: 100%;
+      max-width: 500px;
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .stage-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stage-modal-header h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0F1419;
+      margin: 0;
+    }
+    .stage-modal-close {
+      background: transparent;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: #64748B;
+      padding: 4px;
+      border-radius: 6px;
+    }
+    .stage-modal-desc {
+      font-size: 0.88rem;
+      color: #475569;
+      line-height: 1.45;
+      margin: 0;
+    }
+    .stage-modal-label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #1E293B;
+      margin-bottom: 8px;
+    }
+    .stage-modal-label small {
+      font-weight: 500;
+      color: #64748B;
+    }
+    .stage-modal-textarea {
+      width: 100%;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+    .stage-modal-textarea:focus {
+      outline: none;
+      border-color: #074023;
+      box-shadow: 0 0 0 3px rgba(7, 64, 35, 0.12);
+    }
+    .stage-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .empty {
+      padding: 80px 40px;
+      background: #FFFFFF;
+      border: 1px dashed #CBD5E1;
+      border-radius: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .empty strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    /* WhatsApp-Style Case Chat UI */
+    .chat-container {
+      margin-top: 24px;
+      padding: 0 !important;
+      border: 1px solid #D1D7DB;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #EFEAE2;
+      box-shadow: 0 10px 28px rgba(15, 20, 25, 0.06);
+      display: flex;
+      flex-direction: column;
+      animation: reveal 240ms ease-out;
+    }
+    .wa-chat-header {
+      background: #F0F2F5;
+      padding: 12px 18px;
+      border-bottom: 1px solid #D1D7DB;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .wa-header-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #0284C7;
+      color: #FFFFFF;
+      display: grid;
+      place-items: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      box-shadow: 0 2px 5px rgba(2, 132, 199, 0.25);
+    }
+    .wa-header-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .wa-header-title {
+      font-weight: 800;
+      font-size: 0.98rem;
+      color: #111B21;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .wa-header-status {
+      font-size: 0.76rem;
+      color: #667781;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 1px;
+    }
+    .wa-online-dot {
+      width: 7px;
+      height: 7px;
+      background: #25D366;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.2);
+    }
+    .wa-header-badge {
+      font-size: 0.74rem;
+      font-weight: 750;
+      color: #008069;
+      background: #D9FDD3;
+      padding: 4px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+      border: 1px solid rgba(0, 168, 132, 0.2);
+    }
+    .wa-case-pill {
+      font-size: 0.74rem;
+      background: #E2E8F0;
+      color: #1E293B;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 750;
+      margin-left: 6px;
+    }
+    .chat-thread {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 240px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding: 18px 16px;
+      background: #EFEAE2;
+      background-image: 
+        radial-gradient(#d5cdc4 0.8px, transparent 0.8px),
+        radial-gradient(#d5cdc4 0.8px, #EFEAE2 0.8px);
+      background-size: 26px 26px;
+      background-position: 0 0, 13px 13px;
+    }
+    .chat-empty {
+      padding: 24px 20px;
+      text-align: center;
+      color: #54656F;
+      font-size: 0.88rem;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      border: 1px dashed #CBD5E1;
+      margin: auto 0;
+      box-shadow: 0 1px 3px rgba(11, 20, 26, 0.08);
+    }
+    .chat-bubble {
+      max-width: 76%;
+      padding: 8px 12px 6px 12px;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      word-break: break-word;
+      position: relative;
+    }
+    /* Right bubble: Messages I am sending (Advocate) */
+    .chat-bubble.mine {
+      align-self: flex-end !important;
+      margin-left: auto !important;
+      margin-right: 0 !important;
+      background: #D9FDD3;
+      color: #111B21;
+      border-radius: 12px 12px 2px 12px;
+      box-shadow: 0 1px 1.5px rgba(11, 20, 26, 0.16);
+      border: 1px solid rgba(0, 168, 132, 0.15);
+    }
+    /* Left bubble: Messages received from Applicant */
+    .chat-bubble.theirs {
+      align-self: flex-start !important;
+      margin-right: auto !important;
+      margin-left: 0 !important;
+      background: #FFFFFF;
+      color: #111B21;
+      border-radius: 12px 12px 12px 2px;
+      box-shadow: 0 1px 1.5px rgba(11, 20, 26, 0.16);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    .chat-bubble-sender {
+      font-size: 0.73rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .chat-bubble.mine .chat-bubble-sender {
+      color: #065F46;
+    }
+    .chat-bubble.theirs .chat-bubble-sender {
+      color: #1D4ED8;
+    }
+    .chat-bubble-text {
+      color: #111B21;
+      font-size: 0.92rem;
+      white-space: pre-wrap;
+    }
+    .chat-bubble-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.68rem;
+      color: #667781;
+      margin-top: 3px;
+    }
+    .chat-bubble.mine .chat-bubble-footer {
+      color: #557064;
+    }
+    .wa-ticks {
+      color: #53BDEB;
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: -2.5px;
+    }
+    .chat-form {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 14px;
+      background: #F0F2F5;
+      border-top: 1px solid #D1D7DB;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 11px 18px;
+      border-radius: 24px;
+      border: 1px solid #D1D7DB;
+      background: #FFFFFF;
+      font-size: 0.92rem;
+      color: #111B21;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .chat-input:focus {
+      border-color: #00A884;
+      box-shadow: 0 0 0 2px rgba(0, 168, 132, 0.2);
+    }
+    .chat-send-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50% !important;
+      background: #00A884 !important;
+      color: #FFFFFF !important;
+      border: none !important;
+      display: grid !important;
+      place-items: center !important;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0, 168, 132, 0.35) !important;
+      transition: all 0.18s ease;
+      padding: 0 !important;
+    }
+    .chat-send-btn:hover {
+      background: #008f6f !important;
+      transform: scale(1.06) !important;
+    }
+    .chat-send-btn:active {
+      transform: scale(0.94) !important;
+    }
+    
+    /* Case Category Tabs & Previous Cases */
+    .case-tabs-bar {
+      display: inline-flex;
+      gap: 6px;
+      margin-bottom: 24px;
+      background: rgba(0, 0, 0, 0.04);
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    .case-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 9px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .case-tab:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.7);
+    }
+    .case-tab.is-active {
+      background: #FFFFFF;
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    }
+    .tab-count-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: #E5E7EB;
+      color: #374151;
+      transition: all 0.2s ease;
+    }
+    .case-tab.is-active .tab-count-badge {
+      background: var(--green);
+      color: #FFFFFF;
+    }
+    
+    .item.is-previous {
+      border-color: rgba(0, 0, 0, 0.09);
+      background: #FAF9F6;
+      opacity: 0.95;
+    }
+    .previous-case-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+    .previous-case-banner.resolved {
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      color: #065F46;
+    }
+    .previous-case-banner.released {
+      background: #F3F4F6;
+      border: 1px solid #E5E7EB;
+      color: #4B5563;
+    }
+    .previous-case-banner.other {
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      color: #92400E;
+    }
+    .previous-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: #E5E7EB;
+      color: #4B5563;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    @media(max-width: 768px) {
+      .nav-links {
+        display: flex;
+        gap: 6px;
+      }
+      .nav-links a {
+        padding: 6px 12px;
+        font-size: 0.82rem;
+        border-radius: 999px;
+      }
+      .nav-links a.active {
+        background: #074023;
+        color: #FFFFFF !important;
+      }
+      .nav-links a:not(.active) {
+        background: #F1F5F9;
+        color: #475569;
+      }
+      .avatar-meta { display: none; }
+      .avatar-btn { padding: 4px 8px 4px 4px; gap: 6px; }
+      .dropdown-menu { right: 0; width: 250px; }
+      
+      .intro h1 { font-size: clamp(1.9rem, 7vw, 2.5rem); margin-bottom: 10px; }
+      .intro p { font-size: 0.95rem; }
+      
+      .case-tabs-bar { width: 100%; display: flex; box-sizing: border-box; }
+      .case-tab { flex: 1; justify-content: center; font-size: 0.85rem; padding: 10px 8px; min-height: 44px; }
+      
+      .item { padding: 18px 16px; border-radius: 18px; }
+      .item-head { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .meta { grid-template-columns: 1fr; gap: 8px; }
+      .stage-actions-row { flex-direction: column; align-items: stretch; gap: 8px; }
+      .stage-actions-row button { width: 100%; justify-content: center; min-height: 44px; }
+      .actions { flex-direction: column; align-items: stretch; gap: 10px; }
+      .actions .button { width: 100%; min-height: 48px; }
+      
+      /* Mobile WhatsApp Chat */
+      .chat-container { border-radius: 16px; margin-top: 20px; }
+      .wa-chat-header { padding: 10px 14px; }
+      .wa-header-avatar { width: 36px; height: 36px; font-size: 1.1rem; }
+      .wa-header-title { font-size: 0.92rem; }
+      .wa-header-badge { font-size: 0.68rem; padding: 2px 8px; }
+      .chat-thread { padding: 12px 10px; min-height: 240px; max-height: 380px; }
+      .chat-bubble { max-width: 90%; font-size: 0.9rem; padding: 8px 10px 6px; }
+      .chat-form { padding: 8px 10px; gap: 8px; }
+      .chat-input { font-size: 16px !important; padding: 9px 14px; min-height: 42px; }
+      .chat-send-btn { width: 42px; height: 42px; }
+      
+      /* Mobile Stage Progression Bottom Sheet */
+      .stage-modal-backdrop {
+        align-items: flex-end;
+        padding: 0;
+      }
+      .stage-modal-card {
+        border-radius: 24px 24px 0 0;
+        max-height: 88dvh;
+        width: 100%;
+        max-width: 100%;
+        padding: 22px 20px 28px;
+        animation: sheet-enter 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+      .stage-modal-textarea {
+        font-size: 16px !important;
+      }
+      .stage-modal-actions {
+        flex-direction: column-reverse;
+        gap: 10px;
+      }
+      .stage-modal-actions .button {
+        width: 100%;
+        min-height: 48px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="/motion.css" />
+</head>
+<body>
+  <div class="top-rule"></div>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="/">
+          <img class="brand-logo" src="/logo.svg" alt="Ona Polisi" onerror="this.onerror=null;this.src='/logo.png';" />
+        </a>
+        <div class="nav-right">
+          <div class="nav-links">
+            <a href="/lawyer/available">Available cases</a>
+            <a class="active" href="/lawyer/my-cases">My cases</a>
+            <a href="/verification" id="nav-verification-link" style="color: var(--muted); font-size: 0.9rem; display: none;">LSK Verification</a>
+          </div>
+          
+          <!-- Advocate Avatar Dropdown -->
+          <div class="user-menu" id="user-menu">
+            <button type="button" class="avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false" title="Advocate Profile & Menu">
+              <div class="avatar-circle" id="nav-avatar-circle">⚖️</div>
+              <div class="avatar-meta">
+                <span class="avatar-name" id="nav-user-name">Advocate</span>
+                <span class="avatar-badge">
+                  <span class="avatar-badge-dot"></span>
+                  <span id="nav-user-role-text">Verified LSK</span>
+                </span>
+              </div>
+              <svg class="avatar-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </button>
+            <div class="dropdown-menu" id="user-dropdown" role="menu">
+              <div class="dropdown-header">
+                <div class="dropdown-avatar-lg" id="dropdown-avatar-lg">⚖️</div>
+                <div class="dropdown-user-text">
+                  <div class="dropdown-user-title" id="dropdown-user-name">LSK Advocate</div>
+                  <div class="dropdown-user-email" id="dropdown-user-email">Loading account…</div>
+                </div>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a href="/lawyer/available" class="dropdown-item">
+                <span class="dropdown-item-icon">📋</span>
+                <span>Available Cases</span>
+              </a>
+              <a href="/lawyer/my-cases" class="dropdown-item">
+                <span class="dropdown-item-icon">💼</span>
+                <span>My Caseload</span>
+              </a>
+              <a href="/verification" class="dropdown-item" id="dropdown-verification-item" style="display: none;">
+                <span class="dropdown-item-icon">🛡️</span>
+                <span>LSK Verification</span>
+              </a>
+              <div class="dropdown-divider"></div>
+              <button type="button" class="dropdown-item signout-item" id="signout-button">
+                <span class="dropdown-item-icon">🚪</span>
+                <span>Sign out</span>
+              </button>
+            </div>
+          </div>
+          <a href="/login?role=lawyer" class="login-fallback-btn" id="login-fallback-btn" style="display: none;">Sign in</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+  
+  <main>
+    <div class="container">
+      <div class="intro">
+        <div class="live-pill">
+          <span class="live-pill-dot"></span>
+          <span>Caseload Management</span>
+          <span class="live-pill-sep">·</span>
+          <span class="live-pill-text">Active Legal Aid</span>
+        </div>
+        <h1>Cases in your care.</h1>
+        <p>Manage your active pro-bono caseload, advance legal aid stages, chat with applicants, or review your history of concluded cases.</p>
+      </div>
+      
+      <div class="message error" id="message" role="alert"></div>
+
+      <div class="case-tabs-bar" role="tablist" aria-label="Case Categories">
+        <button type="button" class="case-tab is-active" id="tab-active" role="tab" aria-selected="true" data-category="active">
+          <span>⚡ Active Caseload</span>
+          <span class="tab-count-badge" id="badge-active">0</span>
+        </button>
+        <button type="button" class="case-tab" id="tab-previous" role="tab" aria-selected="false" data-category="previous">
+          <span>📁 Previous Cases</span>
+          <span class="tab-count-badge" id="badge-previous">0</span>
+        </button>
+        <button type="button" class="case-tab" id="tab-all" role="tab" aria-selected="false" data-category="all">
+          <span>All Records</span>
+          <span class="tab-count-badge" id="badge-all">0</span>
+        </button>
+      </div>
+      
+      <section class="queue" id="queue" aria-live="polite">
+        <div class="empty">Loading your cases…</div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Advance Stage Modal -->
+  <div class="stage-modal-backdrop" id="stage-modal-backdrop" style="display: none;">
+    <div class="stage-modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-stage-title">
+      <div class="stage-modal-header">
+        <h3 id="modal-stage-title">Advance Case Stage</h3>
+        <button type="button" class="stage-modal-close" id="modal-stage-close" aria-label="Close dialog">✕</button>
+      </div>
+      <p id="modal-stage-desc" class="stage-modal-desc"></p>
+      <form id="stage-modal-form">
+        <input type="hidden" id="modal-case-id" />
+        <input type="hidden" id="modal-next-status" />
+        <label for="modal-stage-note" class="stage-modal-label">
+          <span>Action Taken / Case Update Note:</span>
+          <small>This note will be recorded on the citizen's live tracking receipt.</small>
+        </label>
+        <textarea id="modal-stage-note" class="stage-modal-textarea" rows="3" placeholder="Enter notes on the institutional action or resolution achieved..." required></textarea>
+        <div class="stage-modal-actions">
+          <button type="button" class="button secondary" id="modal-stage-cancel">Cancel</button>
+          <button type="submit" class="button primary" id="modal-stage-submit">Confirm & Advance Stage</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    const queue=document.getElementById('queue');const message=document.getElementById('message');
+    function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+    function formatDate(value){return new Intl.DateTimeFormat('en-KE',{dateStyle:'medium'}).format(new Date(value))}
+    function showError(text){message.textContent=text;message.classList.add('is-visible')}
+    
+    function contactAction(item){
+      if(item.contact_status==='Available')return '<button class="button secondary" data-contact-request>Request confidential contact</button>';
+      if(item.contact_status==='Requested')return '<span class="contact-state pending">● Contact request pending</span>';
+      if(item.contact_status==='Approved')return '<button class="button secondary" data-reveal-contact>Reveal approved contact</button>';
+      if(item.contact_status==='Declined')return '<span class="contact-state declined">● Contact access declined</span>';
+      return '<span class="contact-state">● No contact detail attached</span>';
+    }
+
+    function getStepClass(currentStatus, targetStep) {
+      const order = ['Filed', 'Under review', 'Escalated', 'Resolved'];
+      const curIdx = order.indexOf(currentStatus);
+      const tgtIdx = order.indexOf(targetStep);
+      if (curIdx > tgtIdx) return 'done';
+      if (curIdx === tgtIdx) {
+        if (targetStep === 'Escalated') return 'active escalated';
+        if (targetStep === 'Resolved') return 'active resolved';
+        return 'active';
+      }
+      return 'upcoming';
+    }
+
+    function renderStageControls(item) {
+      const status = item.status;
+      if (status === 'Resolved') {
+        return `
+          <div class="stage-resolved-badge">
+            <span>✓</span>
+            <span>Case Concluded & Successfully Resolved</span>
+          </div>
+        `;
+      }
+      if (status === 'Escalated') {
+        return `
+          <span class="stage-action-prompt-text">Formal action underway:</span>
+          <button type="button" class="btn-advance-resolve" data-stage-advance="Resolved">
+            <span>✓</span>
+            <span>Conclude & Mark Resolved</span>
+          </button>
+        `;
+      }
+      // Status is 'Filed' or 'Under review'
+      return `
+        <span class="stage-action-prompt-text">Advance Case Stage:</span>
+        <button type="button" class="btn-advance-escalate" data-stage-advance="Escalated">
+          <span>⚡</span>
+          <span>Move to Escalated</span>
+        </button>
+        <button type="button" class="btn-advance-resolve" data-stage-advance="Resolved">
+          <span>✓</span>
+          <span>Mark as Resolved</span>
+        </button>
+      `;
+    }
+    
+    let allCasesList = [];
+    let currentCategoryFilter = 'active';
+
+    function updateCategoryBadges() {
+      const activeCount = allCasesList.filter(c => c.case_category === 'active').length;
+      const prevCount = allCasesList.filter(c => c.case_category === 'previous').length;
+      const allCount = allCasesList.length;
+
+      const bActive = document.getElementById('badge-active');
+      const bPrev = document.getElementById('badge-previous');
+      const bAll = document.getElementById('badge-all');
+
+      if (bActive) bActive.textContent = activeCount;
+      if (bPrev) bPrev.textContent = prevCount;
+      if (bAll) bAll.textContent = allCount;
+    }
+
+    function renderCurrentView() {
+      let filtered = allCasesList;
+      if (currentCategoryFilter === 'active') {
+        filtered = allCasesList.filter(c => c.case_category === 'active');
+      } else if (currentCategoryFilter === 'previous') {
+        filtered = allCasesList.filter(c => c.case_category === 'previous');
+      }
+      render(filtered, currentCategoryFilter);
+    }
+
+    // Category tab switcher
+    document.querySelectorAll('.case-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.case-tab').forEach(t => {
+          t.classList.remove('is-active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('is-active');
+        tab.setAttribute('aria-selected', 'true');
+        currentCategoryFilter = tab.dataset.category;
+        renderCurrentView();
+      });
+    });
+
+    function render(cases, filter) {
+      if (!cases.length) {
+        if (filter === 'active') {
+          queue.innerHTML = `
+            <div class="empty">
+              <div style="font-size: 2.2rem; margin-bottom: 10px;">⚡</div>
+              <strong>No active cases in your queue.</strong>
+              <p>You currently do not have any open active cases requiring progression.</p>
+              <div style="margin-top: 16px;">
+                <a href="/lawyer/available" class="button primary" style="width: auto; padding: 10px 20px;">Browse Available Cases&nbsp; →</a>
+              </div>
+            </div>
+          `;
+        } else if (filter === 'previous') {
+          queue.innerHTML = `
+            <div class="empty">
+              <div style="font-size: 2.2rem; margin-bottom: 10px;">📁</div>
+              <strong>No previous cases recorded.</strong>
+              <p>Cases you successfully resolve, conclude, or complete will be archived here in your advocate case history.</p>
+            </div>
+          `;
+        } else {
+          queue.innerHTML = `
+            <div class="empty">
+              <div style="font-size: 2.2rem; margin-bottom: 10px;">📋</div>
+              <strong>You have no claimed or past cases.</strong>
+              <p>Browse available cases when you are ready to take on pro-bono casework.</p>
+              <div style="margin-top: 16px;">
+                <a href="/lawyer/available" class="button primary" style="width: auto; padding: 10px 20px;">Browse Available Cases&nbsp; →</a>
+              </div>
+            </div>
+          `;
+        }
+        return;
+      }
+
+      queue.innerHTML = cases.map((item) => {
+        const isPrev = item.case_category === 'previous';
+        
+        let prevBanner = '';
+        if (isPrev) {
+          if (item.status === 'Resolved') {
+            prevBanner = `
+              <div class="previous-case-banner resolved">
+                <span style="font-size: 1.25rem;">✓</span>
+                <div>
+                  <strong>Concluded & Successfully Resolved:</strong> You represented this citizen report and brought it to a successful resolution.
+                </div>
+              </div>
+            `;
+          } else if (item.claim_status === 'Released') {
+            const relDate = item.released_at ? formatDate(item.released_at) : formatDate(item.updated_at);
+            prevBanner = `
+              <div class="previous-case-banner released">
+                <span style="font-size: 1.25rem;">↩</span>
+                <div>
+                  <strong>Released from Caseload:</strong> You released this case back to the advocate pool on ${escapeHtml(relDate)}.
+                </div>
+              </div>
+            `;
+          } else {
+            prevBanner = `
+              <div class="previous-case-banner other">
+                <span style="font-size: 1.25rem;">📁</span>
+                <div>
+                  <strong>Archived Case Record:</strong> Concluded with status: <em>${escapeHtml(item.status)}</em>.
+                </div>
+              </div>
+            `;
+          }
+        }
+
+        let stageBoxHtml = '';
+        if (isPrev) {
+          if (item.status === 'Resolved') {
+            stageBoxHtml = `
+              <div class="stage-progression-box" style="border-left: 3px solid #10B981;">
+                <div class="stage-progression-head">
+                  <div class="stage-progression-title">
+                    <span>⚖️ Case Outcome</span>
+                    <span class="stage-current-pill" style="background: #D1FAE5; color: #065F46;">Status: <strong>Resolved</strong></span>
+                  </div>
+                  <div class="stage-steps-track">
+                    <span class="track-step done">1. Filed</span>
+                    <span class="track-arrow">➔</span>
+                    <span class="track-step done">2. Under review</span>
+                    <span class="track-arrow">➔</span>
+                    <span class="track-step done">3. Escalated</span>
+                    <span class="track-arrow">➔</span>
+                    <span class="track-step active resolved">4. Resolved</span>
+                  </div>
+                </div>
+                <div class="stage-actions-row">
+                  <div class="stage-resolved-badge">
+                    <span>✓</span>
+                    <span>Case Concluded & Successfully Resolved</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else {
+            stageBoxHtml = `
+              <div class="stage-progression-box" style="border-left: 3px solid #9CA3AF;">
+                <div class="stage-progression-head">
+                  <div class="stage-progression-title">
+                    <span>📁 Archival Record</span>
+                    <span class="stage-current-pill">Status: <strong>${escapeHtml(item.claim_status === 'Released' ? 'Released' : item.status)}</strong></span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        } else {
+          stageBoxHtml = `
+            <div class="stage-progression-box">
+              <div class="stage-progression-head">
+                <div class="stage-progression-title">
+                  <span>⚖️ Case Stage Progression</span>
+                  <span class="stage-current-pill">Current: <strong>${escapeHtml(item.status)}</strong></span>
+                </div>
+                <div class="stage-steps-track">
+                  <span class="track-step ${getStepClass(item.status, 'Filed')}">1. Filed</span>
+                  <span class="track-arrow">➔</span>
+                  <span class="track-step ${getStepClass(item.status, 'Under review')}">2. Under review</span>
+                  <span class="track-arrow">➔</span>
+                  <span class="track-step ${getStepClass(item.status, 'Escalated')}">3. Escalated</span>
+                  <span class="track-arrow">➔</span>
+                  <span class="track-step ${getStepClass(item.status, 'Resolved')}">4. Resolved</span>
+                </div>
+              </div>
+              <div class="stage-actions-row">
+                ${renderStageControls(item)}
+              </div>
+            </div>
+          `;
+        }
+
+        let actionsHtml = '';
+        if (isPrev) {
+          actionsHtml = `
+            <a class="button primary" href="/case/${encodeURIComponent(item.case_id)}/receipt" target="_blank">📄 Official Receipt&nbsp; →</a>
+            <a class="button secondary" href="/case/${encodeURIComponent(item.case_id)}">🔍 Case Timeline</a>
+            <button class="button secondary" data-chat-toggle>💬 Review Dialogue</button>
+          `;
+        } else {
+          actionsHtml = `
+            <a class="button primary" href="/case/${encodeURIComponent(item.case_id)}">Open tracking page&nbsp; →</a>
+            <button class="button secondary" data-chat-toggle>💬 Chat with Applicant</button>
+            ${contactAction(item)}
+            <a class="button secondary" href="/case/${encodeURIComponent(item.case_id)}/receipt" target="_blank" title="View or print official receipt">📄 Receipt</a>
+            <button class="button tertiary" data-release>Release case</button>
+          `;
+        }
+
+        return `
+          <article class="item ${isPrev ? 'is-previous' : ''}" data-case="${escapeHtml(item.case_id)}">
+            <div class="item-head">
+              <div>
+                <h2>
+                  ${escapeHtml(item.case_id)}
+                  ${isPrev ? '<span class="previous-tag">📁 Previous</span>' : ''}
+                </h2>
+                <div class="meta-grid">
+                  <div class="meta-item"><span class="meta-label">Category</span><span class="meta-value">${escapeHtml(item.category)}</span></div>
+                  <div class="meta-item"><span class="meta-label">Location</span><span class="meta-value">${escapeHtml(item.location)}</span></div>
+                  <div class="meta-item"><span class="meta-label">Claimed</span><span class="meta-value">${escapeHtml(formatDate(item.claimed_at))}</span></div>
+                </div>
+              </div>
+              <span class="status" data-status="${escapeHtml(item.status)}">${escapeHtml(item.status)}</span>
+            </div>
+            
+            ${prevBanner}
+
+            <div class="description-area">
+              <h3>Incident Description</h3>
+              <p class="description">${escapeHtml(item.description)}</p>
+            </div>
+
+            ${stageBoxHtml}
+
+            <div class="actions">
+              ${actionsHtml}
+            </div>
+            <div class="contact-output" data-contact-output aria-live="polite"></div>
+            <div class="chat-container" data-chat-container style="display: none;">
+              <div class="wa-chat-header">
+                <div class="wa-header-avatar" aria-hidden="true">👤</div>
+                <div class="wa-header-info">
+                  <div class="wa-header-title">
+                    <span>Case Applicant</span>
+                    <span class="wa-case-pill">${escapeHtml(item.case_id)}</span>
+                  </div>
+                  <div class="wa-header-status">
+                    <span class="wa-online-dot"></span>
+                    <span>Confidential Citizen Dialogue · Incident Record</span>
+                  </div>
+                </div>
+                <div class="wa-header-badge">Applicant Channel</div>
+              </div>
+              <div class="chat-thread" data-chat-thread>
+                <div class="chat-empty">Loading conversation...</div>
+              </div>
+              <form class="chat-form" data-chat-form>
+                <input type="text" class="chat-input" placeholder="Type a message or clarifying question for the applicant..." required />
+                <button type="submit" class="chat-send-btn" aria-label="Send message" title="Send message">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                </button>
+              </form>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+    
+    function formatTime(val) {
+      if (!val) return '';
+      return new Intl.DateTimeFormat('en-KE', { timeStyle: 'short', dateStyle: 'short' }).format(new Date(val));
+    }
+
+    async function loadChatMessages(caseId, threadEl) {
+      try {
+        const res = await fetch(`/api/cases/${encodeURIComponent(caseId)}/messages`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Could not load conversation');
+        if (!data.messages.length) {
+          threadEl.innerHTML = '<div class="chat-empty">No messages yet. Send a message to start direct communication with the applicant.</div>';
+          return;
+        }
+        threadEl.innerHTML = data.messages.map(m => {
+          // On Lawyer Caseload page:
+          // The Advocate is YOU (RIGHT / .mine).
+          // The Applicant is the other party (LEFT / .theirs).
+          const isMine = m.sender_role === 'lawyer';
+          const cleanSenderName = escapeHtml(String(m.sender_name || '').replace(/Counsel/g, 'Advocate'));
+          const senderLabel = isMine ? 'You (Advocate)' : `👤 ${cleanSenderName}`;
+          return `
+            <div class="chat-bubble ${isMine ? 'mine' : 'theirs'}">
+              <div class="chat-bubble-sender">
+                ${senderLabel}
+              </div>
+              <div class="chat-bubble-text">${escapeHtml(m.message)}</div>
+              <div class="chat-bubble-footer">
+                <span>${escapeHtml(formatTime(m.created_at))}</span>
+                ${isMine ? '<span class="wa-ticks">✓✓</span>' : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+        threadEl.scrollTop = threadEl.scrollHeight;
+      } catch(err) {
+        threadEl.innerHTML = `<div class="chat-empty" style="color:#DC2626;">${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    async function load(){
+      try{
+        const response=await fetch('/api/lawyer/my-cases');
+        const payload=await response.json();
+        if(!response.ok)throw new Error(payload.error||'Sign in with a verified lawyer account to view your cases.');
+        allCasesList = payload.cases || [];
+        updateCategoryBadges();
+        renderCurrentView();
+      }catch(error){
+        queue.innerHTML=`
+          <div class="empty">
+            <div style="font-size: 2.5rem; margin-bottom: 12px;">⚖️</div>
+            <strong>Advocate Workspace Access Required</strong>
+            <p>${escapeHtml(error.message)}</p>
+            <div style="display: flex; gap: 12px; justify-content: center; margin-top: 20px;">
+              <a href="/login?role=lawyer" class="button primary" style="width: auto; padding: 10px 20px;">Sign in as Advocate&nbsp; →</a>
+              <a href="/verification" class="button" style="width: auto; padding: 10px 20px; background: #fff; color: var(--text); border: 1px solid var(--border);">LSK Verification</a>
+            </div>
+          </div>
+        `;
+        showError(error.message);
+      }
+    }
+    
+    // Auto-poll active chat if open
+    setInterval(() => {
+      document.querySelectorAll('[data-chat-container]').forEach(container => {
+        if (container.style.display !== 'none') {
+          const card = container.closest('[data-case]');
+          if (card) {
+            const thread = container.querySelector('[data-chat-thread]');
+            loadChatMessages(card.dataset.case, thread);
+          }
+        }
+      });
+    }, 1500);
+
+    queue.addEventListener('submit', async (event) => {
+      const form = event.target.closest('[data-chat-form]');
+      if (!form) return;
+      event.preventDefault();
+      const card = form.closest('[data-case]');
+      if (!card) return;
+      const input = form.querySelector('.chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const submitBtn = form.querySelector('button');
+      submitBtn.disabled = true;
+      try {
+        const response = await fetch(`/api/cases/${encodeURIComponent(card.dataset.case)}/messages`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text, sender_role: 'lawyer' })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Failed to send message');
+        input.value = '';
+        const thread = card.querySelector('[data-chat-thread]');
+        await loadChatMessages(card.dataset.case, thread);
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    queue.addEventListener('click',async(event)=>{
+      const card=event.target.closest('[data-case]');
+      if(!card)return;
+      const caseId=card.dataset.case;
+      const chatToggle=event.target.closest('[data-chat-toggle]');
+      const requestButton=event.target.closest('[data-contact-request]');
+      const revealButton=event.target.closest('[data-reveal-contact]');
+      const releaseButton=event.target.closest('[data-release]');
+      
+      if(chatToggle) {
+        const chatContainer = card.querySelector('[data-chat-container]');
+        const isHidden = chatContainer.style.display === 'none';
+        chatContainer.style.display = isHidden ? 'block' : 'none';
+        chatToggle.textContent = isHidden ? '✕ Close chat' : '💬 Chat with Applicant';
+        if (isHidden) {
+          const thread = chatContainer.querySelector('[data-chat-thread]');
+          loadChatMessages(caseId, thread);
+        }
+        return;
+      }
+
+      if(requestButton){
+        requestButton.disabled=true;
+        try{
+          const response=await fetch(`/api/cases/${encodeURIComponent(caseId)}/contact-request`,{method:'POST'});
+          const payload=await response.json();
+          if(!response.ok)throw new Error(payload.error||'The contact request could not be sent.');
+          load();
+        }catch(error){
+          showError(error.message);
+          requestButton.disabled=false;
+        }
+        return;
+      }
+      
+      if(revealButton){
+        revealButton.disabled=true;
+        try{
+          const response=await fetch(`/api/cases/${encodeURIComponent(caseId)}/confidential-contact`);
+          const payload=await response.json();
+          if(!response.ok)throw new Error(payload.error||'The contact could not be revealed.');
+          card.querySelector('[data-contact-output]').textContent=`Approved contact: ${payload.contact}`;
+          revealButton.remove();
+        }catch(error){
+          showError(error.message);
+          revealButton.disabled=false;
+        }
+        return;
+      }
+      
+      const stageBtn = event.target.closest('[data-stage-advance]');
+      if (stageBtn) {
+        const nextStatus = stageBtn.dataset.stageAdvance;
+        openStageModal(caseId, nextStatus);
+        return;
+      }
+
+      if(!releaseButton)return;
+      releaseButton.disabled=true;
+      try{
+        const response=await fetch(`/api/cases/${encodeURIComponent(caseId)}/release`,{method:'POST'});
+        const payload=await response.json();
+        if(!response.ok)throw new Error(payload.error||'The case could not be released.');
+        load();
+      }catch(error){
+        showError(error.message);
+        releaseButton.disabled=false;
+      }
+    });
+
+    // Case Stage Progression Modal Controller
+    const stageModalBackdrop = document.getElementById('stage-modal-backdrop');
+    const stageModalForm = document.getElementById('stage-modal-form');
+    const modalCaseId = document.getElementById('modal-case-id');
+    const modalNextStatus = document.getElementById('modal-next-status');
+    const modalStageTitle = document.getElementById('modal-stage-title');
+    const modalStageDesc = document.getElementById('modal-stage-desc');
+    const modalStageNote = document.getElementById('modal-stage-note');
+    const modalStageSubmit = document.getElementById('modal-stage-submit');
+    const modalStageClose = document.getElementById('modal-stage-close');
+    const modalStageCancel = document.getElementById('modal-stage-cancel');
+
+    function openStageModal(caseId, nextStatus) {
+      modalCaseId.value = caseId;
+      modalNextStatus.value = nextStatus;
+      if (nextStatus === 'Escalated') {
+        modalStageTitle.textContent = `⚡ Escalate Case ${caseId}`;
+        modalStageDesc.textContent = `Advancing to Escalated will notify the citizen on their live timeline that formal legal action has been initiated (e.g. demand letter served, complaint filed with IPOA/IAU/Court).`;
+        modalStageNote.placeholder = `e.g. Formal complaint served to IPOA; notice of inquiry served to Station Commander.`;
+        modalStageNote.value = `Formal legal escalation initiated with oversight and disciplinary authorities.`;
+      } else {
+        modalStageTitle.textContent = `✓ Conclude & Resolve Case ${caseId}`;
+        modalStageDesc.textContent = `Marking this case as Resolved concludes the pro-bono legal aid on this incident with a final outcome summary.`;
+        modalStageNote.placeholder = `e.g. Unlawful charges withdrawn, citizen released on bond, property returned.`;
+        modalStageNote.value = `Pro-bono legal aid concluded with successful outcome.`;
+      }
+      stageModalBackdrop.style.display = 'flex';
+      modalStageNote.focus();
+    }
+
+    function closeStageModal() {
+      stageModalBackdrop.style.display = 'none';
+      stageModalForm.reset();
+      modalStageSubmit.disabled = false;
+      modalStageSubmit.textContent = 'Confirm & Advance Stage';
+    }
+
+    modalStageClose.addEventListener('click', closeStageModal);
+    modalStageCancel.addEventListener('click', closeStageModal);
+    stageModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === stageModalBackdrop) closeStageModal();
+    });
+
+    stageModalForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const caseId = modalCaseId.value;
+      const nextStatus = modalNextStatus.value;
+      const note = modalStageNote.value.trim();
+      if (!caseId || !nextStatus) return;
+
+      modalStageSubmit.disabled = true;
+      modalStageSubmit.textContent = 'Updating status...';
+      try {
+        const res = await fetch(`/api/lawyer/cases/${encodeURIComponent(caseId)}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: nextStatus, note: note })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to update case status.');
+        closeStageModal();
+        await load();
+      } catch (err) {
+        showError(err.message);
+        modalStageSubmit.disabled = false;
+        modalStageSubmit.textContent = 'Confirm & Advance Stage';
+      }
+    });
+
+    // Advocate Account & Avatar Dropdown Logic
+    (function initUserDropdown() {
+      const userMenu = document.getElementById('user-menu');
+      const avatarBtn = document.getElementById('avatar-btn');
+      const signoutBtn = document.getElementById('signout-button');
+      const fallbackBtn = document.getElementById('login-fallback-btn');
+      const navName = document.getElementById('nav-user-name');
+      const navCircle = document.getElementById('nav-avatar-circle');
+      const dropdownName = document.getElementById('dropdown-user-name');
+      const dropdownEmail = document.getElementById('dropdown-user-email');
+      const dropdownAvatarLg = document.getElementById('dropdown-avatar-lg');
+      const roleText = document.getElementById('nav-user-role-text');
+
+      if (!userMenu || !avatarBtn) return;
+
+      avatarBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = userMenu.classList.toggle('open');
+        avatarBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!userMenu.contains(e.target)) {
+          userMenu.classList.remove('open');
+          avatarBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          userMenu.classList.remove('open');
+          avatarBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      fetch('/api/auth/me')
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data && data.user) {
+            const user = data.user;
+            const email = user.email || '';
+            const namePart = email.split('@')[0] || 'Advocate';
+            const cleanName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+            const initial = cleanName.charAt(0).toUpperCase() || '⚖️';
+
+            if (navName) navName.textContent = cleanName;
+            if (navCircle) navCircle.textContent = initial;
+            if (dropdownName) dropdownName.textContent = `Adv. ${cleanName}`;
+            if (dropdownEmail) dropdownEmail.textContent = email;
+            if (dropdownAvatarLg) dropdownAvatarLg.textContent = initial;
+            if (roleText) {
+              roleText.textContent = user.verification_status === 'verified' ? 'Verified LSK' : 'LSK Advocate';
+            }
+
+            const navVerifLink = document.getElementById('nav-verification-link');
+            const dropdownVerifItem = document.getElementById('dropdown-verification-item');
+            if (user.verification_status === 'verified') {
+              if (navVerifLink) navVerifLink.style.display = 'none';
+              if (dropdownVerifItem) dropdownVerifItem.style.display = 'none';
+            } else {
+              if (navVerifLink) navVerifLink.style.display = '';
+              if (dropdownVerifItem) dropdownVerifItem.style.display = '';
+            }
+          } else {
+            if (userMenu) userMenu.style.display = 'none';
+            if (fallbackBtn) fallbackBtn.style.display = 'inline-flex';
+          }
+        })
+        .catch(() => {});
+
+      if (signoutBtn) {
+        signoutBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          signoutBtn.disabled = true;
+          signoutBtn.style.opacity = '0.6';
+          try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+          } catch (_) {}
+          window.location.href = '/login?role=lawyer';
+        });
+      }
+    })();
+
+    load();
+  </script>
+  <script src="/motion.js" defer></script>
+</body>
+</html>

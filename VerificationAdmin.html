@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verification queue — Ona Polisi</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="apple-touch-icon" href="/favicon-512.png" />
+  <style>
+    :root {
+      --bg: #F8F6F0;
+      --surface: #FFFFFF;
+      --text: #0F1419;
+      --muted: #5B6470;
+      --border: rgba(226, 232, 240, 0.9);
+      --primary: #074023;
+      --primary-hover: #05331C;
+      --alert: #C8102E;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+
+    .top-rule { display: none; }
+
+    .container {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .nav-wrapper {
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 80px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      display: block;
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .back {
+      color: #475569;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 999px;
+      transition: all 180ms ease;
+    }
+    .back:hover {
+      color: var(--text);
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    main {
+      padding: 48px 0 90px;
+    }
+
+    .intro {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-end;
+      margin-bottom: 36px;
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #E6F4EA;
+      border: 1px solid rgba(19, 78, 46, 0.15);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #134E2E;
+      margin-bottom: 16px;
+    }
+    .live-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #0B6B3A;
+      box-shadow: 0 0 0 3px rgba(11, 107, 58, 0.2);
+    }
+    .live-pill-sep { color: #A7D7B5; }
+    .live-pill-text {
+      color: #134E2E;
+      font-weight: 600;
+    }
+
+    h1, h2, p { margin-top: 0; }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+      line-height: 1.1;
+      letter-spacing: -0.05em;
+      font-weight: 850;
+      color: #0F1419;
+    }
+
+    .intro p {
+      max-width: 650px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .badge {
+      padding: 6px 14px;
+      color: #8A5300;
+      background: #FDF0D5;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 24px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .message.is-visible { display: block; }
+    .error { color: #8D0C20; background: #FBE4E7; border: 1px solid #F4C2C9; }
+
+    .queue {
+      display: grid;
+      gap: 16px;
+    }
+
+    .item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: center;
+      padding: 24px 28px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(15, 20, 25, 0.04);
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+    .item:hover {
+      border-color: rgba(7, 64, 35, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(15, 20, 25, 0.08);
+    }
+
+    .item h2 {
+      margin-bottom: 6px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #0F1419;
+    }
+
+    .meta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .meta strong {
+      color: #1E293B;
+    }
+
+    .credential {
+      margin-top: 12px;
+      padding: 12px 14px;
+      color: #1E293B;
+      background: #F8F9FA;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 0.82rem;
+      word-break: break-word;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .button {
+      min-height: 42px;
+      padding: 0 18px;
+      border-radius: 10px;
+      background: var(--surface);
+      font-size: 0.84rem;
+      font-weight: 700;
+      transition: all 180ms ease;
+    }
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .approve {
+      color: #166534;
+      border: 1px solid #BBF7D0;
+      background: #DCFCE7;
+    }
+    .approve:hover {
+      background: #BBF7D0;
+    }
+
+    .reject {
+      color: #DC2626;
+      border: 1px solid #FECACA;
+      background: #FEE2E2;
+    }
+    .reject:hover {
+      background: #FCA5A5;
+      color: #991B1B;
+    }
+
+    .empty {
+      padding: 60px 24px;
+      border: 1px dashed #CBD5E1;
+      color: var(--muted);
+      background: #FFFFFF;
+      border-radius: 20px;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+    .empty strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #0F1419;
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    @media(max-width: 680px) {
+      .intro { display: block; }
+      .badge { display: inline-block; margin-top: 18px; }
+      .item { grid-template-columns: 1fr; }
+      .actions { justify-content: flex-start; }
+    }
+  </style>
+  <link rel="stylesheet" href="/motion.css" />
+</head>
+<body>
+  <div class="top-rule"></div>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="/">
+          <img class="brand-logo" src="/logo.svg" alt="Ona Polisi" onerror="this.onerror=null;this.src='/logo.png';" />
+        </a>
+        <a class="back" href="/admin">← Back to Admin Panel</a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+      <div class="intro">
+        <div>
+          <div class="live-pill">
+            <span class="live-pill-dot"></span>
+            <span>Admin Queue</span>
+            <span class="live-pill-sep">·</span>
+            <span class="live-pill-text">Credential Governance</span>
+          </div>
+          <h1>Verification queue.</h1>
+          <p>Review professional credential references before granting lawyer or journalist access. Approval changes the account role; rejection does not delete the submitted request.</p>
+        </div>
+        <span class="badge">Pending review</span>
+      </div>
+
+      <div class="message error" id="message" role="alert"></div>
+
+      <section class="queue" id="queue" aria-live="polite">
+        <div class="empty">Loading verification requests…</div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    (async function guardAdminPage() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (!res.ok) {
+          window.location.replace('/login?next=' + encodeURIComponent(window.location.pathname));
+          return;
+        }
+        const data = await res.json();
+        if (!data.user || data.user.role !== 'admin') {
+          if (data.user && data.user.role === 'lawyer') {
+            window.location.replace('/lawyer/available');
+          } else {
+            window.location.replace('/');
+          }
+        }
+      } catch (e) {
+        window.location.replace('/login');
+      }
+    })();
+
+    const queue=document.getElementById('queue');const message=document.getElementById('message');
+    function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+    function formatDate(value){return new Intl.DateTimeFormat('en-KE',{dateStyle:'medium',timeStyle:'short'}).format(new Date(value))}
+    function showError(text){message.textContent=text;message.classList.add('is-visible')}
+    function render(items){if(!items.length){queue.innerHTML='<div class="empty"><strong>No pending verification requests.</strong>The queue is clear for now.</div>';return}queue.innerHTML=items.map((item)=>`<article class="item" data-id="${escapeHtml(item.id)}"><div><h2>${escapeHtml(item.email)}</h2><div class="meta"><span>Applying as <strong>${escapeHtml(item.requested_role)}</strong></span><span>${escapeHtml(item.credential_type)}</span><span>${escapeHtml(formatDate(item.created_at))}</span></div><div class="credential">Credential reference: ${escapeHtml(item.credential_number)}${item.organization?` · ${escapeHtml(item.organization)}`:''}</div></div><div class="actions"><button class="button approve" data-status="Approved">Approve</button><button class="button reject" data-status="Rejected">Reject</button></div></article>`).join('')}
+    async function load(){try{const response=await fetch('/api/admin/verification?status=Pending');const payload=await response.json();if(!response.ok)throw new Error(payload.error||'The verification queue could not be loaded.');render(payload.requests)}catch(error){queue.innerHTML='';showError(error.message)}}
+    queue.addEventListener('click',async(event)=>{const button=event.target.closest('button[data-status]');if(!button)return;const item=button.closest('[data-id]');button.disabled=true;try{const response=await fetch(`/api/admin/verification/${item.dataset.id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({review_status:button.dataset.status})});const payload=await response.json();if(!response.ok)throw new Error(payload.error||'The review failed.');await load()}catch(error){showError(error.message);button.disabled=false}});load();
+  </script>
+  <script src="/motion.js" defer></script>
+</body>
+</html>

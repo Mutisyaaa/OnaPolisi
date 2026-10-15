@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request verification — Ona Polisi</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="apple-touch-icon" href="/favicon-512.png" />
+  <style>
+    :root {
+      --bg: #F8F6F0;
+      --surface: #FFFFFF;
+      --text: #0F1419;
+      --muted: #5B6470;
+      --border: rgba(226, 232, 240, 0.9);
+      --primary: #074023;
+      --primary-hover: #05331C;
+      --alert: #C8102E;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .top-rule { display: none; }
+
+    .container {
+      width: min(1040px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .nav-wrapper {
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 80px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      display: block;
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .back {
+      color: #475569;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 999px;
+      transition: all 180ms ease;
+    }
+    .back:hover {
+      color: var(--text);
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    main {
+      padding: 48px 0 90px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #E6F4EA;
+      border: 1px solid rgba(19, 78, 46, 0.15);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #134E2E;
+      margin-bottom: 16px;
+    }
+    .live-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #0B6B3A;
+      box-shadow: 0 0 0 3px rgba(11, 107, 58, 0.2);
+    }
+    .live-pill-sep { color: #A7D7B5; }
+    .live-pill-text {
+      color: #134E2E;
+      font-weight: 600;
+    }
+
+    h1, h2, p { margin-top: 0; }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(2.3rem, 4.5vw, 3.6rem);
+      line-height: 1.1;
+      letter-spacing: -0.05em;
+      font-weight: 850;
+      color: #0F1419;
+    }
+
+    .intro p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .note {
+      padding: 18px 20px;
+      color: #475569;
+      background: #FFFFFF;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      border-left: 4px solid var(--primary);
+      border-radius: 12px;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      box-shadow: 0 4px 12px rgba(15, 20, 25, 0.02);
+    }
+
+    .card {
+      padding: 36px;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      background: var(--surface);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(15, 20, 25, 0.04);
+    }
+
+    .card h2 {
+      margin-bottom: 8px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #0F1419;
+    }
+
+    .subcopy {
+      margin-bottom: 24px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    label {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #1E293B;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px 16px;
+      color: var(--text);
+      border: 1px solid #CBD5E1;
+      border-radius: 12px;
+      background: #FFFFFF;
+      font-size: 0.95rem;
+      transition: border-color 150ms ease;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(7, 64, 35, 0.12);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 48px;
+      padding: 0 24px;
+      color: #FFFFFF;
+      border: 0;
+      border-radius: 12px;
+      background: var(--primary);
+      font-size: 0.95rem;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(7, 64, 35, 0.2);
+      transition: all 180ms ease;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(7, 64, 35, 0.3);
+    }
+
+    .button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(7, 64, 35, 0.2);
+    }
+
+    .status {
+      display: none;
+      margin-top: 18px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .status.is-visible { display: block; }
+    .status.error { color: #8D0C20; background: #FBE4E7; border: 1px solid #F4C2C9; }
+    .status.success { color: #166534; background: #DCFCE7; border: 1px solid #BBF7D0; }
+
+    .requests {
+      display: grid;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .requests h3 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .request {
+      padding: 16px 18px;
+      border: 1px solid #E2E8F0;
+      background: #F8F9FA;
+      border-radius: 12px;
+    }
+
+    .request strong {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #0F1419;
+      margin-bottom: 4px;
+    }
+
+    .request span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #FDF0D5;
+      color: #8A5300;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    @media(max-width: 760px) {
+      .container { width: min(100% - 24px, 1080px); }
+      .layout { grid-template-columns: 1fr; gap: 24px; }
+      .intro h1 { font-size: clamp(1.9rem, 7vw, 2.5rem); margin-bottom: 12px; }
+      .intro p { font-size: 0.95rem; }
+      .card { padding: 22px 18px; border-radius: 18px; }
+      .field-grid { grid-template-columns: 1fr; gap: 14px; }
+      .form-group input, .form-group textarea { font-size: 16px !important; min-height: 48px; box-sizing: border-box; }
+      .button { min-height: 50px; font-size: 1rem; width: 100%; }
+    }
+  </style>
+  <link rel="stylesheet" href="/motion.css" />
+</head>
+<body>
+  <div class="top-rule"></div>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="/">
+          <img class="brand-logo" src="/logo.svg" alt="Ona Polisi" onerror="this.onerror=null;this.src='/logo.png';" />
+        </a>
+        <a class="back" href="/">← Back to home</a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+      <div class="layout">
+        <div class="intro">
+          <div class="live-pill">
+            <span class="live-pill-dot"></span>
+            <span>Accreditation Portal</span>
+            <span class="live-pill-sep">·</span>
+            <span class="live-pill-text">Advocate Access</span>
+          </div>
+          <h1>Put the right expertise behind the record.</h1>
+          <p>Verified lawyers and journalists will unlock protected support and data tools. A request is reviewed by an Ona Polisi administrator; submitting a credential does not verify it automatically.</p>
+          <div class="note">Only submit credentials you are authorized to share. This prototype stores the reference for review and does not connect to an external credential registry yet.</div>
+        </div>
+
+        <section class="card" id="main-card">
+          <h2>Advocate verification.</h2>
+          <p class="subcopy" id="card-subcopy">Submit your credentials for pro-bono casework accreditation.</p>
+          
+          <div id="auth-gate-notice" style="display: none; padding: 20px; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 14px; margin-bottom: 20px;">
+            <strong style="color: #92400E; display: block; margin-bottom: 6px;">Sign in required</strong>
+            <p style="color: #B45309; font-size: 0.9rem; margin: 0 0 14px;">You must sign in or create an account first so your application can be linked to your profile.</p>
+            <a href="/login?next=/verification" class="button" style="display: inline-flex; width: auto; min-height: 42px; padding: 0 20px; font-size: 0.9rem;">Sign in or Create Account →</a>
+          </div>
+
+          <div id="pending-status-banner" style="display: none; padding: 22px; background: #FEF3C7; border: 1.5px solid #F59E0B; border-radius: 16px; margin-bottom: 24px;">
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="font-size: 1.6rem; line-height: 1;">⏳</span>
+              <div>
+                <strong style="color: #92400E; font-size: 1.05rem; display: block; margin-bottom: 4px;">Application Under Review</strong>
+                <p style="color: #78350F; font-size: 0.9rem; line-height: 1.5; margin: 0 0 10px;">
+                  Your LSK credentials have been received and placed in the administrative queue. Our Legal Oversight team verifies all advocate submissions against the official Roll of Advocates within <strong>1–2 working days</strong>.
+                </p>
+                <span style="font-size: 0.82rem; color: #B45309; font-weight: 650;">While under review, you retain full access to citizen reporting and case tracking.</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="approved-status-banner" style="display: none; padding: 22px; background: #ECFDF5; border: 1.5px solid #10B981; border-radius: 16px; margin-bottom: 24px;">
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="font-size: 1.6rem; line-height: 1;">⚖️</span>
+              <div>
+                <strong style="color: #065F46; font-size: 1.05rem; display: block; margin-bottom: 4px;">Accreditation Approved!</strong>
+                <p style="color: #047857; font-size: 0.9rem; line-height: 1.5; margin: 0 0 14px;">
+                  Your practicing status is verified. You have full access to unclaimed incident dossiers and direct citizen consultation channels.
+                </p>
+                <a href="/lawyer/available" class="button" style="display: inline-flex; width: auto; min-height: 44px; padding: 0 22px;">Open Case Marketplace →</a>
+              </div>
+            </div>
+          </div>
+
+          <form id="verification-form">
+            <div class="field">
+              <label for="requested-role">I am applying as</label>
+              <select id="requested-role" name="requested_role" required>
+                <option value="lawyer" selected>Legal Advocate (Lawyer)</option>
+                <option value="journalist">Accredited Journalist</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="credential-type">Credential type</label>
+              <select id="credential-type" name="credential_type" required>
+                <option value="LSK number" selected>LSK number (Law Society of Kenya)</option>
+                <option value="Press credential">Press credential</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="credential-number">LSK Roll Number or Admission Reference</label>
+              <input id="credential-number" name="credential_number" placeholder="e.g. P105/12345/20" required />
+            </div>
+            <div class="field">
+              <label for="organization">Chambers, Law Firm or Practice Station <span style="color:var(--muted);font-weight:600">(optional)</span></label>
+              <input id="organization" name="organization" placeholder="e.g. Bowmans, Kituo Cha Sheria, or Sole Practitioner" />
+            </div>
+            <button class="button" type="submit" id="submit-btn">Submit credentials for review&nbsp; →</button>
+          </form>
+          <div class="status" id="status" role="status"></div>
+          <div class="requests" id="requests"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('verification-form');
+    const status = document.getElementById('status');
+    const requests = document.getElementById('requests');
+    const authGateNotice = document.getElementById('auth-gate-notice');
+    const pendingBanner = document.getElementById('pending-status-banner');
+    const approvedBanner = document.getElementById('approved-status-banner');
+    const submitBtn = document.getElementById('submit-btn');
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
+    }
+    function showStatus(text, kind) {
+      status.textContent = text;
+      status.className = `status ${kind} is-visible`;
+    }
+
+    async function loadRequests() {
+      try {
+        const response = await fetch('/api/verification/requests/me');
+        if (response.status === 401) {
+          authGateNotice.style.display = 'block';
+          form.style.opacity = '0.4';
+          form.style.pointerEvents = 'none';
+          return;
+        }
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Sign in is required.');
+        
+        const list = payload.requests || [];
+        const pending = list.find(r => r.review_status === 'Pending');
+        const approved = list.find(r => r.review_status === 'Approved');
+
+        if (approved) {
+          approvedBanner.style.display = 'block';
+          form.style.display = 'none';
+        } else if (pending) {
+          pendingBanner.style.display = 'block';
+          form.style.display = 'none';
+        }
+
+        requests.innerHTML = list.length ? `<h3>Your Application History</h3>${list.map((item) => `
+          <div class="request">
+            <strong>${escapeHtml(item.requested_role === 'lawyer' ? '⚖️ Legal Advocate' : item.requested_role)} · ${escapeHtml(item.credential_type)}</strong>
+            <span>${escapeHtml(item.organization || 'No chambers or organization listed')}</span>
+            <span>Submitted ${escapeHtml(new Intl.DateTimeFormat('en-KE', { dateStyle: 'medium' }).format(new Date(item.created_at)))}</span>
+            <span class="badge" style="background:${item.review_status==='Approved'?'#DCFCE7':(item.review_status==='Pending'?'#FEF3C7':'#FEE2E2')}; color:${item.review_status==='Approved'?'#166534':(item.review_status==='Pending'?'#B45309':'#991B1B')};">
+              ${escapeHtml(item.review_status)}
+            </span>
+            ${item.review_note ? `<p style="margin: 8px 0 0; font-size: 0.82rem; color: #475569;"><strong>Reviewer note:</strong> ${escapeHtml(item.review_note)}</p>` : ''}
+          </div>
+        `).join('')} : '';
+      } catch (error) {
+        showStatus(error.message, 'error');
+      }
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      submitBtn.disabled = true;
+      try {
+        const response = await fetch('/api/verification/requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form)))
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'The request could not be submitted.');
+        showStatus('Credentials submitted successfully! Your application is now in review.', 'success');
+        form.reset();
+        loadRequests();
+      } catch (error) {
+        showStatus(error.message, 'error');
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    loadRequests();
+  </script>
+  <script src="/motion.js" defer></script>
+</body>
+</html>

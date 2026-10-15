@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Available cases — Ona Polisi</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="apple-touch-icon" href="/favicon-512.png" />
+  <style>
+    :root {
+      --bg: #F7F5F0;
+      --surface: #FFFFFF;
+      --text: #0F1419;
+      --muted: #5B6470;
+      --border: #DDD9CF;
+      --primary: #0B6B3A;
+      --alert: #C8102E;
+      --highlight: #F2A900;
+      --ink-soft: #171D24;
+      --state-filed: #5B7FA6;
+      --state-review: #E0A100;
+      --state-resolved: #1E8A4C;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      color: #0F1419;
+      background: #F8F6F0;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+    h1, h2, p {
+      margin-top: 0;
+    }
+    
+    .top-rule {
+      display: none;
+    }
+
+    .nav-wrapper {
+      background: transparent;
+      border-bottom: none;
+      padding-top: 10px;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 80px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .brand:hover {
+      opacity: 0.88;
+    }
+    
+    .brand-logo {
+      display: block;
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      position: relative;
+      display: flex;
+      align-items: center;
+      color: #64748B;
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 999px;
+      transition: all 0.18s ease;
+    }
+
+    .nav-links a:hover {
+      color: #0F1419;
+      background: rgba(15, 20, 25, 0.04);
+    }
+
+    .nav-links a.active {
+      color: #074023;
+      background: #E6F4EA;
+      font-weight: 800;
+    }
+
+    /* Advocate User Avatar Dropdown */
+    .user-menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    .avatar-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 999px;
+      padding: 4px 12px 4px 5px;
+      cursor: pointer;
+      font-family: inherit;
+      color: #0F1419;
+      transition: all 0.18s ease;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    }
+
+    .avatar-btn:hover {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    .avatar-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #074023 0%, #0B6B3A 100%);
+      color: #FFFFFF;
+      display: grid;
+      place-items: center;
+      font-size: 0.88rem;
+      font-weight: 750;
+      flex-shrink: 0;
+      box-shadow: 0 2px 4px rgba(7, 64, 35, 0.2);
+    }
+
+    .avatar-meta {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      line-height: 1.15;
+    }
+
+    .avatar-name {
+      font-size: 0.84rem;
+      font-weight: 750;
+      color: #0F1419;
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .avatar-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #0B6B3A;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .avatar-badge-dot {
+      width: 5px;
+      height: 5px;
+      background: #10B981;
+      border-radius: 50%;
+    }
+
+    .avatar-chevron {
+      color: #64748B;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .user-menu.open .avatar-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Dropdown popover */
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 260px;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.04);
+      padding: 8px;
+      display: none;
+      flex-direction: column;
+      z-index: 1000;
+      animation: dropdownFadeIn 0.15s ease-out forwards;
+    }
+
+    .user-menu.open .dropdown-menu {
+      display: flex;
+    }
+
+    @keyframes dropdownFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dropdown-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #F8FAFC;
+      border-radius: 10px;
+      margin-bottom: 6px;
+    }
+
+    .dropdown-avatar-lg {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #074023 0%, #0B6B3A 100%);
+      color: #FFFFFF;
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .dropdown-user-text {
+      overflow: hidden;
+    }
+
+    .dropdown-user-title {
+      font-size: 0.85rem;
+      font-weight: 750;
+      color: #0F1419;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dropdown-user-email {
+      font-size: 0.74rem;
+      color: #64748B;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: #F1F5F9;
+      margin: 4px 0;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: #334155;
+      text-decoration: none;
+      font-size: 0.86rem;
+      font-weight: 600;
+      transition: all 0.15s ease;
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .dropdown-item:hover {
+      background: #F1F5F9;
+      color: #0F1419;
+    }
+
+    .dropdown-item-icon {
+      font-size: 1rem;
+      line-height: 1;
+      width: 20px;
+      display: inline-flex;
+      justify-content: center;
+    }
+
+    .dropdown-item.signout-item {
+      color: #DC2626;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .dropdown-item.signout-item:hover {
+      background: #FEE2E2;
+      color: #B91C1C;
+    }
+
+    .login-fallback-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 16px;
+      background: #074023;
+      color: #FFFFFF;
+      font-size: 0.86rem;
+      font-weight: 700;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: background 0.18s;
+    }
+    .login-fallback-btn:hover {
+      background: #0B6B3A;
+    }
+
+    main {
+      padding: 50px 0 90px;
+    }
+
+    /* Live Pill */
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #E6F4EA;
+      border: none;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 750;
+      color: #134E2E;
+      margin-bottom: 22px;
+    }
+    .live-pulse-dot {
+      width: 7px;
+      height: 7px;
+      background: #0B6B3A;
+      border-radius: 50%;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .live-pill-tag {
+      color: #134E2E;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+    }
+    .live-pill-sep { color: #A7D7B5; }
+    .live-pill-text {
+      color: #134E2E;
+      font-weight: 600;
+    }
+
+    .intro {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 32px;
+      margin-bottom: 80px;
+    }
+
+    .intro-text h1 {
+      margin-bottom: 16px;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      line-height: 1.1;
+      letter-spacing: -0.06em;
+    }
+
+    .intro-text p {
+      max-width: 640px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.1rem;
+      font-weight: 650;
+    }
+
+    .count {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 18px;
+      color: var(--primary);
+      background: #e3f1e8;
+      border: 1px solid rgba(11,107,58,0.15);
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 850;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(11,107,58,0.06);
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 32px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 750;
+    }
+
+    .message.is-visible {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .error {
+      color: #8d0c20;
+      background: #fbe4e7;
+      border: 1px solid #f4c2c9;
+    }
+
+    .queue {
+      display: grid;
+      gap: 16px;
+    }
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 26px 30px;
+      background: #FFFFFF;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      border-radius: 20px;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(15, 20, 25, 0.04);
+      transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1), border-color 180ms ease;
+    }
+
+    .item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 20, 25, 0.08);
+      border-color: rgba(7, 64, 35, 0.25);
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .case-title {
+      margin: 0 0 10px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #0F1419;
+    }
+
+    .meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      background: #F8F9FA;
+      border: 1px solid #E2E8F0;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #475569;
+      white-space: nowrap;
+    }
+
+    .tag.tag-location {
+      color: #0F1419;
+      background: #F1F5F9;
+      border-color: #CBD5E1;
+      font-weight: 750;
+    }
+    .tag.tag-evidence {
+      color: #074023;
+      background: #E8F5E9;
+      border-color: #C8E6C9;
+    }
+    .tag.tag-legal-aid {
+      color: #1E3A8A;
+      background: #EFF6FF;
+      border-color: #BFDBFE;
+    }
+
+    .tag.status-filed { color: #334155; background: #E2E8F0; border-color: #CBD5E1; }
+    .tag.status-under-review { color: #8A5300; background: #FDF0D5; border-color: #FCE1AA; }
+    .tag.status-escalated { color: #8D3D0F; background: #FDE8D8; border-color: #F8CBB1; }
+    .tag.status-resolved { color: #166534; background: #DCFCE7; border-color: #BBF7D0; }
+
+    /* Case Entailment & Synopsis Box */
+    .case-entailment-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-left: 4px solid #074023;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .entailment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .entailment-title {
+      font-size: 0.78rem;
+      font-weight: 850;
+      color: #1E293B;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .entailment-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #074023;
+      background: #E6F4EA;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .entailment-text {
+      margin: 0;
+      color: #334155;
+      font-size: 0.93rem;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .item-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 4px;
+      border-top: 1px solid rgba(226, 232, 240, 0.6);
+    }
+
+    .button.inspect {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 44px;
+      padding: 0 20px;
+      background: #FFFFFF;
+      color: #0F1419;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 750;
+      cursor: pointer;
+      transition: all 180ms ease;
+    }
+
+    .button.inspect:hover {
+      background: #F8FAFC;
+      border-color: #0F1419;
+      transform: translateY(-1px);
+    }
+
+    .button.claim {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 44px;
+      padding: 0 24px;
+      background: #074023;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 750;
+      cursor: pointer;
+      transition: all 180ms ease;
+      box-shadow: 0 4px 14px rgba(7, 64, 35, 0.2);
+    }
+
+    .button.claim:hover {
+      background: #05331C;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(7, 64, 35, 0.3);
+    }
+
+    .button.claim:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(7, 64, 35, 0.2);
+    }
+
+    .button.claim:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Case Dossier Modal */
+    .dossier-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 20, 25, 0.65);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .dossier-modal-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    @keyframes modalSlideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .dossier-modal-header {
+      padding: 22px 28px 18px;
+      border-bottom: 1px solid #E2E8F0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #F8FAFC;
+    }
+
+    .dossier-modal-header h3 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 850;
+      color: #0F1419;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dossier-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: #64748B;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      line-height: 1;
+      transition: all 0.15s ease;
+    }
+
+    .dossier-modal-close:hover {
+      background: #E2E8F0;
+      color: #0F1419;
+    }
+
+    .dossier-modal-body {
+      padding: 24px 28px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .dossier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      background: #F1F5F9;
+      padding: 14px 16px;
+      border-radius: 12px;
+    }
+
+    .dossier-grid-item label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #64748B;
+      margin-bottom: 3px;
+    }
+
+    .dossier-grid-item span {
+      font-size: 0.92rem;
+      font-weight: 750;
+      color: #0F1419;
+    }
+
+    .dossier-section-title {
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: #1E293B;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dossier-narrative-box {
+      background: #F8FAFC;
+      border: 1px solid #CBD5E1;
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #0F1419;
+      white-space: pre-line;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .dossier-legal-advice-box {
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 0.88rem;
+      color: #064E3B;
+      line-height: 1.5;
+    }
+
+    .dossier-legal-advice-box strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #065F46;
+      font-weight: 800;
+    }
+
+    .dossier-modal-footer {
+      padding: 18px 28px;
+      border-top: 1px solid #E2E8F0;
+      background: #F8FAFC;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .empty {
+      padding: 80px 32px;
+      border: 1px dashed #CBD5E1;
+      color: var(--muted);
+      background: #FFFFFF;
+      border-radius: 20px;
+      text-align: center;
+    }
+    
+    .empty-icon {
+      font-size: 2.5rem;
+      color: #94A3B8;
+      margin-bottom: 16px;
+    }
+
+    .empty strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #0F1419;
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    @media(max-width: 768px) {
+      .nav-links {
+        display: flex;
+        gap: 6px;
+      }
+      .nav-links a {
+        padding: 6px 12px;
+        font-size: 0.82rem;
+        border-radius: 999px;
+      }
+      .nav-links a.active {
+        background: #074023;
+        color: #FFFFFF !important;
+      }
+      .nav-links a:not(.active) {
+        background: #F1F5F9;
+        color: #475569;
+      }
+      .avatar-meta {
+        display: none;
+      }
+      .avatar-btn {
+        padding: 4px 8px 4px 4px;
+        gap: 6px;
+      }
+      .dropdown-menu {
+        right: 0;
+        width: 250px;
+      }
+      .intro {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 36px;
+      }
+      .intro-text h1 {
+        font-size: clamp(1.9rem, 7vw, 2.5rem);
+        margin-bottom: 10px;
+      }
+      .intro-text p {
+        font-size: 0.95rem;
+      }
+      .item {
+        padding: 18px 16px;
+        border-radius: 18px;
+        gap: 14px;
+      }
+      .item-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      .item-meta {
+        flex-direction: column;
+        gap: 6px;
+      }
+      .item-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .item-actions .button {
+        width: 100%;
+        min-height: 48px;
+      }
+
+      /* Mobile Case Dossier Bottom Sheet */
+      .dossier-modal-backdrop {
+        align-items: flex-end;
+        padding: 0;
+      }
+      .dossier-modal-card {
+        border-radius: 24px 24px 0 0;
+        max-height: 88dvh;
+        width: 100%;
+        max-width: 100%;
+        animation: sheet-enter 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+      .dossier-modal-header {
+        padding: 16px 20px;
+      }
+      .dossier-modal-body {
+        padding: 18px 20px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .dossier-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 12px;
+      }
+      .dossier-modal-footer {
+        padding: 14px 20px 24px;
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .dossier-modal-footer .button {
+        width: 100%;
+        min-height: 48px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="/motion.css" />
+</head>
+<body>
+  <div class="top-rule"></div>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="/">
+          <img class="brand-logo" src="/logo.svg" alt="Ona Polisi" onerror="this.onerror=null;this.src='/logo.png';" />
+        </a>
+        <div class="nav-right">
+          <div class="nav-links">
+            <a class="active" href="/lawyer/available">Available cases</a>
+            <a href="/lawyer/my-cases">My cases</a>
+            <a href="/verification" id="nav-verification-link" style="color: var(--muted); font-size: 0.9rem; display: none;">LSK Verification</a>
+          </div>
+          
+          <!-- Advocate Avatar Dropdown -->
+          <div class="user-menu" id="user-menu">
+            <button type="button" class="avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false" title="Advocate Profile & Menu">
+              <div class="avatar-circle" id="nav-avatar-circle">⚖️</div>
+              <div class="avatar-meta">
+                <span class="avatar-name" id="nav-user-name">Advocate</span>
+                <span class="avatar-badge">
+                  <span class="avatar-badge-dot"></span>
+                  <span id="nav-user-role-text">Verified LSK</span>
+                </span>
+              </div>
+              <svg class="avatar-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </button>
+            <div class="dropdown-menu" id="user-dropdown" role="menu">
+              <div class="dropdown-header">
+                <div class="dropdown-avatar-lg" id="dropdown-avatar-lg">⚖️</div>
+                <div class="dropdown-user-text">
+                  <div class="dropdown-user-title" id="dropdown-user-name">LSK Advocate</div>
+                  <div class="dropdown-user-email" id="dropdown-user-email">Loading account…</div>
+                </div>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a href="/lawyer/available" class="dropdown-item">
+                <span class="dropdown-item-icon">📋</span>
+                <span>Available Cases</span>
+              </a>
+              <a href="/lawyer/my-cases" class="dropdown-item">
+                <span class="dropdown-item-icon">💼</span>
+                <span>My Caseload</span>
+              </a>
+              <a href="/verification" class="dropdown-item" id="dropdown-verification-item" style="display: none;">
+                <span class="dropdown-item-icon">🛡️</span>
+                <span>LSK Verification</span>
+              </a>
+              <div class="dropdown-divider"></div>
+              <button type="button" class="dropdown-item signout-item" id="signout-button">
+                <span class="dropdown-item-icon">🚪</span>
+                <span>Sign out</span>
+              </button>
+            </div>
+          </div>
+          <a href="/login?role=lawyer" class="login-fallback-btn" id="login-fallback-btn" style="display: none;">Sign in</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <main>
+    <div class="container">
+      <div class="intro">
+        <div class="intro-text">
+          <div class="live-pill" style="margin-bottom: 14px;">
+            <span class="live-pill-dot"></span>
+            <span>Lawyer Workspace</span>
+            <span class="live-pill-sep">·</span>
+            <span class="live-pill-text">Advocate Access</span>
+          </div>
+          <h1>Cases that need a next step.</h1>
+          <p>Inspect incident intake briefs, police stations involved, and evidence counts before claiming cases for pro-bono representation.</p>
+        </div>
+        <div class="count" id="count">Loading…</div>
+      </div>
+      <div class="message error" id="message" role="alert"></div>
+      <section class="queue" id="queue" aria-live="polite">
+        <div class="empty">
+          <div class="empty-icon">●</div>
+          <strong>Loading available cases…</strong>
+        </div>
+      </section>
+    </div>
+
+    <!-- Case Dossier / Intake Details Modal -->
+    <div class="dossier-modal-backdrop" id="dossier-modal-backdrop" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="dossier-modal-title">
+      <div class="dossier-modal-card">
+        <div class="dossier-modal-header">
+          <h3 id="dossier-modal-title">
+            <span>📋</span>
+            <span id="dossier-case-id">Case Intake Dossier</span>
+          </h3>
+          <button type="button" class="dossier-modal-close" id="dossier-modal-close" aria-label="Close dossier">✕</button>
+        </div>
+        <div class="dossier-modal-body">
+          <div class="dossier-grid">
+            <div class="dossier-grid-item">
+              <label>Allegation Category</label>
+              <span id="dossier-category">--</span>
+            </div>
+            <div class="dossier-grid-item">
+              <label>Station / Incident Location</label>
+              <span id="dossier-location">--</span>
+            </div>
+            <div class="dossier-grid-item">
+              <label>Lodging Date (EAT)</label>
+              <span id="dossier-date">--</span>
+            </div>
+            <div class="dossier-grid-item">
+              <label>Evidence Files</label>
+              <span id="dossier-evidence">--</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="dossier-section-title">
+              <span>📝 What This Case Entails (Documented Incident Narrative)</span>
+            </div>
+            <div class="dossier-narrative-box" id="dossier-narrative">Loading narrative...</div>
+          </div>
+
+          <div class="dossier-legal-advice-box">
+            <strong>⚖️ Advocate Legal Assessment & Action Track:</strong>
+            <span id="dossier-advice-text">Review statutory violations and lodge formal legal intervention.</span>
+          </div>
+        </div>
+        <div class="dossier-modal-footer">
+          <button type="button" class="button inspect" id="dossier-modal-cancel">Close Preview</button>
+          <button type="button" class="button claim" id="dossier-modal-claim">Claim this case & open caseload&nbsp; →</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    const queue = document.getElementById('queue');
+    const message = document.getElementById('message');
+    const count = document.getElementById('count');
+    
+    // Dossier Modal Elements
+    const dossierBackdrop = document.getElementById('dossier-modal-backdrop');
+    const dossierCaseId = document.getElementById('dossier-case-id');
+    const dossierCategory = document.getElementById('dossier-category');
+    const dossierLocation = document.getElementById('dossier-location');
+    const dossierDate = document.getElementById('dossier-date');
+    const dossierEvidence = document.getElementById('dossier-evidence');
+    const dossierNarrative = document.getElementById('dossier-narrative');
+    const dossierAdviceText = document.getElementById('dossier-advice-text');
+    const dossierClose = document.getElementById('dossier-modal-close');
+    const dossierCancel = document.getElementById('dossier-modal-cancel');
+    const dossierClaimBtn = document.getElementById('dossier-modal-claim');
+
+    let availableCasesList = [];
+    let activeDossierCaseId = null;
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[c]))
+    }
+    
+    function formatDate(value) {
+      return new Intl.DateTimeFormat('en-KE', { dateStyle: 'medium' }).format(new Date(value))
+    }
+    
+    function showError(text) {
+      message.innerHTML = `<strong>Error:</strong> ${escapeHtml(text)}`;
+      message.classList.add('is-visible');
+    }
+
+    function getLegalAssessment(category) {
+      const cat = String(category || '').toLowerCase();
+      if (cat.includes('detention') || cat.includes('unlawful')) {
+        return 'Potential violation of Article 49(1)(f) of the Constitution (24-hour court appearance rule) and right to police bail under Article 49(2). Key advocate action: Serve station demand for immediate bond or prepare Habeas Corpus application.';
+      }
+      if (cat.includes('extortion') || cat.includes('briber')) {
+        return 'Potential violation of the Bribery Act 2016 and Section 46 of the Leadership and Integrity Act. Key advocate action: Document financial transaction records, demand station Occurrence Book (OB) entry, and file formal notification to IPOA & EACC.';
+      }
+      if (cat.includes('force') || cat.includes('brutal') || cat.includes('assault')) {
+        return 'Potential violation of Article 29 (Freedom from torture, cruel or inhuman treatment) and the Sixth Schedule of the NPS Act. Key advocate action: Ensure urgent P3 medical examination is certified, secure corroborating video/witness evidence, and lodge IPOA complaint.';
+      }
+      if (cat.includes('search') || cat.includes('seizure') || cat.includes('property')) {
+        return 'Potential violation of Article 31 of the Constitution (Right to Privacy) and Section 118 of the Criminal Procedure Code. Key advocate action: Demand search warrant verification and petition for immediate return of seized personal property/devices.';
+      }
+      return 'Assigned advocate examination of constitutional violations, station records verification, and lodging of formal legal representation.';
+    }
+
+    function openDossierModal(caseId) {
+      const item = availableCasesList.find(c => c.case_id === caseId);
+      if (!item) return;
+
+      activeDossierCaseId = caseId;
+      dossierCaseId.textContent = `Case Intake Dossier · ${item.case_id}`;
+      dossierCategory.textContent = item.category || 'Incident Allegation';
+      dossierLocation.textContent = item.location || 'Location withheld';
+      dossierDate.textContent = formatDate(item.created_at);
+      
+      const count = Number(item.evidence_count) || 0;
+      dossierEvidence.textContent = count > 0 ? `${count} file${count === 1 ? '' : 's'} attached` : 'None attached';
+      
+      dossierNarrative.textContent = item.description || 'No detailed incident narrative was provided by the citizen.';
+      dossierAdviceText.textContent = getLegalAssessment(item.category);
+      
+      dossierBackdrop.style.display = 'flex';
+    }
+
+    function closeDossierModal() {
+      dossierBackdrop.style.display = 'none';
+      activeDossierCaseId = null;
+      dossierClaimBtn.disabled = false;
+      dossierClaimBtn.innerHTML = 'Claim this case & open caseload&nbsp; →';
+    }
+
+    dossierClose.addEventListener('click', closeDossierModal);
+    dossierCancel.addEventListener('click', closeDossierModal);
+    dossierBackdrop.addEventListener('click', (e) => {
+      if (e.target === dossierBackdrop) closeDossierModal();
+    });
+
+    async function executeClaim(caseId, triggerBtn) {
+      if (triggerBtn) {
+        triggerBtn.disabled = true;
+        triggerBtn.textContent = 'Claiming case...';
+      }
+      try {
+        const response = await fetch(`/api/cases/${encodeURIComponent(caseId)}/claim`, { method: 'POST' });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'The case could not be claimed.');
+        window.location.href = '/lawyer/my-cases';
+      } catch (error) {
+        showError(error.message);
+        if (triggerBtn) {
+          triggerBtn.disabled = false;
+          triggerBtn.textContent = 'Claim case & begin legal aid →';
+        }
+      }
+    }
+
+    dossierClaimBtn.addEventListener('click', () => {
+      if (activeDossierCaseId) {
+        executeClaim(activeDossierCaseId, dossierClaimBtn);
+      }
+    });
+
+    function render(cases) {
+      count.textContent = `${cases.length} available`;
+      if (!cases.length) {
+        queue.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">✓</div>
+            <strong>No unclaimed cases right now.</strong>
+            <p>Check back when a new case enters the review queue.</p>
+          </div>
+        `;
+        return;
+      }
+
+      queue.innerHTML = cases.map((item) => {
+        const statusClass = item.status ? item.status.toLowerCase().replace(/\s+/g, '-') : '';
+        const evidenceCount = Number(item.evidence_count) || 0;
+        const evidenceLabel = evidenceCount > 0 
+          ? `📎 ${evidenceCount} evidence file${evidenceCount === 1 ? '' : 's'}` 
+          : '📎 No attached evidence';
+        const contactTag = item.contact_status && item.contact_status !== 'None'
+          ? '<span class="tag tag-legal-aid">🛡️ Legal Aid Requested</span>'
+          : '';
+        const fullDesc = item.description || 'No detailed narrative provided.';
+        const isLong = fullDesc.length > 220;
+        const shortDesc = isLong ? fullDesc.slice(0, 210) + '…' : fullDesc;
+
+        return `
+          <article class="item" data-case="${escapeHtml(item.case_id)}">
+            <div class="item-header">
+              <div>
+                <h2 class="case-title">${escapeHtml(item.case_id)}</h2>
+                <div class="meta">
+                  <span class="tag">● ${escapeHtml(item.category)}</span>
+                  <span class="tag tag-location">📍 ${escapeHtml(item.location || 'Location withheld')}</span>
+                  <span class="tag tag-evidence">${escapeHtml(evidenceLabel)}</span>
+                  ${contactTag}
+                  <span class="tag status-${escapeHtml(statusClass)}">${escapeHtml(item.status)}</span>
+                  <span class="tag">🕒 Filed ${escapeHtml(formatDate(item.created_at))}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="case-entailment-box">
+              <div class="entailment-header">
+                <div class="entailment-title">
+                  <span>📋 What this case entails:</span>
+                </div>
+                <span class="entailment-badge">Intake Brief</span>
+              </div>
+              <p class="entailment-text" data-entailment-text="${escapeHtml(item.case_id)}" data-full="${escapeHtml(fullDesc)}" data-short="${escapeHtml(shortDesc)}">
+                ${escapeHtml(shortDesc)}
+              </p>
+              ${isLong ? `
+                <div>
+                  <button type="button" class="entailment-readmore" data-toggle-desc="${escapeHtml(item.case_id)}">
+                    Read full narrative ▾
+                  </button>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="item-actions">
+              <button type="button" class="button inspect" data-inspect="${escapeHtml(item.case_id)}">
+                🔍 Inspect Case Dossier
+              </button>
+              <button type="button" class="button claim" data-claim="${escapeHtml(item.case_id)}">
+                Claim case & begin legal aid&nbsp; →
+              </button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+    
+    async function load() {
+      try {
+        const response = await fetch('/api/lawyer/available');
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Sign in with a verified lawyer account to view cases.');
+        availableCasesList = payload.cases || [];
+        render(availableCasesList);
+      } catch (error) {
+        queue.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">🔒</div>
+            <strong>Advocate Access Required</strong>
+            <p>${escapeHtml(error.message)}</p>
+            <div style="display: flex; gap: 12px; justify-content: center; margin-top: 20px;">
+              <a href="/login?role=lawyer" class="button claim" style="width: auto; padding: 10px 20px;">Sign in as Advocate&nbsp; →</a>
+              <a href="/verification" class="button" style="width: auto; padding: 10px 20px; background: #fff; color: var(--text); border: 1px solid var(--border);">LSK Verification</a>
+            </div>
+          </div>
+        `;
+        showError(error.message);
+        count.textContent = 'Auth required';
+      }
+    }
+    
+    queue.addEventListener('click', async (event) => {
+      // Inline text expand/collapse
+      const toggleBtn = event.target.closest('[data-toggle-desc]');
+      if (toggleBtn) {
+        const caseId = toggleBtn.dataset.toggleDesc;
+        const textEl = queue.querySelector(`[data-entailment-text="${CSS.escape(caseId)}"]`);
+        if (textEl) {
+          const isExpanded = toggleBtn.dataset.expanded === 'true';
+          if (isExpanded) {
+            textEl.textContent = textEl.dataset.short;
+            toggleBtn.textContent = 'Read full narrative ▾';
+            toggleBtn.dataset.expanded = 'false';
+          } else {
+            textEl.textContent = textEl.dataset.full;
+            toggleBtn.textContent = 'Show less ▴';
+            toggleBtn.dataset.expanded = 'true';
+          }
+        }
+        return;
+      }
+
+      // Dossier modal inspect
+      const inspectBtn = event.target.closest('[data-inspect]');
+      if (inspectBtn) {
+        openDossierModal(inspectBtn.dataset.inspect);
+        return;
+      }
+
+      // Direct claim
+      const claimBtn = event.target.closest('[data-claim]');
+      if (claimBtn) {
+        const caseId = claimBtn.dataset.claim || claimBtn.closest('[data-case]').dataset.case;
+        executeClaim(caseId, claimBtn);
+        return;
+      }
+    });
+
+    // Advocate Account & Avatar Dropdown Logic
+    (function initUserDropdown() {
+      const userMenu = document.getElementById('user-menu');
+      const avatarBtn = document.getElementById('avatar-btn');
+      const signoutBtn = document.getElementById('signout-button');
+      const fallbackBtn = document.getElementById('login-fallback-btn');
+      const navName = document.getElementById('nav-user-name');
+      const navCircle = document.getElementById('nav-avatar-circle');
+      const dropdownName = document.getElementById('dropdown-user-name');
+      const dropdownEmail = document.getElementById('dropdown-user-email');
+      const dropdownAvatarLg = document.getElementById('dropdown-avatar-lg');
+      const roleText = document.getElementById('nav-user-role-text');
+
+      if (!userMenu || !avatarBtn) return;
+
+      avatarBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = userMenu.classList.toggle('open');
+        avatarBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!userMenu.contains(e.target)) {
+          userMenu.classList.remove('open');
+          avatarBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          userMenu.classList.remove('open');
+          avatarBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      fetch('/api/auth/me')
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data && data.user) {
+            const user = data.user;
+            const email = user.email || '';
+            const namePart = email.split('@')[0] || 'Advocate';
+            const cleanName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+            const initial = cleanName.charAt(0).toUpperCase() || '⚖️';
+
+            if (navName) navName.textContent = cleanName;
+            if (navCircle) navCircle.textContent = initial;
+            if (dropdownName) dropdownName.textContent = `Adv. ${cleanName}`;
+            if (dropdownEmail) dropdownEmail.textContent = email;
+            if (dropdownAvatarLg) dropdownAvatarLg.textContent = initial;
+            if (roleText) {
+              roleText.textContent = user.verification_status === 'verified' ? 'Verified LSK' : 'LSK Advocate';
+            }
+
+            const navVerifLink = document.getElementById('nav-verification-link');
+            const dropdownVerifItem = document.getElementById('dropdown-verification-item');
+            if (user.verification_status === 'verified') {
+              if (navVerifLink) navVerifLink.style.display = 'none';
+              if (dropdownVerifItem) dropdownVerifItem.style.display = 'none';
+            } else {
+              if (navVerifLink) navVerifLink.style.display = '';
+              if (dropdownVerifItem) dropdownVerifItem.style.display = '';
+            }
+          } else {
+            if (userMenu) userMenu.style.display = 'none';
+            if (fallbackBtn) fallbackBtn.style.display = 'inline-flex';
+          }
+        })
+        .catch(() => {});
+
+      if (signoutBtn) {
+        signoutBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          signoutBtn.disabled = true;
+          signoutBtn.style.opacity = '0.6';
+          try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+          } catch (_) {}
+          window.location.href = '/login?role=lawyer';
+        });
+      }
+    })();
+
+    load();
+  </script>
+  <script src="/motion.js" defer></script>
+</body>
+</html>
