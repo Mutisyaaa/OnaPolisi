@@ -36,7 +36,7 @@ body::after { bottom: -11rem; left: -9rem; border-color: rgba(11, 107, 58, 0.08)
 
 .site-header,
 .site-nav { backdrop-filter: blur(10px); }
-.site-header { background: rgba(247, 245, 240, 0.74); }
+.site-header { background: rgba(248, 250, 252, 0.85); }
 
 .brand-mark,
 .preview-brand span {
@@ -89,7 +89,7 @@ button {
 
 /* Primary Pill Button with Green Ambient Aura Glow */
 .button-primary {
-  background: linear-gradient(135deg, #074023 0%, #0B6B3A 100%) !important;
+  background: linear-gradient(135deg, #064E3B 0%, #0B6B3A 100%) !important;
   color: #FFFFFF !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
   border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
@@ -97,7 +97,7 @@ button {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 .button-primary:hover {
-  background: linear-gradient(135deg, #05331C 0%, #07542d 100%) !important;
+  background: linear-gradient(135deg, #043D2E 0%, #065F46 100%) !important;
   border-color: rgba(255, 255, 255, 0.4) !important;
   border-top-color: rgba(255, 255, 255, 0.75) !important;
   box-shadow: 0 12px 30px rgba(7, 64, 35, 0.38), 0 0 24px rgba(11, 107, 58, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.55) !important;
@@ -124,7 +124,7 @@ button {
 .button:not(.button-primary):not(.nav-cta):not(.nav-hamburger):not(.close-button) {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.46) 100%) !important;
   color: #0F1419 !important;
-  border: 1px solid rgba(221, 217, 207, 0.75) !important;
+  border: 1px solid rgba(226, 232, 240, 0.85) !important;
   border-top: 1.5px solid rgba(255, 255, 255, 0.95) !important;
   border-radius: 999px !important;
   backdrop-filter: blur(16px) saturate(160%);
@@ -137,7 +137,7 @@ button {
   border-color: rgba(7, 64, 35, 0.35) !important;
   border-top-color: rgba(255, 255, 255, 1) !important;
   box-shadow: 0 12px 30px rgba(15, 20, 25, 0.1), 0 0 20px rgba(11, 107, 58, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.95) !important;
-  color: #074023 !important;
+  color: #064E3B !important;
 }
 
 .report-preview,

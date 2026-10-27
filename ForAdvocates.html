@@ -9,13 +9,13 @@
   <link rel="apple-touch-icon" href="/favicon-512.png" />
   <style>
     :root {
-      --bg: #F8F6F0;
+      --bg: #F8FAFC;
       --surface: #FFFFFF;
-      --text: #0F1419;
-      --muted: #5B6470;
+      --text: #0F172A;
+      --muted: #475569;
       --border: rgba(226, 232, 240, 0.9);
-      --primary: #074023;
-      --primary-hover: #05331C;
+      --primary: #064E3B;
+      --primary-hover: #043D2E;
       --primary-subtle: #E6F4EA;
       --alert: #C8102E;
       --highlight: #F2A900;
@@ -89,7 +89,7 @@
       border: 1px solid transparent;
     }
     .button.primary {
-      background: linear-gradient(135deg, #074023 0%, #0B6B3A 100%);
+      background: linear-gradient(135deg, #064E3B 0%, #0B6B3A 100%);
       color: #FFFFFF;
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-top: 1.5px solid rgba(255, 255, 255, 0.45);
@@ -97,7 +97,7 @@
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
     }
     .button.primary:hover {
-      background: linear-gradient(135deg, #05331C 0%, #07542d 100%);
+      background: linear-gradient(135deg, #043D2E 0%, #065F46 100%);
       border-color: rgba(255, 255, 255, 0.4);
       border-top-color: rgba(255, 255, 255, 0.75);
       transform: translateY(-2.5px);
@@ -106,7 +106,7 @@
     .button.secondary {
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.5) 100%);
       color: #0F1419;
-      border: 1px solid rgba(221, 217, 207, 0.75);
+      border: 1px solid rgba(226, 232, 240, 0.85);
       border-top: 1.5px solid rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(16px) saturate(160%);
       -webkit-backdrop-filter: blur(16px) saturate(160%);
@@ -538,7 +538,7 @@
       font-size: 1rem;
       font-weight: 750;
       border-radius: 999px;
-      background: linear-gradient(135deg, #074023 0%, #0B6B3A 100%);
+      background: linear-gradient(135deg, #064E3B 0%, #0B6B3A 100%);
       color: #FFFFFF;
       border: none;
       cursor: pointer;
@@ -546,7 +546,7 @@
       transition: all 0.22s ease;
     }
     .auth-modal-submit:hover {
-      background: linear-gradient(135deg, #05331C 0%, #07542d 100%);
+      background: linear-gradient(135deg, #043D2E 0%, #065F46 100%);
       transform: translateY(-1.5px);
       box-shadow: 0 10px 24px rgba(7, 64, 35, 0.3);
     }
@@ -641,8 +641,9 @@
       align-items: center;
       gap: 6px;
       padding: 5px 12px;
-      background: #E6F4EA;
-      color: #074023;
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid rgba(217, 119, 6, 0.28);
       border-radius: 999px;
       font-size: 0.78rem;
       font-weight: 750;
@@ -741,7 +742,7 @@
       font-size: 1rem;
       font-weight: 750;
       border-radius: 999px;
-      background: linear-gradient(135deg, #074023 0%, #0B6B3A 100%);
+      background: linear-gradient(135deg, #064E3B 0%, #0B6B3A 100%);
       color: #FFFFFF;
       border: none;
       cursor: pointer;
@@ -750,7 +751,7 @@
       font-family: inherit;
     }
     .advocate-modal-submit:hover {
-      background: linear-gradient(135deg, #05331C 0%, #07542d 100%);
+      background: linear-gradient(135deg, #043D2E 0%, #065F46 100%);
       transform: translateY(-1.5px);
       box-shadow: 0 10px 24px rgba(7, 64, 35, 0.3);
     }
@@ -770,7 +771,7 @@
       cursor: pointer;
     }
   </style>
-  <link rel="stylesheet" href="/motion.css?v=20261027b" />
+  <link rel="stylesheet" href="/motion.css?v=20261028a" />
 </head>
 <body>
   <div class="nav-wrapper">
@@ -791,9 +792,9 @@
   <main>
     <div class="container">
       <section class="hero">
-        <div class="live-pill">
-          <span class="live-pill-dot"></span>
-          <span>Pro-Bono Legal Assistance · LSK Verification</span>
+        <div class="live-pill" style="background: #FEF3C7; border: 1px solid rgba(217, 119, 6, 0.28); color: #92400E;">
+          <span class="live-pill-dot" style="background: #D97706; box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);"></span>
+          <span style="font-weight: 750;">⚖️ Pro-Bono Legal Aid · Certified LSK Accreditation</span>
         </div>
         <h1>Lend your legal voice.<br><span class="hero-accent">Defend citizen rights.</span></h1>
         <p>Join verified Law Society of Kenya (LSK) advocates providing pro-bono guidance, bail hearing support, and legal representation to citizens reporting police misconduct.</p>
