@@ -44,7 +44,17 @@ if (!pool) {
 }
 
 app.use(express.json({ limit: '1mb' }));
-app.use(express.static(__dirname));
+app.use(express.static(__dirname, {
+  etag: false,
+  maxAge: 0,
+  setHeaders: (res, path) => {
+    if (path.endsWith('.css') || path.endsWith('.js') || path.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+  }
+}));
 
 const allowedCategories = new Set([
   'Harassment or intimidation',

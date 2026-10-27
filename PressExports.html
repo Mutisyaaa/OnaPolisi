@@ -318,7 +318,7 @@
       th, td { padding: 14px 18px; }
     }
   </style>
-  <link rel="stylesheet" href="/motion.css" />
+  <link rel="stylesheet" href="/motion.css?v=20261027b" />
 </head>
 <body>
   <div class="top-rule"></div>
@@ -397,6 +397,6 @@
     function render(payload){threshold.textContent=`Groups require ${payload.threshold}+ reports`;if(!payload.rows.length){rows.innerHTML='<tr><td colspan="4" class="empty"><strong>No report groups meet the privacy threshold yet.</strong>Broader patterns will appear as more reports are collected.</td></tr>';return}rows.innerHTML=payload.rows.map((item)=>`<tr><td>${escapeHtml(item.report_month)}</td><td>${escapeHtml(item.category)}</td><td>${escapeHtml(item.status)}</td><td class="count">${escapeHtml(item.report_count)}</td></tr>`).join('')}
     async function load(){try{const response=await fetch('/api/press/exports/preview');const payload=await response.json();if(!response.ok)throw new Error(payload.error||'Sign in with a verified journalist account to view exports.');render(payload)}catch(error){showError(error.message)}}load();
   </script>
-  <script src="/motion.js" defer></script>
+  <script src="/motion.js?v=20261027b" defer></script>
 </body>
 </html>

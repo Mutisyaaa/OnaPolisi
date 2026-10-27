@@ -277,7 +277,7 @@
       .actions { justify-content: flex-start; }
     }
   </style>
-  <link rel="stylesheet" href="/motion.css" />
+  <link rel="stylesheet" href="/motion.css?v=20261027b" />
 </head>
 <body>
   <div class="top-rule"></div>
@@ -345,6 +345,6 @@
     async function load(){try{const response=await fetch('/api/admin/verification?status=Pending');const payload=await response.json();if(!response.ok)throw new Error(payload.error||'The verification queue could not be loaded.');render(payload.requests)}catch(error){queue.innerHTML='';showError(error.message)}}
     queue.addEventListener('click',async(event)=>{const button=event.target.closest('button[data-status]');if(!button)return;const item=button.closest('[data-id]');button.disabled=true;try{const response=await fetch(`/api/admin/verification/${item.dataset.id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({review_status:button.dataset.status})});const payload=await response.json();if(!response.ok)throw new Error(payload.error||'The review failed.');await load()}catch(error){showError(error.message);button.disabled=false}});load();
   </script>
-  <script src="/motion.js" defer></script>
+  <script src="/motion.js?v=20261027b" defer></script>
 </body>
 </html>
