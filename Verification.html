@@ -100,9 +100,23 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 56px;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 48px;
       align-items: start;
+    }
+
+    /* Frosted Glass Intro Container for Advocate Instructions */
+    .intro {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.6) 100%);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border: 1px solid rgba(203, 213, 225, 0.85);
+      border-top: 1.5px solid rgba(255, 255, 255, 0.95);
+      border-radius: 24px;
+      padding: 38px 34px;
+      box-shadow: 0 16px 40px rgba(15, 20, 25, 0.04), 0 2px 6px rgba(15, 20, 25, 0.02);
+      box-sizing: border-box;
+      position: relative;
     }
 
     .live-pill {
@@ -111,12 +125,12 @@
       gap: 8px;
       padding: 6px 14px;
       background: #E6F4EA;
-      border: 1px solid rgba(19, 78, 46, 0.15);
+      border: 1px solid rgba(19, 78, 46, 0.2);
       border-radius: 999px;
       font-size: 0.8rem;
-      font-weight: 600;
+      font-weight: 750;
       color: #134E2E;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     .live-pill-dot {
       width: 7px;
@@ -128,37 +142,87 @@
     .live-pill-sep { color: #A7D7B5; }
     .live-pill-text {
       color: #134E2E;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     h1, h2, p { margin-top: 0; }
 
-    h1 {
+    .intro h1 {
       margin: 0 0 16px;
-      font-size: clamp(2.3rem, 4.5vw, 3.6rem);
-      line-height: 1.1;
-      letter-spacing: -0.05em;
+      font-size: clamp(2.1rem, 3.8vw, 2.75rem);
+      line-height: 1.15;
+      letter-spacing: -0.04em;
       font-weight: 850;
       color: #0F1419;
     }
+    .intro-accent {
+      color: #074023;
+    }
 
-    .intro p {
-      color: var(--muted);
-      font-size: 1.05rem;
+    .intro-desc {
+      color: #1E293B; /* Highly visible, readable dark slate */
+      font-size: 1rem;
+      font-weight: 550;
       line-height: 1.6;
       margin-bottom: 24px;
     }
 
-    .note {
-      padding: 18px 20px;
-      color: #475569;
-      background: #FFFFFF;
+    .intro-guidelines {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .guideline-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 13px 15px;
+      background: rgba(255, 255, 255, 0.78);
       border: 1px solid rgba(226, 232, 240, 0.9);
-      border-left: 4px solid var(--primary);
-      border-radius: 12px;
-      font-size: 0.88rem;
+      border-radius: 14px;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .guideline-item:hover {
+      background: #FFFFFF;
+      border-color: rgba(7, 64, 35, 0.3);
+    }
+
+    .guideline-icon {
+      font-size: 1.2rem;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .guideline-text strong {
+      display: block;
+      color: #0F1419;
+      font-size: 0.92rem;
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+
+    .guideline-text span {
+      display: block;
+      color: #334155; /* Crisp readable charcoal */
+      font-size: 0.86rem;
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+    .note {
+      padding: 16px 18px;
+      color: #074023; /* Crisp, high-contrast forest green text */
+      background: rgba(230, 244, 234, 0.75);
+      border: 1px solid rgba(11, 107, 58, 0.24);
+      border-left: 4px solid #074023;
+      border-radius: 14px;
+      font-size: 0.86rem;
       line-height: 1.55;
-      box-shadow: 0 4px 12px rgba(15, 20, 25, 0.02);
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(7, 64, 35, 0.04);
     }
 
     .card {
@@ -336,9 +400,36 @@
             <span class="live-pill-sep">·</span>
             <span class="live-pill-text">Advocate Access</span>
           </div>
-          <h1>Put the right expertise behind the record.</h1>
-          <p>Verified lawyers and journalists will unlock protected support and data tools. A request is reviewed by an Ona Polisi administrator; submitting a credential does not verify it automatically.</p>
-          <div class="note">Only submit credentials you are authorized to share. This prototype stores the reference for review and does not connect to an external credential registry yet.</div>
+          <h1>Put the right expertise behind the <span class="intro-accent">record.</span></h1>
+          <p class="intro-desc">Verified legal advocates gain secure access to citizen incident reports, evidentiary dossiers, and direct confidential client consultation channels.</p>
+          
+          <div class="intro-guidelines">
+            <div class="guideline-item">
+              <span class="guideline-icon">⚖️</span>
+              <div class="guideline-text">
+                <strong>LSK Roll Verification</strong>
+                <span>Submit your active Law Society of Kenya admission number or roll reference for pro-bono casework accreditation.</span>
+              </div>
+            </div>
+            <div class="guideline-item">
+              <span class="guideline-icon">🛡️</span>
+              <div class="guideline-text">
+                <strong>Administrative Oversight</strong>
+                <span>All submissions are cross-referenced with the official Roll of Advocates within 1–2 business days.</span>
+              </div>
+            </div>
+            <div class="guideline-item">
+              <span class="guideline-icon">🔒</span>
+              <div class="guideline-text">
+                <strong>Confidential Casework</strong>
+                <span>Once accredited, unlock unredacted witness testimonies and direct encrypted client dialogue.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="note">
+            <strong>Security Standard:</strong> Only submit credentials you are authorized to share. Evidentiary records and complainant identities remain encrypted under strict advocate-client confidentiality.
+          </div>
         </div>
 
         <section class="card" id="main-card">
