@@ -691,77 +691,6 @@
       font-weight: 450; 
     }
 
-    /* Clarity Spotlight */
-    .clarity-spotlight { 
-      display: grid; 
-      grid-template-columns: 1fr 1.05fr; 
-      gap: 48px; 
-      align-items: center; 
-      padding: 44px; 
-      border: 1px solid rgba(226, 232, 240, 0.9); 
-      background: #FFFFFF; 
-      border-radius: 22px; 
-      box-shadow: 0 12px 36px rgba(15, 20, 25, 0.04); 
-    }
-    .clarity-title { 
-      font-size: clamp(1.6rem, 3.2vw, 2.1rem); 
-      font-weight: 850; 
-      color: #0F1419; 
-      margin: 8px 0 14px; 
-      letter-spacing: -0.03em; 
-    }
-    .clarity-desc { 
-      color: #64748B; 
-      font-size: 1rem; 
-      line-height: 1.6; 
-      margin-bottom: 24px; 
-    }
-    .clarity-checklist { 
-      list-style: none; 
-      padding: 0; 
-      margin: 0 0 28px; 
-      display: grid; 
-      gap: 14px; 
-    }
-    .clarity-checklist li { 
-      display: flex; 
-      align-items: flex-start; 
-      gap: 12px; 
-      font-size: 0.92rem; 
-      color: #334155; 
-      line-height: 1.5; 
-    }
-    .check-icon { 
-      display: inline-grid; 
-      place-items: center; 
-      width: 22px; 
-      height: 22px; 
-      border-radius: 50%; 
-      background: #DCFCE7; 
-      color: #166534; 
-      font-weight: 850; 
-      font-size: 0.78rem; 
-      flex-shrink: 0; 
-      margin-top: 1px; 
-    }
-    .clarity-actions { 
-      display: flex; 
-      gap: 14px; 
-      flex-wrap: wrap; 
-    }
-    .clarity-media { 
-      border-radius: 16px; 
-      overflow: hidden; 
-      border: 1px solid rgba(226, 232, 240, 0.9); 
-      box-shadow: 0 12px 28px rgba(15, 20, 25, 0.06); 
-    }
-    .clarity-media img { 
-      display: block; 
-      width: 100%; 
-      height: auto; 
-      object-fit: cover; 
-    }
-
     /* CTA Box */
     .cta-box { 
       display: flex; 
@@ -899,7 +828,6 @@
       .feature-grid { grid-template-columns: 1fr; gap: 18px; }
       .reassurance-grid { grid-template-columns: 1fr; gap: 16px; }
       .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-      .clarity-spotlight { grid-template-columns: 1fr; padding: 28px 20px; gap: 32px; }
       .cta-box { flex-direction: column; text-align: center; padding: 36px 24px; }
       .cta-btns { width: 100%; justify-content: center; }
       .cta-btns .button { width: 100%; min-height: 48px; }
@@ -1227,40 +1155,6 @@
             <h3>Direct Action</h3>
             <p>Connect with assigned legal counsel for representation and escalation.</p>
           </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 3: Clarity & Safety Spotlight -->
-    <section class="section clarity-section">
-      <div class="container">
-        <div class="clarity-spotlight">
-          <div class="clarity-content">
-            <span class="section-kicker">SAFETY FIRST</span>
-            <h2 class="clarity-title">Your Safety Is Our Priority</h2>
-            <p class="clarity-desc">Ona Polisi is built specifically to shield citizen reporters while ensuring evidence cannot be altered or suppressed.</p>
-            <ul class="clarity-checklist">
-              <li>
-                <span class="check-icon">✓</span>
-                <span><strong>No Account Needed:</strong> Report completely anonymously without registration.</span>
-              </li>
-              <li>
-                <span class="check-icon">✓</span>
-                <span><strong>EXIF Data Stripped:</strong> Photos and videos have location metadata sanitized on upload.</span>
-              </li>
-              <li>
-                <span class="check-icon">✓</span>
-                <span><strong>Immediate Danger?</strong> If in active danger, always call national emergency services (999 / 112) first.</span>
-              </li>
-            </ul>
-            <div class="clarity-actions">
-              <button class="button button-primary" data-open-report>File a Report Now →</button>
-              <a class="button button-secondary" href="/for-advocates">Advocate Portal</a>
-            </div>
-          </div>
-          <div class="clarity-media">
-            <img src="/hero-illustration.jpg" alt="Ona Polisi — Citizen protection and community justice" loading="lazy" />
-          </div>
         </div>
       </div>
     </section>
