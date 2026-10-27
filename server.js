@@ -416,6 +416,45 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
+app.post('/api/auth/register-advocate', async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'The database is not configured yet.' });
+
+  const email = normalizeEmail(req.body?.email);
+  const password = typeof req.body?.password === 'string' ? req.body.password : '';
+  const credentialNumber = cleanText(req.body?.credential_number, 120);
+  const organization = cleanText(req.body?.organization, 180) || null;
+
+  if (!/^\S+@\S+\.\S+$/.test(email)) return res.status(400).json({ error: 'Enter a valid email address.' });
+  if (password.length < 8) return res.status(400).json({ error: 'Use a password with at least 8 characters.' });
+  if (credentialNumber.length < 3) return res.status(400).json({ error: 'Enter your valid LSK Roll Number or Admission Reference.' });
+
+  try {
+    const passwordHash = await hashPassword(password);
+    const result = await pool.query(
+      `INSERT INTO users (email, password_hash, role, verification_status)
+       VALUES ($1, $2, 'public', 'pending')
+       RETURNING id, email, role, verification_status`,
+      [email, passwordHash],
+    );
+    const user = result.rows[0];
+
+    await pool.query(
+      `INSERT INTO verification_requests (user_id, requested_role, credential_type, credential_number, organization)
+       VALUES ($1, 'lawyer', 'LSK number', $2, $3)`,
+      [user.id, credentialNumber, organization],
+    );
+
+    setSessionCookie(res, await createSession(user.id));
+    return res.status(201).json({ user: publicUser(user), message: 'Advocate application submitted successfully.' });
+  } catch (error) {
+    if (error.code === '23505') {
+      return res.status(409).json({ error: 'An account with that email already exists. Please sign in instead.' });
+    }
+    console.error('Advocate registration failed:', error.message);
+    return res.status(500).json({ error: 'The advocate application could not be submitted. Please try again.' });
+  }
+});
+
 app.post('/api/auth/login', async (req, res) => {
   if (!pool) return res.status(503).json({ error: 'The database is not configured yet.' });
 
