@@ -8,6 +8,73 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
   <link rel="apple-touch-icon" href="/favicon-512.png" />
   <style>
+  <style>
+    /* CYA Hero & Live Accents */
+    .hero {
+      padding: 56px 0 40px;
+      text-align: center;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .hero-accent {
+      background: linear-gradient(135deg, #064E3B 0%, #0B6B3A 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.12rem;
+      color: #64748B;
+      line-height: 1.6;
+      margin: 0 auto 28px;
+      max-width: 720px;
+      font-weight: 450;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    /* Trust / Metric Strip */
+    .trust-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .trust-stat {
+      padding: 24px 22px;
+      background: #FFFFFF;
+      border: 1.5px solid rgba(226, 232, 240, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(15, 20, 25, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .trust-stat:hover {
+      transform: translateY(-2.5px);
+      box-shadow: 0 14px 32px rgba(6, 78, 59, 0.08);
+      border-color: rgba(6, 78, 59, 0.3);
+    }
+
+    .item {
+      border: 1.5px solid rgba(226, 232, 240, 0.95) !important;
+      border-left: 5px solid #064E3B !important;
+      border-radius: 20px !important;
+      box-shadow: 0 10px 28px rgba(15, 20, 25, 0.04) !important;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .item:hover {
+      border-color: rgba(6, 78, 59, 0.35) !important;
+      border-left-color: #064E3B !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 16px 36px rgba(6, 78, 59, 0.08) !important;
+    }
+
     :root {
       --bg: #F8FAFC;
       --surface: #FFFFFF;
@@ -1003,19 +1070,48 @@
   </div>
   <main>
     <div class="container">
-      <div class="intro">
-        <div class="intro-text">
-          <div class="live-pill" style="margin-bottom: 14px;">
-            <span class="live-pill-dot"></span>
-            <span>Lawyer Workspace</span>
-            <span class="live-pill-sep">·</span>
-            <span class="live-pill-text">Advocate Access</span>
-          </div>
-          <h1>Cases that need a next step.</h1>
-          <p>Inspect incident intake briefs, police stations involved, and evidence counts before claiming cases for pro-bono representation.</p>
+      <!-- CYA Modern Hero -->
+      <section class="hero">
+        <div class="live-pill" style="background: #FEF3C7; border: 1px solid rgba(217, 119, 6, 0.28); color: #92400E; margin-bottom: 18px;">
+          <span class="live-pill-dot" style="background: #D97706; box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);"></span>
+          <span style="font-weight: 750;">⚖️ Available Pro-Bono Cases · LSK Panel Roster</span>
         </div>
-        <div class="count" id="count">Loading…</div>
-      </div>
+        <h1>Cases that need a next step.<br><span class="hero-accent">Step forward for a citizen.</span></h1>
+        <p>Inspect verified incident intake briefs, police stations involved, and cryptographic evidence before claiming cases for pro-bono representation.</p>
+        <div class="hero-actions">
+          <a href="/lawyer/my-cases" class="button primary" style="min-height: 44px; padding: 0 22px;">💼 View My Active Caseload →</a>
+          <a href="/for-advocates" class="button secondary" style="min-height: 44px; padding: 0 20px;">⚖️ Advocate Portal Guide</a>
+        </div>
+        <div class="count" id="count" style="display: none;">Loading…</div>
+      </section>
+
+      <!-- CYA Metric / Trust Strip -->
+      <section class="trust-strip">
+        <div class="trust-stat">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <strong id="stat-available" style="font-size: 2.1rem; color: #064E3B; letter-spacing: -0.03em;">0</strong>
+            <span style="width: 40px; height: 40px; border-radius: 12px; background: #DCFCE7; color: #166534; display: grid; place-items: center; font-size: 1.15rem;">📋</span>
+          </div>
+          <span style="font-weight: 850; color: #0F172A; font-size: 0.98rem; margin-top: 6px;">Available Incidents</span>
+          <span style="font-size: 0.85rem; color: #64748B; line-height: 1.45;">Unclaimed reports awaiting verified pro-bono legal counsel.</span>
+        </div>
+        <div class="trust-stat">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <strong style="font-size: 2.1rem; color: #0B6B3A; letter-spacing: -0.03em;">100%</strong>
+            <span style="width: 40px; height: 40px; border-radius: 12px; background: #E6F5EC; color: #064E3B; display: grid; place-items: center; font-size: 1.15rem;">🛡️</span>
+          </div>
+          <span style="font-weight: 850; color: #0F172A; font-size: 0.98rem; margin-top: 6px;">Evidence Sealed</span>
+          <span style="font-size: 0.85rem; color: #64748B; line-height: 1.45;">EXIF sanitized, SHA-256 hashed and cryptographically secured.</span>
+        </div>
+        <div class="trust-stat">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <strong style="font-size: 2.1rem; color: #D97706; letter-spacing: -0.03em;">24h</strong>
+            <span style="width: 40px; height: 40px; border-radius: 12px; background: #FEF3C7; color: #B45309; display: grid; place-items: center; font-size: 1.15rem;">⏱️</span>
+          </div>
+          <span style="font-weight: 850; color: #0F172A; font-size: 0.98rem; margin-top: 6px;">Urgent Bail Priority</span>
+          <span style="font-size: 0.85rem; color: #64748B; line-height: 1.45;">Priority legal aid for citizens detained past statutory limits.</span>
+        </div>
+      </section>
       <div class="message error" id="message" role="alert"></div>
       <section class="queue" id="queue" aria-live="polite">
         <div class="empty">
@@ -1190,6 +1286,8 @@
 
     function render(cases) {
       count.textContent = `${cases.length} available`;
+      const statAvail = document.getElementById('stat-available');
+      if (statAvail) statAvail.textContent = cases.length;
       if (!cases.length) {
         queue.innerHTML = `
           <div class="empty">
