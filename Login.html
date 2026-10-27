@@ -862,7 +862,7 @@
     confirmPasswordInput.addEventListener('input', checkPasswordMatch);
 
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('mode') === 'register') {
+    if (urlParams.get('mode') === 'register' || window.location.pathname.includes('/register') || window.location.pathname.includes('/signup')) {
       setMode('register');
     }
 

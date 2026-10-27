@@ -304,7 +304,7 @@ app.get('/report', (req, res) => {
   res.sendFile(path.join(__dirname, 'Report.html'));
 });
 
-app.get('/login', (req, res) => {
+app.get(['/login', '/signup', '/register'], (req, res) => {
   res.sendFile(path.join(__dirname, 'Login.html'));
 });
 
