@@ -32,7 +32,7 @@ body::after {
 }
 
 body::before { top: 18%; right: -11rem; }
-body::after { bottom: -11rem; left: -9rem; border-color: rgba(200, 16, 46, 0.1); animation-delay: -7s; }
+body::after { bottom: -11rem; left: -9rem; border-color: rgba(11, 107, 58, 0.08); animation-delay: -7s; }
 
 .site-header,
 .site-nav { backdrop-filter: blur(10px); }
@@ -103,20 +103,20 @@ button {
   box-shadow: 0 12px 30px rgba(7, 64, 35, 0.38), 0 0 24px rgba(11, 107, 58, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.55) !important;
 }
 
-/* Alert / CTA Pill Button with Crimson Ambient Aura Glow */
+/* Alert / CTA Pill Button with Neutral Depth Shadow */
 .nav-cta {
   background: linear-gradient(135deg, #C8102E 0%, #9E0D23 100%) !important;
   color: #FFFFFF !important;
   border: 1px solid rgba(255, 255, 255, 0.22) !important;
   border-top: 1.5px solid rgba(255, 255, 255, 0.48) !important;
-  box-shadow: 0 8px 22px rgba(200, 16, 46, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 4px 14px rgba(15, 20, 25, 0.14), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 .nav-cta:hover {
   background: linear-gradient(135deg, #a80d26 0%, #7d0a1b 100%) !important;
   border-color: rgba(255, 255, 255, 0.45) !important;
   border-top-color: rgba(255, 255, 255, 0.8) !important;
-  box-shadow: 0 12px 32px rgba(200, 16, 46, 0.42), 0 0 24px rgba(200, 16, 46, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 8px 22px rgba(15, 20, 25, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Frosted Glass Secondary Button (Spec Light-Edge Reflection & Glass Blur) */
