@@ -57,7 +57,7 @@
     .brand:hover { opacity: 0.88; }
     .brand-logo { display: block; height: 38px; width: auto; object-fit: contain; }
     .nav-links { display: flex; align-items: center; gap: 36px; color: #1E293B; font-size: 0.95rem; font-weight: 600; }
-    .nav-links a:not(.nav-cta):not(.nav-lawyer-btn):hover { color: #0B6B3A; }
+    .nav-links a:not(.nav-cta):not(.nav-lawyer-btn):not(.nav-auth-link):hover { color: #0B6B3A; }
     
     /* Glassmorphic & Tactile Buttons adapted from cya-platform */
     .button, .nav-cta { 
@@ -142,10 +142,12 @@
       box-shadow: 0 4px 14px rgba(15, 20, 25, 0.05);
     }
 
-    /* Translucent Advocate Pill Button */
-    .nav-lawyer-btn {
+    /* Translucent Advocate & Auth Pill Buttons */
+    .nav-lawyer-btn,
+    .nav-auth-link {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       min-height: 42px;
       padding: 0 20px;
@@ -161,7 +163,8 @@
       text-decoration: none;
       box-shadow: 0 4px 14px rgba(15, 20, 25, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8);
     }
-    .nav-lawyer-btn:hover {
+    .nav-lawyer-btn:hover,
+    .nav-auth-link:hover {
       background: #FFFFFF;
       border-color: #074023;
       color: #074023;
@@ -1085,7 +1088,8 @@
       .nav-links a:hover {
         background: #F8FAFC;
       }
-      .nav-lawyer-btn {
+      .nav-lawyer-btn,
+      .nav-auth-link {
         justify-content: center;
         width: 100%;
       }
@@ -1195,7 +1199,7 @@
           <a href="/for-advocates" class="nav-lawyer-btn" id="nav-lawyer-link">
             For Advocates
           </a>
-          <a href="/login" class="nav-auth-link" id="nav-auth-link" style="color: #475569; font-size: 0.92rem; font-weight: 700; text-decoration: none; padding: 6px 12px;">
+          <a href="/login" class="nav-auth-link" id="nav-auth-link">
             Log in
           </a>
           <button type="button" id="nav-signout-btn" style="display: none; background: none; border: 1px solid #CBD5E1; color: #64748B; font-size: 0.85rem; font-weight: 700; padding: 6px 14px; border-radius: 999px; cursor: pointer;">Sign out</button>
