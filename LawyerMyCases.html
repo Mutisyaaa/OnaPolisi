@@ -857,89 +857,149 @@
       border: 1px solid #86EFAC;
     }
 
-    /* Advance Stage Modal */
+    /* Advance Stage & Court Brief Modals (Scrollable & Pinned Actions) */
     .stage-modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 1100;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
-      animation: reveal 0.15s ease-out;
+      overflow-y: auto;
+      animation: reveal 0.18s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .stage-modal-card {
       background: #FFFFFF;
-      border-radius: 18px;
-      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+      border-radius: 22px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28), 0 0 40px rgba(6, 78, 59, 0.12);
+      border: 1.5px solid rgba(226, 232, 240, 0.95);
       width: 100%;
-      max-width: 500px;
-      padding: 24px 28px;
+      max-width: 640px;
+      max-height: min(92vh, 92dvh);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      overflow: hidden;
+      padding: 0 !important;
+      position: relative;
     }
     .stage-modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 20px 24px;
+      background: #FFFFFF;
+      border-bottom: 1.5px solid #E2E8F0;
+      flex-shrink: 0;
     }
     .stage-modal-header h3 {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #0F1419;
+      font-size: 1.2rem;
+      font-weight: 850;
+      color: #064E3B;
       margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.02em;
     }
     .stage-modal-close {
-      background: transparent;
-      border: none;
-      font-size: 1.1rem;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #F1F5F9;
+      border: 1.5px solid #CBD5E1;
+      font-size: 1.05rem;
+      font-weight: 800;
       cursor: pointer;
-      color: #64748B;
-      padding: 4px;
-      border-radius: 6px;
+      color: #475569;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      line-height: 1;
+      transition: all 0.2s ease;
+    }
+    .stage-modal-close:hover {
+      background: #E2E8F0;
+      color: #0F172A;
+      transform: scale(1.08);
+    }
+    .stage-modal-body {
+      padding: 22px 24px;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+    .stage-modal-body::-webkit-scrollbar {
+      width: 7px;
+    }
+    .stage-modal-body::-webkit-scrollbar-track {
+      background: #F8FAFC;
+    }
+    .stage-modal-body::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 999px;
+    }
+    .stage-modal-body::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
     }
     .stage-modal-desc {
       font-size: 0.88rem;
       color: #475569;
-      line-height: 1.45;
+      line-height: 1.5;
       margin: 0;
+      background: #F8FAFC;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid #E2E8F0;
     }
     .stage-modal-label {
       display: flex;
       flex-direction: column;
       gap: 4px;
       font-size: 0.84rem;
-      font-weight: 700;
+      font-weight: 750;
       color: #1E293B;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
     .stage-modal-label small {
       font-weight: 500;
       color: #64748B;
+      font-size: 0.8rem;
     }
     .stage-modal-textarea {
       width: 100%;
       border: 1.5px solid #CBD5E1;
-      border-radius: 10px;
-      padding: 10px 14px;
+      border-radius: 12px;
+      padding: 12px 14px;
       font-family: inherit;
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       resize: vertical;
       box-sizing: border-box;
+      line-height: 1.5;
+      transition: all 0.2s;
     }
     .stage-modal-textarea:focus {
       outline: none;
-      border-color: #074023;
-      box-shadow: 0 0 0 3px rgba(7, 64, 35, 0.12);
+      border-color: #064E3B;
+      box-shadow: 0 0 0 3px rgba(6, 78, 59, 0.12);
     }
     .stage-modal-actions {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
       gap: 12px;
-      margin-top: 14px;
+      padding: 16px 24px;
+      background: #F8FAFC;
+      border-top: 1.5px solid #E2E8F0;
+      flex-shrink: 0;
+      margin-top: 0 !important;
     }
 
     .empty {
@@ -1492,82 +1552,85 @@
 
   <!-- Court Brief Modal Backdrop -->
   <div class="stage-modal-backdrop" id="court-brief-modal-backdrop" style="display: none;">
-    <div class="stage-modal-card" role="dialog" aria-modal="true" aria-labelledby="court-brief-title" style="max-width: 600px; width: 100%;">
+    <div class="stage-modal-card" role="dialog" aria-modal="true" aria-labelledby="court-brief-title" style="max-width: 640px; width: 100%;">
       <div class="stage-modal-header">
         <h3 id="court-brief-title">🏛️ Brief Applicant on Court Hearing</h3>
-        <button type="button" class="stage-modal-close" id="court-brief-close" aria-label="Close dialog">✕</button>
+        <button type="button" class="stage-modal-close" id="court-brief-close" aria-label="Close dialog" title="Close dialog (Esc)">✕</button>
       </div>
-      <p class="stage-modal-desc">
-        Record what transpired during the court session. This brief will appear immediately on the complainant's live tracking receipt, in their case activity timeline, and in direct case messages.
-      </p>
-      <form id="court-brief-form">
+      <form id="court-brief-form" style="display: flex; flex-direction: column; flex: 1; overflow: hidden; margin: 0;">
         <input type="hidden" id="brief-case-id" />
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
-          <div>
-            <label for="brief-court-name" class="stage-modal-label">
-              <span>Court Station & Room:</span>
-            </label>
-            <input type="text" id="brief-court-name" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 10px 14px; font-size: 0.9rem;" placeholder="e.g. Milimani Law Courts, Court 4" required />
-          </div>
-          <div>
-            <label for="brief-hearing-type" class="stage-modal-label">
-              <span>Hearing / Session Type:</span>
-            </label>
-            <select id="brief-hearing-type" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 10px 14px; font-size: 0.9rem;" required>
-              <option value="Bail / Bond Application">Bail / Bond Application</option>
-              <option value="Plea Taking & Arraignment">Plea Taking & Arraignment</option>
-              <option value="Mention Date / Directions">Mention Date / Directions</option>
-              <option value="Bond Review / Variation">Bond Review / Variation</option>
-              <option value="Pre-Trial Conference">Pre-Trial Conference</option>
-              <option value="Inquest / Habeas Corpus Hearing">Inquest / Habeas Corpus Hearing</option>
-              <option value="Ruling / Judgment">Ruling / Judgment</option>
-              <option value="Court Appearance">Court Appearance</option>
-            </select>
-          </div>
-        </div>
+        <div class="stage-modal-body">
+          <p class="stage-modal-desc">
+            Record what transpired during the court session. This brief will appear immediately on the complainant's live tracking receipt, in their case activity timeline, and in direct case messages.
+          </p>
 
-        <div style="margin-bottom: 14px;">
-          <label for="brief-magistrate" class="stage-modal-label">
-            <span>Presiding Magistrate / Judge (Optional):</span>
-          </label>
-          <input type="text" id="brief-magistrate" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 10px 14px; font-size: 0.9rem;" placeholder="e.g. Hon. Resident Magistrate J. Ochieng" />
-        </div>
-
-        <div style="margin-bottom: 14px;">
-          <label for="brief-proceedings" class="stage-modal-label">
-            <span>What Was Said in Court (Proceedings Summary):</span>
-            <small>Detail prosecution submissions, defense arguments, and judicial remarks.</small>
-          </label>
-          <textarea id="brief-proceedings" class="stage-modal-textarea" rows="4" placeholder="e.g. The prosecution opposed bail on grounds of flight risk. We argued under Article 49(1)(h) that bail is a constitutional right and the accused has a fixed abode. The Magistrate agreed with defense submissions..." required></textarea>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; margin-bottom: 14px;">
-          <div>
-            <label for="brief-orders" class="stage-modal-label">
-              <span>Court Orders & Bail Terms (If any):</span>
-            </label>
-            <input type="text" id="brief-orders" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 10px 14px; font-size: 0.9rem;" placeholder="e.g. Granted KES 20,000 cash bail or KES 50,000 bond" />
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div>
+              <label for="brief-court-name" class="stage-modal-label">
+                <span>Court Station & Room:</span>
+              </label>
+              <input type="text" id="brief-court-name" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 11px 14px; font-size: 0.92rem;" placeholder="e.g. Milimani Law Courts, Court 4" required />
+            </div>
+            <div>
+              <label for="brief-hearing-type" class="stage-modal-label">
+                <span>Hearing / Session Type:</span>
+              </label>
+              <select id="brief-hearing-type" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 11px 14px; font-size: 0.92rem;" required>
+                <option value="Bail / Bond Application">Bail / Bond Application</option>
+                <option value="Plea Taking & Arraignment">Plea Taking & Arraignment</option>
+                <option value="Mention Date / Directions">Mention Date / Directions</option>
+                <option value="Bond Review / Variation">Bond Review / Variation</option>
+                <option value="Pre-Trial Conference">Pre-Trial Conference</option>
+                <option value="Inquest / Habeas Corpus Hearing">Inquest / Habeas Corpus Hearing</option>
+                <option value="Ruling / Judgment">Ruling / Judgment</option>
+                <option value="Court Appearance">Court Appearance</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label for="brief-next-date" class="stage-modal-label">
-              <span>Next Court Date (If scheduled):</span>
-            </label>
-            <input type="date" id="brief-next-date" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 9px 14px; font-size: 0.9rem;" />
-          </div>
-        </div>
 
-        <div style="margin-bottom: 18px;">
-          <label for="brief-instructions" class="stage-modal-label">
-            <span>Direct Guidance / Action for the Applicant:</span>
-            <small>What should the citizen or their family do right now?</small>
-          </label>
-          <textarea id="brief-instructions" class="stage-modal-textarea" rows="2" placeholder="e.g. Please ask your contact person to bring original national ID and 2 passport photos to the registry tomorrow morning."></textarea>
+          <div>
+            <label for="brief-magistrate" class="stage-modal-label">
+              <span>Presiding Magistrate / Judge (Optional):</span>
+            </label>
+            <input type="text" id="brief-magistrate" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 11px 14px; font-size: 0.92rem;" placeholder="e.g. Hon. Resident Magistrate J. Ochieng" />
+          </div>
+
+          <div>
+            <label for="brief-proceedings" class="stage-modal-label">
+              <span>What Was Said in Court (Proceedings Summary):</span>
+              <small>Detail prosecution submissions, defense arguments, and judicial remarks.</small>
+            </label>
+            <textarea id="brief-proceedings" class="stage-modal-textarea" rows="4" placeholder="e.g. The prosecution opposed bail on grounds of flight risk. We argued under Article 49(1)(h) that bail is a constitutional right and the accused has a fixed abode. The Magistrate agreed with defense submissions..." required></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px;">
+            <div>
+              <label for="brief-orders" class="stage-modal-label">
+                <span>Court Orders & Bail Terms (If any):</span>
+              </label>
+              <input type="text" id="brief-orders" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 11px 14px; font-size: 0.92rem;" placeholder="e.g. Granted KES 20,000 cash bail or KES 50,000 bond" />
+            </div>
+            <div>
+              <label for="brief-next-date" class="stage-modal-label">
+                <span>Next Court Date (If scheduled):</span>
+              </label>
+              <input type="date" id="brief-next-date" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 10px 14px; font-size: 0.92rem;" />
+            </div>
+          </div>
+
+          <div>
+            <label for="brief-instructions" class="stage-modal-label">
+              <span>Direct Guidance / Action for the Applicant:</span>
+              <small>What should the citizen or their family do right now?</small>
+            </label>
+            <textarea id="brief-instructions" class="stage-modal-textarea" rows="2" placeholder="e.g. Please ask your contact person to bring original national ID and 2 passport photos to the registry tomorrow morning."></textarea>
+          </div>
         </div>
 
         <div class="stage-modal-actions">
-          <button type="button" class="button secondary" id="court-brief-cancel">Cancel</button>
-          <button type="submit" class="button primary" id="court-brief-submit">🏛️ Publish Brief to Applicant</button>
+          <button type="button" class="button secondary" id="court-brief-cancel" style="min-height: 44px; padding: 0 20px;">Cancel & Close</button>
+          <button type="submit" class="button primary" id="court-brief-submit" style="min-height: 44px; padding: 0 24px;">🏛️ Publish Brief to Applicant</button>
         </div>
       </form>
     </div>
@@ -1575,23 +1638,27 @@
 
   <!-- Advance Stage Modal -->
   <div class="stage-modal-backdrop" id="stage-modal-backdrop" style="display: none;">
-    <div class="stage-modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-stage-title">
+    <div class="stage-modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-stage-title" style="max-width: 540px; width: 100%;">
       <div class="stage-modal-header">
         <h3 id="modal-stage-title">Advance Case Stage</h3>
-        <button type="button" class="stage-modal-close" id="modal-stage-close" aria-label="Close dialog">✕</button>
+        <button type="button" class="stage-modal-close" id="modal-stage-close" aria-label="Close dialog" title="Close dialog (Esc)">✕</button>
       </div>
-      <p id="modal-stage-desc" class="stage-modal-desc"></p>
-      <form id="stage-modal-form">
+      <form id="stage-modal-form" style="display: flex; flex-direction: column; flex: 1; overflow: hidden; margin: 0;">
         <input type="hidden" id="modal-case-id" />
         <input type="hidden" id="modal-next-status" />
-        <label for="modal-stage-note" class="stage-modal-label">
-          <span>Action Taken / Case Update Note:</span>
-          <small>This note will be recorded on the citizen's live tracking receipt.</small>
-        </label>
-        <textarea id="modal-stage-note" class="stage-modal-textarea" rows="3" placeholder="Enter notes on the institutional action or resolution achieved..." required></textarea>
+        
+        <div class="stage-modal-body">
+          <p id="modal-stage-desc" class="stage-modal-desc"></p>
+          <label for="modal-stage-note" class="stage-modal-label">
+            <span>Action Taken / Case Update Note:</span>
+            <small>This note will be recorded on the citizen's live tracking receipt.</small>
+          </label>
+          <textarea id="modal-stage-note" class="stage-modal-textarea" rows="4" placeholder="Enter notes on the institutional action or resolution achieved..." required></textarea>
+        </div>
+
         <div class="stage-modal-actions">
-          <button type="button" class="button secondary" id="modal-stage-cancel">Cancel</button>
-          <button type="submit" class="button primary" id="modal-stage-submit">Confirm & Advance Stage</button>
+          <button type="button" class="button secondary" id="modal-stage-cancel" style="min-height: 44px; padding: 0 20px;">Cancel & Close</button>
+          <button type="submit" class="button primary" id="modal-stage-submit" style="min-height: 44px; padding: 0 24px;">Confirm & Advance Stage</button>
         </div>
       </form>
     </div>
@@ -2212,6 +2279,18 @@
         alert(err.message);
         courtBriefSubmit.disabled = false;
         courtBriefSubmit.textContent = '🏛️ Publish Brief to Applicant';
+      }
+    });
+
+    // Close on Escape key press
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (courtBriefModalBackdrop && courtBriefModalBackdrop.style.display === 'flex') {
+          closeCourtBriefModal();
+        }
+        if (stageModalBackdrop && stageModalBackdrop.style.display === 'flex') {
+          closeStageModal();
+        }
       }
     });
 
