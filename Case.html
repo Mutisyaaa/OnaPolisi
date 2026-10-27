@@ -940,6 +940,17 @@
               Analyze Status →
             </button>
           </div>
+          <!-- Official Court Proceedings Briefs Section -->
+          <section class="court-briefs-section" id="court-briefs-section" style="display: none; margin: 24px 0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+              <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: #064E3B; display: flex; align-items: center; gap: 8px;">
+                <span>🏛️</span>
+                <span>Court Proceedings & Hearing Briefs</span>
+              </h3>
+              <span id="court-brief-count" style="font-size: 0.76rem; font-weight: 750; background: #D1FAE5; color: #064E3B; padding: 3px 10px; border-radius: 999px;">0 Briefs</span>
+            </div>
+            <div id="court-briefs-list" style="display: flex; flex-direction: column; gap: 14px;"></div>
+          </section>
           <div class="activity" id="activity"></div>
           <div class="case-details">
             <div class="detail">
@@ -1179,7 +1190,68 @@
         chatThread.innerHTML = `<div class="chat-empty" style="color: #DC2626;">${escapeHtml(err.message)}</div>`;
       }
     }
-    function renderCase(incident) {
+    function renderCourtBriefs(briefs = []) {
+      const section = document.getElementById('court-briefs-section');
+      const list = document.getElementById('court-briefs-list');
+      const countEl = document.getElementById('court-brief-count');
+      if (!section || !list) return;
+
+      if (!briefs || briefs.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+
+      section.style.display = 'block';
+      countEl.textContent = `${briefs.length} Hearing Brief${briefs.length === 1 ? '' : 's'}`;
+
+      list.innerHTML = briefs.map(b => `
+        <article class="court-brief-card" style="padding: 18px 20px; background: #FFFFFF; border: 1.5px solid rgba(6, 78, 59, 0.22); border-radius: 16px; box-shadow: 0 6px 20px rgba(6, 78, 59, 0.05); display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+            <div>
+              <span style="display: inline-block; background: #064E3B; color: #FFFFFF; font-size: 0.76rem; font-weight: 800; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.03em;">
+                ${escapeHtml(b.hearing_type)}
+              </span>
+              <h4 style="margin: 6px 0 2px; font-size: 1.02rem; font-weight: 800; color: #0F172A;">
+                ${escapeHtml(b.court_name)}
+              </h4>
+              ${b.presiding_magistrate ? `<div style="font-size: 0.82rem; color: #64748B;">Presiding: ${escapeHtml(b.presiding_magistrate)}</div>` : ''}
+            </div>
+            <div style="font-size: 0.8rem; font-weight: 700; color: #64748B; background: #F1F5F9; padding: 4px 10px; border-radius: 8px;">
+              Session Date: ${escapeHtml(formatDate(b.created_at))}
+            </div>
+          </div>
+
+          <div style="margin-top: 4px; line-height: 1.6; color: #334155; font-size: 0.92rem; background: #F8FAFC; padding: 12px 14px; border-radius: 10px; border: 1px solid #E2E8F0;">
+            <strong style="color: #064E3B; display: block; margin-bottom: 4px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em;">What Transpired in Court:</strong>
+            ${escapeHtml(b.proceedings_summary).replace(/\n/g, '<br />')}
+          </div>
+
+          ${b.court_orders ? `
+            <div style="padding: 10px 14px; background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 10px; font-size: 0.88rem; color: #92400E;">
+              <strong>⚖️ Court Orders & Bail Ruling:</strong> ${escapeHtml(b.court_orders)}
+            </div>
+          ` : ''}
+
+          ${b.next_court_date ? `
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 0.86rem; color: #064E3B; font-weight: 750;">
+              <span>📅 Next Court Date / Appearance:</span>
+              <span style="background: #D1FAE5; padding: 2px 10px; border-radius: 6px; border: 1px solid #A7F3D0;">
+                ${escapeHtml(formatDate(b.next_court_date))}
+              </span>
+            </div>
+          ` : ''}
+
+          ${b.instructions_to_applicant ? `
+            <div style="padding: 12px 14px; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px; font-size: 0.88rem; color: #1E40AF;">
+              <strong>📌 Advocate's Direct Instructions to You:</strong><br />
+              ${escapeHtml(b.instructions_to_applicant).replace(/\n/g, '<br />')}
+            </div>
+          ` : ''}
+        </article>
+      `).join('');
+    }
+
+    function renderCase(incident, events = [], courtBriefs = []) {
       const status = incident.status === 'Closed' ? 'Resolved' : (incident.status || 'Filed');
       document.getElementById('case-id').textContent = incident.case_id;
       document.getElementById('case-subtitle').textContent = `Last updated ${formatDate(incident.updated_at || incident.created_at)}`;
@@ -1187,8 +1259,9 @@
       document.getElementById('case-category').textContent = incident.category;
       document.getElementById('case-location').textContent = incident.location;
       document.getElementById('evidence-count').textContent = incident.evidence_count ? `${incident.evidence_count} file${incident.evidence_count === 1 ? '' : 's'} uploaded.` : 'No files uploaded yet.';
-      renderTimeline(incident, incident.events || []);
-      renderActivity(incident.events || []);
+      renderTimeline(incident, events);
+      renderActivity(events);
+      renderCourtBriefs(courtBriefs);
       const receiptBtn = document.getElementById('case-receipt-btn');
       if (receiptBtn) receiptBtn.href = `/case/${encodeURIComponent(incident.case_id)}/receipt`;
       loadCaseChat(incident.case_id);
@@ -1214,7 +1287,7 @@
         const response = await fetch(`/api/incidents/${encodeURIComponent(caseId)}`);
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.error || 'The case could not be loaded.');
-        renderCase(payload.incident);
+        renderCase(payload.incident, payload.events || [], payload.court_briefs || []);
       } catch (error) { showError(error.message); }
     }
     lookupForm.addEventListener('submit', (event) => { event.preventDefault(); const caseId = cleanCaseId(input.value); if (!/^OP-\d{4}-\d{6}$/.test(caseId)) return showError('Enter a case reference in the format OP-2026-184200.'); history.replaceState(null, '', `/case/${encodeURIComponent(caseId)}`); loadCase(caseId); });

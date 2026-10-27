@@ -1345,6 +1345,89 @@
     </div>
   </main>
 
+  <!-- Court Brief Modal Backdrop -->
+  <div class="stage-modal-backdrop" id="court-brief-modal-backdrop" style="display: none;">
+    <div class="stage-modal-card" role="dialog" aria-modal="true" aria-labelledby="court-brief-title" style="max-width: 600px; width: 100%;">
+      <div class="stage-modal-header">
+        <h3 id="court-brief-title">🏛️ Brief Applicant on Court Hearing</h3>
+        <button type="button" class="stage-modal-close" id="court-brief-close" aria-label="Close dialog">✕</button>
+      </div>
+      <p class="stage-modal-desc">
+        Record what transpired during the court session. This brief will appear immediately on the complainant's live tracking receipt, in their case activity timeline, and in direct case messages.
+      </p>
+      <form id="court-brief-form">
+        <input type="hidden" id="brief-case-id" />
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label for="brief-court-name" class="stage-modal-label">
+              <span>Court Station & Room:</span>
+            </label>
+            <input type="text" id="brief-court-name" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 10px 14px; font-size: 0.9rem;" placeholder="e.g. Milimani Law Courts, Court 4" required />
+          </div>
+          <div>
+            <label for="brief-hearing-type" class="stage-modal-label">
+              <span>Hearing / Session Type:</span>
+            </label>
+            <select id="brief-hearing-type" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 10px 14px; font-size: 0.9rem;" required>
+              <option value="Bail / Bond Application">Bail / Bond Application</option>
+              <option value="Plea Taking & Arraignment">Plea Taking & Arraignment</option>
+              <option value="Mention Date / Directions">Mention Date / Directions</option>
+              <option value="Bond Review / Variation">Bond Review / Variation</option>
+              <option value="Pre-Trial Conference">Pre-Trial Conference</option>
+              <option value="Inquest / Habeas Corpus Hearing">Inquest / Habeas Corpus Hearing</option>
+              <option value="Ruling / Judgment">Ruling / Judgment</option>
+              <option value="Court Appearance">Court Appearance</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label for="brief-magistrate" class="stage-modal-label">
+            <span>Presiding Magistrate / Judge (Optional):</span>
+          </label>
+          <input type="text" id="brief-magistrate" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 10px 14px; font-size: 0.9rem;" placeholder="e.g. Hon. Resident Magistrate J. Ochieng" />
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label for="brief-proceedings" class="stage-modal-label">
+            <span>What Was Said in Court (Proceedings Summary):</span>
+            <small>Detail prosecution submissions, defense arguments, and judicial remarks.</small>
+          </label>
+          <textarea id="brief-proceedings" class="stage-modal-textarea" rows="4" placeholder="e.g. The prosecution opposed bail on grounds of flight risk. We argued under Article 49(1)(h) that bail is a constitutional right and the accused has a fixed abode. The Magistrate agreed with defense submissions..." required></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label for="brief-orders" class="stage-modal-label">
+              <span>Court Orders & Bail Terms (If any):</span>
+            </label>
+            <input type="text" id="brief-orders" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 10px 14px; font-size: 0.9rem;" placeholder="e.g. Granted KES 20,000 cash bail or KES 50,000 bond" />
+          </div>
+          <div>
+            <label for="brief-next-date" class="stage-modal-label">
+              <span>Next Court Date (If scheduled):</span>
+            </label>
+            <input type="date" id="brief-next-date" class="input" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 9px 14px; font-size: 0.9rem;" />
+          </div>
+        </div>
+
+        <div style="margin-bottom: 18px;">
+          <label for="brief-instructions" class="stage-modal-label">
+            <span>Direct Guidance / Action for the Applicant:</span>
+            <small>What should the citizen or their family do right now?</small>
+          </label>
+          <textarea id="brief-instructions" class="stage-modal-textarea" rows="2" placeholder="e.g. Please ask your contact person to bring original national ID and 2 passport photos to the registry tomorrow morning."></textarea>
+        </div>
+
+        <div class="stage-modal-actions">
+          <button type="button" class="button secondary" id="court-brief-cancel">Cancel</button>
+          <button type="submit" class="button primary" id="court-brief-submit">🏛️ Publish Brief to Applicant</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Advance Stage Modal -->
   <div class="stage-modal-backdrop" id="stage-modal-backdrop" style="display: none;">
     <div class="stage-modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-stage-title">
@@ -1617,6 +1700,7 @@
         } else {
           actionsHtml = `
             <a class="button primary" href="/case/${encodeURIComponent(item.case_id)}">Open tracking page&nbsp; →</a>
+            <button class="button secondary" data-court-brief style="border-color: #064E3B; color: #064E3B; font-weight: 750;">🏛️ Add Court Brief</button>
             <button class="button secondary" data-chat-toggle>💬 Chat with Applicant</button>
             ${contactAction(item)}
             <a class="button secondary" href="/case/${encodeURIComponent(item.case_id)}/receipt" target="_blank" title="View or print official receipt">📄 Receipt</a>
@@ -1799,6 +1883,12 @@
       const requestButton=event.target.closest('[data-contact-request]');
       const revealButton=event.target.closest('[data-reveal-contact]');
       const releaseButton=event.target.closest('[data-release]');
+      const courtBriefButton=event.target.closest('[data-court-brief]');
+      
+      if(courtBriefButton) {
+        openCourtBriefModal(caseId);
+        return;
+      }
       
       if(chatToggle) {
         const chatContainer = card.querySelector('[data-chat-container]');
@@ -1897,6 +1987,80 @@
       modalStageSubmit.disabled = false;
       modalStageSubmit.textContent = 'Confirm & Advance Stage';
     }
+
+    // Court Brief Modal Controller
+    const courtBriefModalBackdrop = document.getElementById('court-brief-modal-backdrop');
+    const courtBriefForm = document.getElementById('court-brief-form');
+    const briefCaseId = document.getElementById('brief-case-id');
+    const briefCourtName = document.getElementById('brief-court-name');
+    const briefHearingType = document.getElementById('brief-hearing-type');
+    const briefMagistrate = document.getElementById('brief-magistrate');
+    const briefProceedings = document.getElementById('brief-proceedings');
+    const briefOrders = document.getElementById('brief-orders');
+    const briefNextDate = document.getElementById('brief-next-date');
+    const briefInstructions = document.getElementById('brief-instructions');
+    const courtBriefSubmit = document.getElementById('court-brief-submit');
+    const courtBriefClose = document.getElementById('court-brief-close');
+    const courtBriefCancel = document.getElementById('court-brief-cancel');
+
+    function openCourtBriefModal(caseId) {
+      briefCaseId.value = caseId;
+      document.getElementById('court-brief-title').textContent = `🏛️ Brief Applicant on Court Hearing (${caseId})`;
+      courtBriefModalBackdrop.style.display = 'flex';
+      briefCourtName.focus();
+    }
+
+    function closeCourtBriefModal() {
+      courtBriefModalBackdrop.style.display = 'none';
+      courtBriefForm.reset();
+      courtBriefSubmit.disabled = false;
+      courtBriefSubmit.textContent = '🏛️ Publish Brief to Applicant';
+    }
+
+    courtBriefClose.addEventListener('click', closeCourtBriefModal);
+    courtBriefCancel.addEventListener('click', closeCourtBriefModal);
+    courtBriefModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === courtBriefModalBackdrop) closeCourtBriefModal();
+    });
+
+    courtBriefForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const caseId = briefCaseId.value;
+      if (!caseId) return;
+
+      courtBriefSubmit.disabled = true;
+      courtBriefSubmit.textContent = 'Publishing brief...';
+
+      try {
+        const payload = {
+          court_name: briefCourtName.value.trim(),
+          hearing_type: briefHearingType.value,
+          presiding_magistrate: briefMagistrate.value.trim(),
+          proceedings_summary: briefProceedings.value.trim(),
+          court_orders: briefOrders.value.trim(),
+          next_court_date: briefNextDate.value || null,
+          instructions_to_applicant: briefInstructions.value.trim()
+        };
+
+        const res = await fetch(`/api/cases/${encodeURIComponent(caseId)}/court-brief`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to record court brief.');
+
+        closeCourtBriefModal();
+        message.className = 'message ok';
+        message.textContent = `Court brief recorded and published to applicant for case ${caseId}.`;
+        load();
+      } catch (err) {
+        alert(err.message);
+        courtBriefSubmit.disabled = false;
+        courtBriefSubmit.textContent = '🏛️ Publish Brief to Applicant';
+      }
+    });
 
     modalStageClose.addEventListener('click', closeStageModal);
     modalStageCancel.addEventListener('click', closeStageModal);

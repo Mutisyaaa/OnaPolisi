@@ -1232,6 +1232,85 @@ app.post('/api/lawyer/cases/:caseId/status', requireRole('lawyer'), async (req, 
   }
 });
 
+app.post('/api/cases/:caseId/court-brief', requireRole('lawyer'), async (req, res) => {
+  const caseId = cleanText(req.params.caseId, 20).toUpperCase();
+  if (!/^OP-\d{4}-\d{6}$/.test(caseId)) return res.status(400).json({ error: 'Enter a valid case reference.' });
+
+  const courtName = cleanText(req.body?.court_name, 180);
+  const hearingType = cleanText(req.body?.hearing_type, 100);
+  const proceedingsSummary = cleanText(req.body?.proceedings_summary, 5000);
+  const presidingMagistrate = cleanText(req.body?.presiding_magistrate, 140);
+  const courtOrders = cleanText(req.body?.court_orders, 2000);
+  const nextCourtDate = req.body?.next_court_date ? cleanText(req.body.next_court_date, 30) : null;
+  const instructionsToApplicant = cleanText(req.body?.instructions_to_applicant, 2000);
+
+  if (!courtName || !hearingType || !proceedingsSummary) {
+    return res.status(400).json({ error: 'Court name, hearing type, and proceedings summary are required.' });
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const claimResult = await client.query(
+      `SELECT incidents.id, incidents.status
+       FROM incidents
+       INNER JOIN case_claims ON case_claims.incident_id = incidents.id
+       WHERE incidents.case_id = $1 AND case_claims.lawyer_id = $2 AND case_claims.status = 'Active'
+       FOR UPDATE`,
+      [caseId, req.user.id]
+    );
+
+    if (!claimResult.rowCount) {
+      await client.query('ROLLBACK');
+      return res.status(403).json({ error: 'You do not have an active representation claim on this case.' });
+    }
+
+    const incident = claimResult.rows[0];
+
+    const briefInsert = await client.query(
+      `INSERT INTO court_briefs 
+       (incident_id, lawyer_id, court_name, hearing_type, presiding_magistrate, proceedings_summary, court_orders, next_court_date, instructions_to_applicant)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       RETURNING *`,
+      [
+        incident.id,
+        req.user.id,
+        courtName,
+        hearingType,
+        presidingMagistrate || null,
+        proceedingsSummary,
+        courtOrders || null,
+        nextCourtDate || null,
+        instructionsToApplicant || null
+      ]
+    );
+
+    const eventNote = `Hearing at ${courtName}. Proceedings: ${proceedingsSummary}${courtOrders ? ' | Orders: ' + courtOrders : ''}${nextCourtDate ? ' | Next date: ' + nextCourtDate : ''}`;
+    await client.query(
+      `INSERT INTO case_events (incident_id, status, title, note)
+       VALUES ($1, $2, $3, $4)`,
+      [incident.id, incident.status, `🏛️ Court Brief: ${hearingType} (${courtName})`, eventNote]
+    );
+
+    const chatMsg = `🏛️ **COURT PROCEEDINGS BRIEF — ${hearingType}**\n**Court:** ${courtName}${presidingMagistrate ? '\n**Presiding:** ' + presidingMagistrate : ''}\n\n**What Transpired in Court:**\n${proceedingsSummary}${courtOrders ? '\n\n**Court Orders / Bail Ruling:**\n' + courtOrders : ''}${nextCourtDate ? '\n\n**Next Court Date:** ' + nextCourtDate : ''}${instructionsToApplicant ? '\n\n**Instructions for You:**\n' + instructionsToApplicant : ''}`;
+    await client.query(
+      `INSERT INTO case_messages (incident_id, sender_id, sender_role, sender_name, message)
+       VALUES ($1, $2, 'lawyer', 'Advocate (Court Brief)', $3)`,
+      [incident.id, req.user.id, chatMsg]
+    );
+
+    await client.query('COMMIT');
+    return res.status(201).json({ ok: true, brief: briefInsert.rows[0] });
+  } catch (error) {
+    await client.query('ROLLBACK').catch(() => {});
+    console.error('Court brief recording failed:', error.message);
+    return res.status(500).json({ error: 'The court brief could not be saved. Please try again.' });
+  } finally {
+    client.release();
+  }
+});
+
 app.get('/api/cases/:caseId/messages', async (req, res) => {
   const caseId = cleanText(req.params.caseId, 20).toUpperCase();
   if (!/^OP-\d{4}-\d{6}$/.test(caseId)) return res.status(400).json({ error: 'Enter a valid case reference.' });
@@ -1438,7 +1517,24 @@ app.get('/api/incidents/:caseId', async (req, res) => {
       [incident.id],
     );
 
-    return res.json({ incident: publicIncident, events: eventsResult.rows, evidence_count: evidenceResult.rows[0].count });
+    const courtBriefsResult = await pool.query(
+      `SELECT cb.id, cb.court_name, cb.hearing_type, cb.presiding_magistrate, cb.proceedings_summary,
+              cb.court_orders, cb.next_court_date, cb.instructions_to_applicant, cb.created_at,
+              vr.organization AS lawyer_org
+       FROM court_briefs cb
+       LEFT JOIN users u ON cb.lawyer_id = u.id
+       LEFT JOIN verification_requests vr ON vr.user_id = u.id AND vr.review_status = 'Approved'
+       WHERE cb.incident_id = $1
+       ORDER BY cb.created_at DESC`,
+      [incident.id]
+    );
+
+    return res.json({
+      incident: publicIncident,
+      events: eventsResult.rows,
+      evidence_count: evidenceResult.rows[0].count,
+      court_briefs: courtBriefsResult.rows
+    });
   } catch (error) {
     console.error('Incident lookup failed:', error.message);
     return res.status(500).json({ error: 'The case could not be loaded. Please try again.' });

@@ -192,3 +192,19 @@ CREATE TABLE IF NOT EXISTS case_messages (
 
 CREATE INDEX IF NOT EXISTS case_messages_incident_idx ON case_messages (incident_id, created_at ASC);
 
+
+CREATE TABLE IF NOT EXISTS court_briefs (
+  id BIGSERIAL PRIMARY KEY,
+  incident_id BIGINT NOT NULL REFERENCES incidents(id) ON DELETE CASCADE,
+  lawyer_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  court_name VARCHAR(180) NOT NULL,
+  hearing_type VARCHAR(100) NOT NULL,
+  presiding_magistrate VARCHAR(140),
+  proceedings_summary TEXT NOT NULL,
+  court_orders TEXT,
+  next_court_date DATE,
+  instructions_to_applicant TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS court_briefs_incident_id_idx ON court_briefs (incident_id, created_at DESC);
