@@ -418,5 +418,6 @@
     async function load(){try{const response=await fetch('/api/press/exports/preview');const payload=await response.json();if(!response.ok)throw new Error(payload.error||'Sign in with a verified journalist account to view exports.');render(payload)}catch(error){showError(error.message)}}load();
   </script>
   <script src="/motion.js?v=20261027b" defer></script>
+  <script src="/ai-companion.js" defer></script>
 </body>
 </html>

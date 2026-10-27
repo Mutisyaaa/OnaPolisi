@@ -915,13 +915,31 @@
             </div>
             <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
               <div class="status-badge" id="status-badge"></div>
-              <a class="button" id="case-receipt-btn" target="_blank" href="/" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 0.82rem; font-weight: 700; border: 1.5px solid #CBD5E1; background: #FFFFFF; color: #0F1419; border-radius: 8px; text-decoration: none;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                Official Receipt
-              </a>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
+                <button class="button" id="case-ai-btn" type="button" data-ona-ai-explain style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 0.82rem; font-weight: 750; background: linear-gradient(135deg, #064E3B 0%, #0B6B3A 100%); color: #FFFFFF; border: 1.5px solid rgba(6, 78, 59, 0.4); border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(6, 78, 59, 0.2);">
+                  <span>✨</span>
+                  <span>Explain with AI</span>
+                </button>
+                <a class="button" id="case-receipt-btn" target="_blank" href="/" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 0.82rem; font-weight: 700; border: 1.5px solid #CBD5E1; background: #FFFFFF; color: #0F1419; border-radius: 8px; text-decoration: none;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                  Official Receipt
+                </a>
+              </div>
             </div>
           </div>
           <div class="timeline" id="timeline"></div>
+          <div class="ai-insight-box" id="ai-insight-box" style="margin: 18px 0; padding: 14px 18px; background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%); border: 1.5px solid #A7F3D0; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; gap: 14px; box-shadow: 0 4px 14px rgba(6, 78, 59, 0.05);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 36px; height: 36px; border-radius: 10px; background: #064E3B; color: #FEF08A; display: grid; place-items: center; font-size: 1.1rem; flex-shrink: 0;">✨</div>
+              <div>
+                <div style="font-weight: 800; color: #064E3B; font-size: 0.92rem;">Ona AI Case Guide</div>
+                <div style="font-size: 0.82rem; color: #047857; margin-top: 2px;">Ask Ona AI to explain what this status means, what steps our pro-bono advocates are taking, and your rights.</div>
+              </div>
+            </div>
+            <button type="button" class="button" data-ona-ai-explain style="padding: 7px 16px; font-size: 0.82rem; font-weight: 750; background: #064E3B; color: #FFFFFF; border-radius: 999px; border: none; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 12px rgba(6, 78, 59, 0.2);">
+              Analyze Status →
+            </button>
+          </div>
           <div class="activity" id="activity"></div>
           <div class="case-details">
             <div class="detail">
@@ -1290,5 +1308,6 @@
     })();
   </script>
   <script src="/motion.js?v=20261027b" defer></script>
+  <script src="/ai-companion.js" defer></script>
 </body>
 </html>

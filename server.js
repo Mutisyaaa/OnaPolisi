@@ -11,6 +11,7 @@ const { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } = re
 const sharp = require('sharp');
 const net = require('node:net');
 const { promisify } = require('node:util');
+const { handleAiAssistantQuery } = require('./lib/aiAssistant');
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
@@ -1663,6 +1664,26 @@ app.post('/api/incidents', (req, res, next) => {
       }
     }
   });
+});
+
+app.post('/api/ai/assistant', async (req, res) => {
+  const userMessage = cleanText(req.body?.message, 2000);
+  const caseId = cleanText(req.body?.case_id || req.body?.caseId, 40);
+
+  if (!userMessage) {
+    return res.status(400).json({ error: 'Please enter a message or case code.' });
+  }
+
+  try {
+    const result = await handleAiAssistantQuery({ userMessage, caseId, pool });
+    if (!result.success) {
+      return res.status(500).json({ error: result.error || 'The AI assistant could not process your request.' });
+    }
+    return res.json(result);
+  } catch (error) {
+    console.error('AI assistant route error:', error.message);
+    return res.status(500).json({ error: 'Failed to consult the AI assistant. Please try again.' });
+  }
 });
 
 app.use((error, req, res, next) => {
