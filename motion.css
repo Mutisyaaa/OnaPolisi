@@ -45,41 +45,100 @@ body::after { bottom: -11rem; left: -9rem; border-color: rgba(200, 16, 46, 0.1);
 }
 .brand:hover .brand-mark { transform: translateY(-3px) rotate(-4deg) scale(1.04); box-shadow: 7px 7px 0 var(--alert), 0 10px 22px rgba(15, 20, 25, 0.15); }
 
+/* Glassmorphism & Tactile Button System adapted from cya-platform */
 .button,
 .nav-cta,
 .tab,
 .close-button,
 button {
-  transform-style: preserve-3d;
-  transition: transform 180ms var(--motion-ease), box-shadow 180ms var(--motion-ease), border-color 180ms ease, background 180ms ease, color 180ms ease;
+  transition: transform 220ms var(--motion-ease), box-shadow 220ms var(--motion-ease), border-color 220ms ease, background 220ms ease, color 220ms ease;
 }
 
 .button,
-.nav-cta { position: relative; overflow: hidden; }
+.nav-cta {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* Shimmer beam sweep on hover */
 .button::before,
 .nav-cta::before {
   position: absolute;
   inset: 0;
   content: "";
-  background: linear-gradient(115deg, rgba(255, 255, 255, 0.34), transparent 38%, transparent 62%, rgba(255, 255, 255, 0.12));
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.45), transparent 38%, transparent 62%, rgba(255, 255, 255, 0.2));
   transform: translateX(-110%);
   transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
 .button:hover::before,
 .nav-cta:hover::before { transform: translateX(110%); }
+
 .button:hover,
-.nav-cta:hover { transform: translateY(-3px) scale(1.02) perspective(500px) rotateX(4deg); }
+.nav-cta:hover {
+  transform: translateY(-2.5px);
+}
 .button:active,
-.nav-cta:active { transform: translateY(3px) scale(0.98) perspective(500px) rotateX(-3deg); transition-duration: 80ms; }
-.button-primary,
-.nav-cta { box-shadow: 0 8px 0 #8d0c20, 0 15px 25px rgba(141, 12, 32, 0.16); }
-.button-primary:hover,
-.nav-cta:hover { box-shadow: 0 11px 0 #8d0c20, 0 20px 32px rgba(141, 12, 32, 0.22); }
+.nav-cta:active {
+  transform: translateY(1px) scale(0.98);
+  transition-duration: 80ms;
+}
+
+/* Primary Pill Button with Green Ambient Aura Glow */
+.button-primary {
+  background: linear-gradient(135deg, #074023 0%, #0B6B3A 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 0 8px 22px rgba(7, 64, 35, 0.26), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+.button-primary:hover {
+  background: linear-gradient(135deg, #05331C 0%, #07542d 100%) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  border-top-color: rgba(255, 255, 255, 0.75) !important;
+  box-shadow: 0 12px 30px rgba(7, 64, 35, 0.38), 0 0 24px rgba(11, 107, 58, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.55) !important;
+}
+
+/* Alert / CTA Pill Button with Crimson Ambient Aura Glow */
+.nav-cta {
+  background: linear-gradient(135deg, #C8102E 0%, #9E0D23 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.48) !important;
+  box-shadow: 0 8px 22px rgba(200, 16, 46, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+.nav-cta:hover {
+  background: linear-gradient(135deg, #a80d26 0%, #7d0a1b 100%) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  border-top-color: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 12px 32px rgba(200, 16, 46, 0.42), 0 0 24px rgba(200, 16, 46, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Frosted Glass Secondary Button (Spec Light-Edge Reflection & Glass Blur) */
 .button-secondary,
-.button:not(.button-primary):not(.nav-cta) { box-shadow: 0 5px 0 rgba(15, 20, 25, 0.09), 0 12px 20px rgba(15, 20, 25, 0.06); }
+.button:not(.button-primary):not(.nav-cta):not(.nav-hamburger):not(.close-button) {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.46) 100%) !important;
+  color: #0F1419 !important;
+  border: 1px solid rgba(221, 217, 207, 0.75) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  border-radius: 999px !important;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  box-shadow: 0 8px 24px rgba(15, 20, 25, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.85) !important;
+}
 .button-secondary:hover,
-.button:not(.button-primary):not(.nav-cta):hover { box-shadow: 0 8px 0 rgba(15, 20, 25, 0.1), 0 18px 28px rgba(15, 20, 25, 0.1); }
+.button:not(.button-primary):not(.nav-cta):not(.nav-hamburger):not(.close-button):hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.7) 100%) !important;
+  border-color: rgba(7, 64, 35, 0.35) !important;
+  border-top-color: rgba(255, 255, 255, 1) !important;
+  box-shadow: 0 12px 30px rgba(15, 20, 25, 0.1), 0 0 20px rgba(11, 107, 58, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.95) !important;
+  color: #074023 !important;
+}
 
 .report-preview,
 .feature,

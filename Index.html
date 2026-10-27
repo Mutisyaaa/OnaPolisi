@@ -59,58 +59,90 @@
     .nav-links { display: flex; align-items: center; gap: 36px; color: #1E293B; font-size: 0.95rem; font-weight: 600; }
     .nav-links a:not(.nav-cta):not(.nav-lawyer-btn):hover { color: #0B6B3A; }
     
-    /* Buttons */
+    /* Glassmorphic & Tactile Buttons adapted from cya-platform */
     .button, .nav-cta { 
       display: inline-flex; align-items: center; justify-content: center; 
-      min-height: 46px; padding: 0 22px; border: 1px solid transparent; 
-      border-radius: 12px; font-weight: 700; font-size: 0.95rem;
-      transition: all 180ms ease; 
+      min-height: 48px; padding: 0 24px; border: 1px solid transparent; 
+      border-radius: 999px; font-weight: 700; font-size: 0.96rem;
+      letter-spacing: 0.2px;
+      transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1); 
       text-decoration: none;
     }
-    .button:hover, .nav-cta:hover { transform: translateY(-1px); }
-    .button:active, .nav-cta:active { transform: translateY(1px); }
+    .button:hover, .nav-cta:hover { transform: translateY(-2.5px); }
+    .button:active, .nav-cta:active { transform: translateY(1px) scale(0.98); }
     
+    /* Alert / Incident Report Pill with Crimson Ambient Glow */
     .nav-cta { 
       min-height: 42px; padding: 0 22px; color: #FFFFFF !important; 
-      background: #A31526; 
+      background: linear-gradient(135deg, #C8102E 0%, #9E0D23 100%); 
       border-radius: 999px; 
-      box-shadow: 0 2px 6px rgba(163, 21, 38, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-top: 1.5px solid rgba(255, 255, 255, 0.48);
+      box-shadow: 0 8px 22px rgba(200, 16, 46, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
     }
-    .nav-cta:hover { background: #8E1120; box-shadow: 0 4px 12px rgba(163, 21, 38, 0.3); }
-    .nav-cta:active { background: #7A0D1B; }
+    .nav-cta:hover { 
+      background: linear-gradient(135deg, #a80d26 0%, #7d0a1b 100%); 
+      border-color: rgba(255, 255, 255, 0.45);
+      border-top-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 12px 32px rgba(200, 16, 46, 0.42), 0 0 24px rgba(200, 16, 46, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.6); 
+    }
+    .nav-cta:active { 
+      background: #7d0a1b;
+      box-shadow: 0 4px 14px rgba(200, 16, 46, 0.3);
+    }
     
+    /* Primary Pill Button with Green Ambient Aura Glow */
     .button-primary { 
-      color: #FFFFFF; 
-      background: #074023; 
-      border-radius: 12px;
+      color: #FFFFFF !important; 
+      background: linear-gradient(135deg, #074023 0%, #0B6B3A 100%); 
+      border-radius: 999px;
+      min-height: 48px;
+      padding: 0 26px;
+      font-size: 0.98rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-top: 1.5px solid rgba(255, 255, 255, 0.45);
+      box-shadow: 0 8px 22px rgba(7, 64, 35, 0.26), inset 0 1px 1px rgba(255, 255, 255, 0.35); 
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    }
+    .button-primary:hover { 
+      background: linear-gradient(135deg, #05331C 0%, #07542d 100%); 
+      border-color: rgba(255, 255, 255, 0.4);
+      border-top-color: rgba(255, 255, 255, 0.75);
+      box-shadow: 0 12px 30px rgba(7, 64, 35, 0.38), 0 0 24px rgba(11, 107, 58, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.55); 
+    }
+    .button-primary:active { 
+      background: #032413; 
+      box-shadow: 0 4px 14px rgba(7, 64, 35, 0.24);
+    }
+    
+    /* Frosted Glass Secondary Button with Specular Edge Reflection */
+    .button-secondary { 
+      color: #0F1419; 
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.5) 100%); 
+      border: 1px solid rgba(221, 217, 207, 0.75);
+      border-top: 1.5px solid rgba(255, 255, 255, 0.95);
+      border-radius: 999px;
       min-height: 48px;
       padding: 0 24px;
       font-size: 0.98rem;
-      box-shadow: 0 2px 8px rgba(7, 64, 35, 0.2); 
-    }
-    .button-primary:hover { 
-      background: #05331C; 
-      box-shadow: 0 6px 16px rgba(7, 64, 35, 0.3); 
-    }
-    .button-primary:active { background: #032413; }
-    
-    .button-secondary { 
-      color: #0F1419; 
-      border: 1.5px solid #1E293B; 
-      background: #FFFFFF; 
-      border-radius: 12px;
-      min-height: 48px;
-      padding: 0 22px;
-      font-size: 0.98rem;
-      box-shadow: 0 1px 3px rgba(15, 20, 25, 0.04); 
+      backdrop-filter: blur(16px) saturate(160%);
+      -webkit-backdrop-filter: blur(16px) saturate(160%);
+      box-shadow: 0 8px 24px rgba(15, 20, 25, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.85); 
     }
     .button-secondary:hover { 
-      background: #FAF8F5; 
-      border-color: #000000;
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.72) 100%); 
+      border-color: rgba(7, 64, 35, 0.35);
+      border-top-color: rgba(255, 255, 255, 1);
+      box-shadow: 0 12px 30px rgba(15, 20, 25, 0.1), 0 0 20px rgba(11, 107, 58, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.95);
+      color: #074023;
     }
-    .button-secondary:active { transform: translateY(1px); }
+    .button-secondary:active { 
+      transform: translateY(1px) scale(0.98); 
+      box-shadow: 0 4px 14px rgba(15, 20, 25, 0.05);
+    }
 
+    /* Translucent Advocate Pill Button */
     .nav-lawyer-btn {
       display: inline-flex;
       align-items: center;
@@ -118,20 +150,23 @@
       min-height: 42px;
       padding: 0 20px;
       color: #0F1419;
-      background: #FFFFFF;
-      border: 1.5px solid #CBD5E1;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.58) 100%);
+      border: 1px solid rgba(203, 213, 225, 0.8);
+      border-top: 1.5px solid rgba(255, 255, 255, 0.95);
       border-radius: 999px;
+      backdrop-filter: blur(14px);
       font-size: 0.9rem;
       font-weight: 700;
-      transition: all 0.18s ease;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       text-decoration: none;
-      box-shadow: 0 1px 3px rgba(15, 20, 25, 0.03);
+      box-shadow: 0 4px 14px rgba(15, 20, 25, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8);
     }
     .nav-lawyer-btn:hover {
       background: #FFFFFF;
-      border-color: #0F1419;
-      color: #0F1419;
-      transform: translateY(-1px);
+      border-color: #074023;
+      color: #074023;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(15, 20, 25, 0.08), 0 0 16px rgba(11, 107, 58, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.95);
     }
     
     .button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(11,107,58,0.2); outline-offset: 3px; }
@@ -554,9 +589,30 @@
     .cta > * { position: relative; z-index: 1; }
     .cta h2 { margin-bottom: 16px; color: #fff; }
     .cta p { max-width: 600px; margin-bottom: 0; color: #d8f0e1; font-size: 1.15rem; }
-    .cta .button { color: var(--text); background: #fff; white-space: nowrap; box-shadow: 0 8px 0 #064c29; font-size: 1.1rem; padding: 0 32px; min-height: 56px; }
-    .cta .button:hover { background: #f7f5f0; box-shadow: 0 10px 0 #064c29, 0 12px 24px rgba(6,76,41,0.4); transform: translateY(-3px); }
-    .cta .button:active { box-shadow: 0 2px 0 #064c29; transform: translateY(3px); }
+    .cta .button { 
+      color: #074023; 
+      background: #FFFFFF; 
+      white-space: nowrap; 
+      border-radius: 999px;
+      font-size: 1.05rem; 
+      font-weight: 800;
+      padding: 0 34px; 
+      min-height: 52px; 
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-top: 1.5px solid #FFFFFF;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.95);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cta .button:hover { 
+      background: #F8FAFC; 
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28), 0 0 22px rgba(255, 255, 255, 0.35), inset 0 1px 2px #FFFFFF;
+      color: #05331C;
+    }
+    .cta .button:active { 
+      transform: translateY(1px) scale(0.98); 
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); 
+    }
 
     /* Footer */
     footer { padding: 40px 0 60px; color: var(--muted); font-size: 0.9rem; font-weight: 500; background: var(--surface); border-top: 1px solid var(--border); }
