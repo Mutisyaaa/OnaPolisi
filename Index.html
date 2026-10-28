@@ -112,25 +112,38 @@
       box-shadow: 0 4px 14px rgba(7, 64, 35, 0.24);
     }
     
-    /* Secondary Button - Seamless Joined Border */
-    .button-secondary { 
-      color: #064E3B; 
-      background: linear-gradient(135deg, #E6F5EC 0%, #D4EFE0 100%); 
-      border: 1.5px solid #064E3B;
-      border-radius: 999px;
+    /* Secondary & Track Case Buttons - Seamless Joined Forest Green Border */
+    .button-secondary,
+    a.button-secondary,
+    .cta-btn-sub { 
+      color: #064E3B !important; 
+      background: linear-gradient(135deg, #E6F5EC 0%, #D4EFE0 100%) !important; 
+      border: 1.5px solid #064E3B !important;
+      border-radius: 999px !important;
       min-height: 48px;
       padding: 0 24px;
       font-size: 0.98rem;
-      font-weight: 750;
+      font-weight: 750 !important;
       backdrop-filter: blur(14px) saturate(140%);
       -webkit-backdrop-filter: blur(14px) saturate(140%);
-      box-shadow: 0 4px 14px rgba(6, 78, 59, 0.08); 
+      box-shadow: 0 4px 14px rgba(6, 78, 59, 0.08) !important; 
+      text-decoration: none !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
     }
-    .button-secondary:hover { 
-      background: linear-gradient(135deg, #D6F1E2 0%, #BFE8D2 100%); 
-      border: 1.5px solid #043D2E;
-      box-shadow: 0 8px 24px rgba(6, 78, 59, 0.16), 0 0 16px rgba(11, 107, 58, 0.14);
-      color: #022C22;
+    .button-secondary:hover,
+    a.button-secondary:hover,
+    .cta-btn-sub:hover { 
+      background: linear-gradient(135deg, #D6F1E2 0%, #BFE8D2 100%) !important; 
+      border: 1.5px solid #043D2E !important;
+      box-shadow: 0 8px 24px rgba(6, 78, 59, 0.16), 0 0 16px rgba(11, 107, 58, 0.14) !important;
+      color: #022C22 !important;
+      transform: translateY(-2px);
+    }
+    .button-secondary::before,
+    .cta-btn-sub::before {
+      display: none !important;
     }
     .button-secondary:active { 
       transform: translateY(1px) scale(0.98); 
@@ -729,14 +742,7 @@
       background: #F8FAFC !important; 
       transform: translateY(-2px); 
     }
-    .cta-btn-sub { 
-      background: rgba(255, 255, 255, 0.14) !important; 
-      color: #FFFFFF !important; 
-      border: 1px solid rgba(255, 255, 255, 0.3) !important; 
-    }
-    .cta-btn-sub:hover { 
-      background: rgba(255, 255, 255, 0.24) !important; 
-    }
+    /* cta-btn-sub now inherits seamless light green styling above */
 
     /* Footer */
     footer { padding: 40px 0 60px; color: var(--muted); font-size: 0.9rem; font-weight: 500; background: var(--surface); border-top: 1px solid var(--border); }
@@ -1177,7 +1183,7 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="/motion.css?v=20261028b" />
+  <link rel="stylesheet" href="/motion.css?v=20261028c" />
 </head>
 <body>
   <header class="site-header" id="home">
@@ -1221,7 +1227,7 @@
           <p class="hero-copy">Secure, anonymous incident documentation directly connected to certified legal aid and human rights advocates in Kenya.</p>
           <div class="hero-actions">
             <button class="button button-primary" data-open-report>Start a report <span aria-hidden="true">&nbsp;→</span></button>
-            <a class="button button-secondary" href="/case">Track a case</a>
+            <a class="button button-secondary" href="/case" id="hero-track-btn" style="background: linear-gradient(135deg, #E6F5EC 0%, #D4EFE0 100%) !important; color: #064E3B !important; border: 1.5px solid #064E3B !important;">Track a case</a>
           </div>
           <div class="hero-trust-bar">
             <span>100% Anonymous</span>
@@ -1384,7 +1390,7 @@
           </div>
           <div class="cta-btns">
             <button class="button button-primary cta-btn-main" data-open-report>Start a report →</button>
-            <a class="button button-secondary cta-btn-sub" href="/case">Track a case</a>
+            <a class="button button-secondary cta-btn-sub" href="/case" style="background: linear-gradient(135deg, #E6F5EC 0%, #D4EFE0 100%) !important; color: #064E3B !important; border: 1.5px solid #064E3B !important;">Track a case</a>
           </div>
         </div>
       </div>

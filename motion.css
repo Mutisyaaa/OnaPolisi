@@ -63,6 +63,14 @@ button {
   letter-spacing: 0.2px;
 }
 
+
+.button-secondary::before,
+.button.secondary::before,
+a.button-secondary::before,
+.cta-btn-sub::before {
+  display: none !important;
+}
+
 /* Shimmer beam sweep on hover */
 .button::before,
 .nav-cta::before {
