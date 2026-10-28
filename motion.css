@@ -87,57 +87,67 @@ button {
   transition-duration: 80ms;
 }
 
-/* Primary Pill Button with Green Ambient Aura Glow */
-.button-primary {
+/* Primary Pill Button - Seamless Joined Border (No White Split Line) */
+.button-primary,
+.button.primary,
+button.button.primary,
+a.button.primary,
+button[type="submit"]:not(.secondary):not(.btn-advance-escalate):not(.btn-advance-resolve) {
   background: linear-gradient(135deg, #064E3B 0%, #0B6B3A 100%) !important;
   color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
-  box-shadow: 0 8px 22px rgba(7, 64, 35, 0.26), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  border: 1.5px solid #064E3B !important;
+  border-radius: 999px !important;
+  box-shadow: 0 8px 22px rgba(7, 64, 35, 0.26) !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
-.button-primary:hover {
+.button-primary:hover,
+.button.primary:hover,
+button.button.primary:hover,
+a.button.primary:hover,
+button[type="submit"]:not(.secondary):not(.btn-advance-escalate):not(.btn-advance-resolve):hover {
   background: linear-gradient(135deg, #043D2E 0%, #065F46 100%) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
-  border-top-color: rgba(255, 255, 255, 0.75) !important;
-  box-shadow: 0 12px 30px rgba(7, 64, 35, 0.38), 0 0 24px rgba(11, 107, 58, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.55) !important;
+  border: 1.5px solid #043D2E !important;
+  box-shadow: 0 12px 30px rgba(7, 64, 35, 0.38), 0 0 24px rgba(11, 107, 58, 0.28) !important;
 }
 
-/* Alert / CTA Pill Button with Neutral Depth Shadow */
+/* Alert / CTA Pill Button - Seamless Joined Crimson Border */
 .nav-cta {
   background: linear-gradient(135deg, #C8102E 0%, #9E0D23 100%) !important;
   color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.48) !important;
-  box-shadow: 0 4px 14px rgba(15, 20, 25, 0.14), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  border: 1.5px solid #9E0D23 !important;
+  border-radius: 999px !important;
+  box-shadow: 0 4px 14px rgba(15, 20, 25, 0.14) !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 .nav-cta:hover {
   background: linear-gradient(135deg, #a80d26 0%, #7d0a1b 100%) !important;
-  border-color: rgba(255, 255, 255, 0.45) !important;
-  border-top-color: rgba(255, 255, 255, 0.8) !important;
-  box-shadow: 0 8px 22px rgba(15, 20, 25, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+  border: 1.5px solid #7d0a1b !important;
+  box-shadow: 0 8px 22px rgba(15, 20, 25, 0.2) !important;
 }
 
-/* Light Green Secondary / Tactile Buttons (Subtle Tint of Main Green) */
+/* Light Green Secondary / Tactile Buttons - Seamless Joined Forest Green Border (No White Split Line) */
 .button-secondary,
-.button:not(.button-primary):not(.nav-cta):not(.nav-hamburger):not(.close-button) {
+.button.secondary,
+button.button.secondary,
+a.button.secondary,
+.button:not(.button-primary):not(.primary):not(.nav-cta):not(.nav-hamburger):not(.close-button):not(.stage-modal-close):not(.tertiary) {
   background: linear-gradient(135deg, #E6F5EC 0%, #D4EFE0 100%) !important;
   color: #064E3B !important;
-  border: 1.5px solid rgba(6, 78, 59, 0.22) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  border: 1.5px solid #064E3B !important;
   border-radius: 999px !important;
   font-weight: 750 !important;
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
-  box-shadow: 0 4px 14px rgba(6, 78, 59, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 4px 14px rgba(6, 78, 59, 0.08) !important;
 }
 .button-secondary:hover,
-.button:not(.button-primary):not(.nav-cta):not(.nav-hamburger):not(.close-button):hover {
+.button.secondary:hover,
+button.button.secondary:hover,
+a.button.secondary:hover,
+.button:not(.button-primary):not(.primary):not(.nav-cta):not(.nav-hamburger):not(.close-button):not(.stage-modal-close):not(.tertiary):hover {
   background: linear-gradient(135deg, #D6F1E2 0%, #BFE8D2 100%) !important;
-  border-color: #064E3B !important;
-  border-top-color: rgba(255, 255, 255, 1) !important;
-  box-shadow: 0 8px 24px rgba(6, 78, 59, 0.16), 0 0 16px rgba(11, 107, 58, 0.14), inset 0 1px 2px rgba(255, 255, 255, 0.95) !important;
+  border: 1.5px solid #043D2E !important;
+  box-shadow: 0 8px 24px rgba(6, 78, 59, 0.16), 0 0 16px rgba(11, 107, 58, 0.14) !important;
   color: #022C22 !important;
   transform: translateY(-2px);
 }
