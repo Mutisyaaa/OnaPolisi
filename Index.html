@@ -8,14 +8,22 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
   <link rel="apple-touch-icon" href="/favicon-512.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;750;800&family=Space+Grotesk:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     :root {
+      --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --bg: #F8FAFC;
       --surface: #FFFFFF;
       --text: #0F172A;
       --muted: #475569;
       --border: #E2E8F0;
       --primary: #064E3B;
+      --primary-dark: #022016;
+      --emerald: #10B981;
+      --emerald-light: #34D399;
       --alert: #C8102E;
       --highlight: #F2A900;
       --ink-soft: #171D24;
@@ -23,9 +31,9 @@
       --state-review: #E0A100;
       --state-escalated: #D95C14;
       --state-resolved: #1E8A4C;
-      --shadow-soft: 0 3px 8px rgba(15, 20, 25, 0.06);
-      --shadow-glass: 0 18px 44px rgba(15, 20, 25, 0.12), 0 3px 8px rgba(15, 20, 25, 0.06);
-      --shadow-lift: 0 24px 54px rgba(15, 20, 25, 0.16), 0 6px 12px rgba(15, 20, 25, 0.08);
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.04), 0 8px 24px -3px rgba(15, 23, 42, 0.06), 0 20px 36px -4px rgba(15, 23, 42, 0.04);
+      --shadow-card-hover: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 14px 28px -4px rgba(15, 23, 42, 0.08), 0 28px 56px -8px rgba(6, 78, 59, 0.12);
       --radius-lg: 24px;
       --radius-md: 16px;
       --card-pad: 32px;
@@ -64,14 +72,28 @@
       box-sizing: border-box;
     }
 
-    /* Typography updates */
-    h1, h2, h3, h4 { margin-top: 0; color: #0F1419; letter-spacing: -0.04em; }
-    h1 { font-size: clamp(3.2rem, 5.8vw, 4.8rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.05em; margin-bottom: 24px; }
-    h2 { font-size: clamp(2.5rem, 5vw, 3.8rem); font-weight: 850; line-height: 1.05; letter-spacing: -0.05em; }
-    h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); font-weight: 800; }
+    /* Typography: Space Grotesk Display Headings & Clean Sans Body */
+    h1, h2, h3, h4,
+    .brand,
+    .section-title,
+    .section-kicker,
+    .cta-text h2,
+    .step-badge,
+    .preview-head-clean h3,
+    .modal-head h2,
+    .auth-modal-header h2 {
+      font-family: var(--font-display);
+    }
+    p, li, span, button, input, select, textarea, label {
+      font-family: var(--font-body);
+    }
+    h1, h2, h3, h4 { margin-top: 0; color: #0F1419; letter-spacing: -0.03em; }
+    h1 { font-size: clamp(3.1rem, 5.6vw, 4.6rem); font-weight: 800; line-height: 1.06; letter-spacing: -0.04em; margin-bottom: 24px; }
+    h2 { font-size: clamp(2.4rem, 4.8vw, 3.6rem); font-weight: 800; line-height: 1.08; letter-spacing: -0.035em; }
+    h3 { font-size: clamp(1.2rem, 2vw, 1.45rem); font-weight: 750; }
     p, li { font-weight: 400; }
     strong { font-weight: 750; }
-    .eyebrow, .section-kicker { color: var(--primary); font-size: 0.8rem; font-weight: 850; letter-spacing: 0.12em; text-transform: uppercase; }
+    .eyebrow, .section-kicker { color: var(--primary); font-size: 0.82rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
 
     /* Header & Navigation matching mockup */
     .site-header { position: relative; border-bottom: none; background: transparent; }
@@ -738,27 +760,27 @@
       font-weight: 500; 
     }
 
-    /* Sections */
-    .section { padding: 84px 0; }
+    /* Sections: Alternating Rhythm (Light -> Dark -> Light -> Dark) */
+    .section { padding: 92px 0; }
     .section-header { 
       text-align: center; 
       max-width: 680px; 
-      margin: 0 auto 48px; 
+      margin: 0 auto 52px; 
     }
     .section-kicker { 
       display: inline-block; 
-      font-size: 0.76rem; 
-      font-weight: 850; 
-      letter-spacing: 0.1em; 
+      font-size: 0.78rem; 
+      font-weight: 800; 
+      letter-spacing: 0.12em; 
       text-transform: uppercase; 
       color: #0B6B3A; 
-      margin-bottom: 8px; 
+      margin-bottom: 10px; 
     }
     h2.section-title { 
-      font-size: clamp(1.85rem, 3.8vw, 2.35rem); 
-      font-weight: 850; 
-      color: #0F1419; 
-      letter-spacing: -0.03em; 
+      font-size: clamp(2rem, 3.8vw, 2.5rem); 
+      font-weight: 800; 
+      color: #0F172A; 
+      letter-spacing: -0.035em; 
       margin: 0; 
       position: relative; 
     }
@@ -766,7 +788,7 @@
       content: ""; 
       width: 48px; 
       height: 3.5px; 
-      background: #074023; 
+      background: #0B6B3A; 
       display: block; 
       margin: 14px auto 0; 
       border-radius: 99px; 
@@ -774,120 +796,169 @@
     .section-intro { 
       margin-top: 14px; 
       color: #64748B; 
-      font-size: 1.05rem; 
+      font-size: 1.08rem; 
       font-weight: 450; 
       line-height: 1.55; 
     }
 
-    /* Feature Grid (Clean 3-Card Array) */
+    /* Section 1: Core Capabilities (Deep Institutional Dark Section) */
+    .features-section {
+      background: #021C14;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.14) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(6, 78, 59, 0.25) 0%, transparent 50%);
+      padding: 96px 0;
+      position: relative;
+    }
+    .features-section .section-kicker {
+      color: #34D399;
+    }
+    .features-section h2.section-title {
+      color: #F8FAFC;
+    }
+    .features-section h2.section-title::after {
+      background: #10B981;
+    }
+    .features-section .section-intro {
+      color: #94A3B8;
+    }
+
+    /* Feature Grid (Depth Cards with Subtle Borders & Layered Shadows) */
     .feature-grid { 
       display: grid; 
       grid-template-columns: repeat(3, 1fr); 
-      gap: 26px; 
+      gap: 28px; 
     }
-    .feature { 
-      padding: 34px 28px; 
-      background: #FFFFFF; 
-      border: 1px solid rgba(226, 232, 240, 0.9); 
-      border-radius: 18px; 
-      box-shadow: 0 10px 28px rgba(15, 20, 25, 0.04); 
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease; 
+    .features-section .feature { 
+      padding: 38px 30px; 
+      background: rgba(255, 255, 255, 0.035); 
+      border: 1px solid rgba(255, 255, 255, 0.09); 
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 20px; 
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.2),
+        0 16px 36px -4px rgba(0, 0, 0, 0.35); 
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease, background 0.28s ease; 
       display: flex; 
       flex-direction: column; 
       text-align: left;
     }
-    .feature:hover { 
-      transform: translateY(-5px); 
-      border-color: rgba(7, 64, 35, 0.3); 
-      box-shadow: 0 18px 38px rgba(15, 20, 25, 0.08); 
+    .features-section .feature:hover { 
+      transform: translateY(-6px); 
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(52, 211, 153, 0.4); 
+      border-top-color: rgba(52, 211, 153, 0.7);
+      box-shadow: 
+        0 10px 20px -2px rgba(0, 0, 0, 0.3),
+        0 24px 50px -4px rgba(0, 0, 0, 0.5),
+        0 0 32px rgba(16, 185, 129, 0.16); 
     }
-    .feature-icon-wrap { 
+    .features-section .feature-icon-wrap { 
       display: grid; 
       place-items: center; 
-      width: 50px; 
-      height: 50px; 
+      width: 52px; 
+      height: 52px; 
       margin-bottom: 22px; 
-      color: #074023; 
-      background: #E8F5E9; 
+      color: #34D399; 
+      background: rgba(16, 185, 129, 0.15); 
+      border: 1px solid rgba(52, 211, 153, 0.3);
       border-radius: 14px; 
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
     }
-    .feature h3 { 
-      margin-bottom: 8px; 
-      font-size: 1.2rem; 
-      font-weight: 800; 
-      color: #0F1419; 
+    .features-section .feature h3 { 
+      margin-bottom: 10px; 
+      font-size: 1.25rem; 
+      font-weight: 750; 
+      color: #F8FAFC; 
     }
-    .feature p { 
+    .features-section .feature p { 
       margin-bottom: 0; 
-      color: #64748B; 
-      font-size: 0.94rem; 
+      color: #94A3B8; 
+      font-size: 0.95rem; 
       line-height: 1.55; 
-      font-weight: 450; 
+      font-weight: 400; 
     }
 
-    /* How It Works (Clean Bright Step Grid) */
+    /* Section 2: How It Works (Clean, Bright Step Grid - Light Section) */
     .steps-section { 
-      background: #F8FAF9; 
-      border-top: 1px solid rgba(226, 232, 240, 0.85); 
-      border-bottom: 1px solid rgba(226, 232, 240, 0.85); 
+      background: #F8FAFC; 
+      border-top: 1px solid #E2E8F0; 
+      border-bottom: 1px solid #E2E8F0; 
+      padding: 96px 0;
     }
     .steps-grid { 
       display: grid; 
       grid-template-columns: repeat(4, 1fr); 
-      gap: 20px; 
+      gap: 22px; 
     }
     .step-card { 
       background: #FFFFFF; 
-      padding: 30px 22px; 
-      border-radius: 18px; 
-      border: 1px solid rgba(226, 232, 240, 0.85); 
-      box-shadow: 0 8px 22px rgba(15, 20, 25, 0.03); 
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; 
+      padding: 34px 24px; 
+      border-radius: 20px; 
+      border: 1px solid rgba(226, 232, 240, 0.9); 
+      box-shadow: 
+        0 1px 3px rgba(15, 23, 42, 0.04),
+        0 8px 24px -2px rgba(15, 23, 42, 0.05); 
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease; 
       text-align: left;
     }
     .step-card:hover { 
-      transform: translateY(-4px); 
-      box-shadow: 0 16px 34px rgba(15, 20, 25, 0.07); 
-      border-color: rgba(7, 64, 35, 0.25); 
+      transform: translateY(-5px); 
+      box-shadow: 
+        0 4px 6px -1px rgba(15, 23, 42, 0.04),
+        0 18px 36px -4px rgba(6, 78, 59, 0.10); 
+      border-color: #A7F3D0; 
     }
     .step-badge { 
       display: inline-flex; 
       align-items: center; 
       justify-content: center; 
-      width: 44px; 
-      height: 44px; 
-      border-radius: 12px; 
-      background: #E8F5E9; 
-      color: #074023; 
-      font-weight: 850; 
-      font-size: 0.96rem; 
-      margin-bottom: 18px; 
+      gap: 6px;
+      padding: 0 14px;
+      height: 38px; 
+      border-radius: 999px; 
+      background: #E6F4EA; 
+      color: #064E3B; 
+      font-weight: 800; 
+      font-size: 0.88rem; 
+      margin-bottom: 20px; 
+      border: 1px solid #C6E7D2;
     }
     .step-card h3 { 
       margin-bottom: 8px; 
-      font-size: 1.12rem; 
-      font-weight: 800; 
-      color: #0F1419; 
+      font-size: 1.15rem; 
+      font-weight: 750; 
+      color: #0F172A; 
     }
     .step-card p { 
       margin-bottom: 0; 
       color: #64748B; 
-      font-size: 0.88rem; 
+      font-size: 0.90rem; 
       line-height: 1.5; 
       font-weight: 450; 
     }
 
-    /* CTA Box */
+    /* Section 3: Call To Action (Deep Institutional Dark Section) */
+    .cta-section {
+      background: #02140E;
+      padding: 92px 0;
+    }
     .cta-box { 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
       gap: 32px; 
-      padding: 48px 44px; 
-      background: linear-gradient(135deg, #064E3B 0%, #0B6B3A 100%); 
-      border-radius: 22px; 
+      padding: 52px 48px; 
+      background: linear-gradient(135deg, #032317 0%, #064E3B 100%); 
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      border-top: 1px solid rgba(52, 211, 153, 0.45);
+      border-radius: 24px; 
       color: #FFFFFF; 
-      box-shadow: 0 16px 40px rgba(7, 64, 35, 0.18); 
+      box-shadow: 
+        0 24px 56px rgba(0, 0, 0, 0.38),
+        0 0 40px rgba(16, 185, 129, 0.12); 
       flex-wrap: wrap; 
     }
     .cta-text h2 { 
@@ -921,7 +992,15 @@
     /* cta-btn-sub now inherits seamless light green styling above */
 
     /* Footer */
-    footer { padding: 40px 0 60px; color: var(--muted); font-size: 0.9rem; font-weight: 500; background: var(--surface); border-top: 1px solid var(--border); }
+    footer { 
+      padding: 44px 0 64px; 
+      color: #94A3B8; 
+      font-size: 0.9rem; 
+      font-weight: 500; 
+      background: #010E0A; 
+      border-top: 1px solid rgba(255, 255, 255, 0.08); 
+    }
+    .footer-brand { color: #F8FAFC; }
     .footer-inner { display: flex; justify-content: space-between; gap: 24px; align-items: center; }
     .footer-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--text); }
     .footer-brand .brand-logo { height: 32px; width: auto; }
@@ -1462,7 +1541,9 @@
           <div class="liquid-orb orb-amber"></div>
           <div class="liquid-orb orb-forest"></div>
           <div class="liquid-cursor-glow" id="hero-cursor-glow"></div>
-          <div class="scenery-watermark">⚖️</div>
+          <div class="scenery-watermark" aria-hidden="true">
+            <svg width="180" height="180" viewBox="0 0 24 24" fill="none" stroke="#064E3B" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scale"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+          </div>
         </div>
 
         <div class="hero-content-tile" id="hero-glass-tile">
@@ -1538,21 +1619,27 @@
   <div class="reassurance-bar" aria-label="Core platform assurances">
     <div class="container reassurance-grid">
       <div class="reassurance-cell">
-        <span class="reassurance-icon-box">🛡️</span>
+        <span class="reassurance-icon-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+        </span>
         <div>
           <strong>100% Anonymous</strong>
           <span>Zero IP logs or account registration</span>
         </div>
       </div>
       <div class="reassurance-cell">
-        <span class="reassurance-icon-box">⚖️</span>
+        <span class="reassurance-icon-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scale"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+        </span>
         <div>
           <strong>Verified LSK Advocates</strong>
           <span>Accredited pro-bono legal review</span>
         </div>
       </div>
       <div class="reassurance-cell">
-        <span class="reassurance-icon-box">🔒</span>
+        <span class="reassurance-icon-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock-keyhole"><circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg>
+        </span>
         <div>
           <strong>Tamper-Evident Receipts</strong>
           <span>Permanent cryptographically verified record</span>
@@ -1562,8 +1649,8 @@
   </div>
 
   <main>
-    <!-- Section 1: Core Capabilities (Clean CYA 3-Card Grid) -->
-    <section class="section" id="why-ona-polisi">
+    <!-- Section 1: Core Capabilities (Deep Institutional Dark Section) -->
+    <section class="section features-section" id="why-ona-polisi">
       <div class="container">
         <div class="section-header">
           <span class="section-kicker">BUILT FOR CITIZEN INTEGRITY</span>
@@ -1573,24 +1660,24 @@
         <div class="feature-grid">
           <article class="feature">
             <div class="feature-icon-wrap" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
             </div>
             <h3>Anonymous Reporting</h3>
-            <p>File incidents with auto-stripped EXIF metadata. No names, phone numbers, or cookies required.</p>
+            <p>File incidents with auto-stripped EXIF metadata. Zero IP logs, cookies, or personal identifiers required.</p>
           </article>
           <article class="feature">
             <div class="feature-icon-wrap" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             </div>
             <h3>Live Case Tracking</h3>
-            <p>Follow status progression in real time using your private case tracking reference code.</p>
+            <p>Follow status progression in real time using your private case tracking reference code and permanent receipt.</p>
           </article>
           <article class="feature">
             <div class="feature-icon-wrap" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scale"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
             </div>
             <h3>LSK Legal Aid Network</h3>
-            <p>Direct escalation to Law Society of Kenya accredited lawyers ready to provide pro-bono defense.</p>
+            <p>Direct escalation to Law Society of Kenya accredited lawyers ready to provide pro-bono defense and court briefs.</p>
           </article>
         </div>
       </div>
@@ -1606,22 +1693,34 @@
         </div>
         <div class="steps-grid">
           <article class="step-card">
-            <div class="step-badge">01</div>
+            <div class="step-badge">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+              <span>01</span>
+            </div>
             <h3>File Incident</h3>
             <p>Record location, category, details, and optional photo or video evidence.</p>
           </article>
           <article class="step-card">
-            <div class="step-badge">02</div>
+            <div class="step-badge">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key-round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+              <span>02</span>
+            </div>
             <h3>Secure Token</h3>
             <p>Save your tamper-evident case ID. Only you hold the key to track it.</p>
           </article>
           <article class="step-card">
-            <div class="step-badge">03</div>
+            <div class="step-badge">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gavel"><path d="m14 13-7.5 7.5c-.8.8-2 .8-2.8 0s-.8-2 0-2.8L11.2 10.2"/><path d="m16 16 6-6"/><path d="m8 8 6-6"/><path d="m9 7 8 8"/><path d="m21 11-8-8"/></svg>
+              <span>03</span>
+            </div>
             <h3>Legal Review</h3>
             <p>Accredited human rights advocates assess the facts and legal merits.</p>
           </article>
           <article class="step-card">
-            <div class="step-badge">04</div>
+            <div class="step-badge">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+              <span>04</span>
+            </div>
             <h3>Direct Action</h3>
             <p>Connect with assigned legal counsel for representation and escalation.</p>
           </article>
@@ -2025,7 +2124,7 @@
             if (data.user.role === 'lawyer') {
               if (lawyerBtn) {
                 lawyerBtn.href = '/lawyer/available';
-                lawyerBtn.innerHTML = `⚖️ Case Marketplace`;
+                lawyerBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>Case Marketplace`;
                 lawyerBtn.style.borderColor = '#074023';
                 lawyerBtn.style.color = '#074023';
                 lawyerBtn.style.background = '#E6F4EA';
@@ -2037,7 +2136,7 @@
             } else if (data.user.role === 'admin') {
               if (lawyerBtn) {
                 lawyerBtn.href = '/admin';
-                lawyerBtn.innerHTML = `🛡️ Admin Center`;
+                lawyerBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>Admin Center`;
               }
               if (authLink) {
                 authLink.href = '/admin/verification';
