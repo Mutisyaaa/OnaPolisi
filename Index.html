@@ -259,150 +259,12 @@
       border-radius: 28px;
     }
 
-    /* Glass Scenery: Background Scene Designed to Visibly Showcase Glass Refraction */
-    .hero-glass-scenery {
-      position: absolute;
-      inset: -20px -30px;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-      border-radius: 36px;
-    }
-
-    /* Fine Precision Coordinate Grid - Visibly Bends Under Glass Refraction */
-    .scenery-grid {
-      position: absolute;
-      inset: 0;
-      background-size: 32px 32px;
-      background-image: 
-        linear-gradient(to right, rgba(6, 78, 59, 0.08) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(6, 78, 59, 0.08) 1px, transparent 1px);
-      mask-image: radial-gradient(circle at 42% 48%, black 35%, rgba(0,0,0,0.5) 65%, transparent 85%);
-      -webkit-mask-image: radial-gradient(circle at 42% 48%, black 35%, rgba(0,0,0,0.5) 65%, transparent 85%);
-      opacity: 0.85;
-    }
-
-    /* Architectural Coordinate Ticks */
-    .scenery-coords {
-      position: absolute;
-      top: 16px;
-      left: 28px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.72rem;
-      font-weight: 750;
-      color: rgba(6, 78, 59, 0.38);
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      user-select: none;
-    }
-
-    /* Rich Floating Liquid Orbs (Apple VisionOS / Stripe Style) */
-    .liquid-orb {
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      will-change: transform;
-    }
-    .orb-emerald {
-      width: 340px;
-      height: 340px;
-      top: -40px;
-      left: -30px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.55) 0%, rgba(16, 185, 129, 0.18) 45%, transparent 70%);
-      filter: blur(36px);
-      animation: driftEmerald 11s ease-in-out infinite alternate;
-    }
-    .orb-amber {
-      width: 290px;
-      height: 290px;
-      bottom: -30px;
-      left: 35%;
-      background: radial-gradient(circle, rgba(242, 169, 0, 0.48) 0%, rgba(217, 119, 6, 0.16) 45%, transparent 70%);
-      filter: blur(34px);
-      animation: driftAmber 13s ease-in-out infinite alternate;
-    }
-    .orb-forest {
-      width: 380px;
-      height: 380px;
-      top: 30%;
-      left: 15%;
-      background: radial-gradient(circle, rgba(6, 78, 59, 0.42) 0%, rgba(4, 61, 46, 0.14) 50%, transparent 70%);
-      filter: blur(42px);
-      animation: driftForest 15s ease-in-out infinite alternate;
-    }
-
-    @keyframes driftEmerald {
-      0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(45px, 35px) scale(1.08); }
-      100% { transform: translate(15px, 60px) scale(0.95); }
-    }
-    @keyframes driftAmber {
-      0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(-35px, -40px) scale(1.12); }
-      100% { transform: translate(25px, -20px) scale(0.96); }
-    }
-    @keyframes driftForest {
-      0% { transform: translate(0, 0) scale(0.96); }
-      50% { transform: translate(30px, -25px) scale(1.06); }
-      100% { transform: translate(-25px, 20px) scale(1.02); }
-    }
-
-    /* Interactive Cursor Spotlight Under Glass */
-    .liquid-cursor-glow {
-      position: absolute;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(52, 211, 153, 0.50) 0%, rgba(16, 185, 129, 0.16) 45%, transparent 70%);
-      filter: blur(28px);
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: opacity 0.3s ease;
-      opacity: 0;
-      z-index: 1;
-    }
-
-    /* Subtle Scales Watermark Behind Glass */
-    .scenery-watermark {
-      position: absolute;
-      right: 18%;
-      top: 25%;
-      font-size: 8.5rem;
-      opacity: 0.065;
-      filter: blur(1.5px);
-      transform: rotate(-10deg);
-      user-select: none;
-      line-height: 1;
-    }
-
-    /* Single Unified Liquid Glass Background Tile for Hero Words */
-    .hero-content-tile {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.52) 48%, rgba(240, 253, 244, 0.65) 100%);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border: 1.5px solid rgba(255, 255, 255, 0.88);
-      border-radius: 28px;
-      padding: 42px 40px;
-      box-shadow: 
-        0 24px 54px rgba(15, 23, 42, 0.07),
-        0 4px 18px rgba(6, 78, 59, 0.05);
-      position: relative;
-      overflow: hidden;
-      box-sizing: border-box;
-      z-index: 1;
-      transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.22s ease-out;
-    }
-    .hero-content-tile:hover {
-      box-shadow: 
-        0 32px 68px rgba(15, 23, 42, 0.10),
-        0 8px 24px rgba(6, 78, 59, 0.08);
-      border-color: rgba(167, 243, 208, 0.95);
-    }
-    .hero-content-tile > * {
+    /* Hero Content (Clean & Open Layout) */
+    .hero-content {
       position: relative;
       z-index: 2;
     }
-    .hero-content-tile h1 {
+    .hero-content h1 {
       margin-top: 0;
     }
     .hero-title-accent { color: #074023; font-weight: 900; }
@@ -1345,27 +1207,9 @@
         max-width: 100%;
         box-sizing: border-box;
       }
-      .hero-glass-scenery {
-        inset: -10px 0;
-        border-radius: 22px;
-      }
-      .scenery-coords {
-        left: 12px;
-        top: 10px;
-        font-size: 0.65rem;
-        max-width: calc(100% - 24px);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .scenery-watermark {
-        display: none;
-      }
-      .hero-content-tile {
+      .hero-content {
         width: 100%;
         max-width: 100%;
-        padding: 26px 18px;
-        border-radius: 22px;
         box-sizing: border-box;
       }
       .hero-visual-wrapper {
@@ -1503,21 +1347,8 @@
         </div>
       </nav>
 
-      <div class="hero" id="hero-glass-root">
-        <!-- Background Scenery specifically crafted to be visibly refracted through the glass -->
-        <div class="hero-glass-scenery" aria-hidden="true">
-          <div class="scenery-grid"></div>
-          <div class="scenery-coords">1.2921° S, 36.8219° E &nbsp;·&nbsp; NAIROBI JURISDICTION &nbsp;·&nbsp; ARTICLE 49</div>
-          <div class="liquid-orb orb-emerald"></div>
-          <div class="liquid-orb orb-amber"></div>
-          <div class="liquid-orb orb-forest"></div>
-          <div class="liquid-cursor-glow" id="hero-cursor-glow"></div>
-          <div class="scenery-watermark" aria-hidden="true">
-            <svg width="180" height="180" viewBox="0 0 24 24" fill="none" stroke="#064E3B" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scale"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
-          </div>
-        </div>
-
-        <div class="hero-content-tile" id="hero-glass-tile">
+      <div class="hero">
+        <div class="hero-content">
           <h1>When something<br>happens, there<br>should be a <span class="hero-title-accent">record.</span></h1>
           <p class="hero-copy">Secure, anonymous incident documentation directly connected to certified legal aid and human rights advocates in Kenya.</p>
           <div class="hero-actions">
@@ -2113,41 +1944,6 @@
   </script>
   <script src="/motion.js?v=20261027b" defer></script>
   <script src="/ai-companion.js" defer></script>
-  <!-- Hero Interactive Liquid Light & Tilt Sheen -->
-  <script>
-    (function initHeroInteractive() {
-      const heroRoot = document.getElementById('hero-glass-root');
-      const glassTile = document.getElementById('hero-glass-tile');
-      const cursorGlow = document.getElementById('hero-cursor-glow');
 
-      if (heroRoot && glassTile) {
-        heroRoot.addEventListener('mousemove', (e) => {
-          const rootRect = heroRoot.getBoundingClientRect();
-          const relX = e.clientX - rootRect.left;
-          const relY = e.clientY - rootRect.top;
-
-          if (cursorGlow) {
-            cursorGlow.style.left = relX + 'px';
-            cursorGlow.style.top = relY + 'px';
-            cursorGlow.style.opacity = '1';
-          }
-
-          const tileRect = glassTile.getBoundingClientRect();
-          if (e.clientX >= tileRect.left && e.clientX <= tileRect.right && e.clientY >= tileRect.top && e.clientY <= tileRect.bottom) {
-            const xNorm = (e.clientX - tileRect.left) / tileRect.width - 0.5;
-            const yNorm = (e.clientY - tileRect.top) / tileRect.height - 0.5;
-            glassTile.style.transform = 'perspective(1000px) rotateY(' + (xNorm * 3.5) + 'deg) rotateX(' + (-yNorm * 3.5) + 'deg)';
-          }
-        });
-
-        heroRoot.addEventListener('mouseleave', () => {
-          glassTile.style.transform = '';
-          if (cursorGlow) {
-            cursorGlow.style.opacity = '0';
-          }
-        });
-      }
-    })();
-  </script>
 </body>
 </html>
