@@ -423,23 +423,7 @@
     }
     .hero-trust-sep { color: #CBD5E1; }
 
-    /* Live Activity Pill matching mockup */
-    .live-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      background: #E6F4EA;
-      border: none;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 750;
-      color: #134E2E;
-      margin-bottom: 24px;
-      box-shadow: none;
-      transition: transform 0.2s ease;
-    }
-    .live-pill:hover { transform: translateY(-1px); }
+
     .live-pulse-dot {
       width: 7px;
       height: 7px;
@@ -460,20 +444,7 @@
       0% { transform: scale(0.8); opacity: 1; }
       100% { transform: scale(2.4); opacity: 0; }
     }
-    .live-pill-tag {
-      color: #134E2E;
-      text-transform: uppercase;
-      font-size: 0.74rem;
-      font-weight: 850;
-      letter-spacing: 0.04em;
-    }
-    .live-pill-sep { color: #A7D7B5; }
-    .live-pill-text {
-      color: #134E2E;
-      font-weight: 600;
-      font-size: 0.82rem;
-      transition: opacity 0.3s ease;
-    }
+
 
     /* Hero Visual with Warm Ambient Glow */
     .hero-visual-wrapper { 
@@ -1547,12 +1518,6 @@
         </div>
 
         <div class="hero-content-tile" id="hero-glass-tile">
-          <div class="live-pill" aria-label="System activity status">
-            <span class="live-pulse-dot"></span>
-            <span class="live-pill-tag">LIVE SYSTEM</span>
-            <span class="live-pill-sep">·</span>
-            <span class="live-pill-text" id="live-ticker-text">24 reports documented this week</span>
-          </div>
           <h1>When something<br>happens, there<br>should be a <span class="hero-title-accent">record.</span></h1>
           <p class="hero-copy">Secure, anonymous incident documentation directly connected to certified legal aid and human rights advocates in Kenya.</p>
           <div class="hero-actions">
@@ -1952,26 +1917,7 @@
 
     // --- Hero Live Simulator & Ticker Controller ---
     (function initHeroSimulator() {
-      // 1. Live Ticker Messages Rotation
-      const tickerEl = document.getElementById('live-ticker-text');
-      const tickerMessages = [
-        "24 reports documented this week across Nairobi & Mombasa",
-        "14 verified legal advocates currently standing by",
-        "Direct end-to-end evidence hashing enabled",
-        "Average intake triage completed in under 4 minutes",
-        "100% anonymous · Zero IP logs retained"
-      ];
-      let tickerIndex = 0;
-      if (tickerEl) {
-        setInterval(() => {
-          tickerIndex = (tickerIndex + 1) % tickerMessages.length;
-          tickerEl.style.opacity = '0';
-          setTimeout(() => {
-            tickerEl.textContent = tickerMessages[tickerIndex];
-            tickerEl.style.opacity = '1';
-          }, 250);
-        }, 5500);
-      }
+
 
       // 2. Interactive Case Simulator Stages Data
       const stages = [
