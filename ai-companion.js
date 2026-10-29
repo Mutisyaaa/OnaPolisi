@@ -402,8 +402,8 @@
       .ona-ai-drawer {
         bottom: 0;
         right: 0;
-        width: 100vw;
-        max-width: 100vw;
+        width: 100%;
+        max-width: 100%;
         height: 85vh;
         max-height: 85vh;
         border-radius: 20px 20px 0 0;
