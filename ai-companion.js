@@ -25,21 +25,21 @@
       padding: 12px 22px;
       background: linear-gradient(135deg, #064E3B 0%, #0B6B3A 100%);
       color: #FFFFFF;
-      border: 1.5px solid rgba(255, 255, 255, 0.35);
-      border-top: 1.5px solid rgba(255, 255, 255, 0.7);
+      border: 1.5px solid #064E3B;
       border-radius: 999px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       font-size: 0.94rem;
       font-weight: 750;
       letter-spacing: -0.01em;
       cursor: pointer;
-      box-shadow: 0 10px 28px rgba(6, 78, 59, 0.35), 0 0 20px rgba(11, 107, 58, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+      box-shadow: 0 10px 28px rgba(6, 78, 59, 0.35), 0 0 20px rgba(11, 107, 58, 0.25);
       transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
       user-select: none;
     }
     .ona-ai-launcher:hover {
       transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 14px 34px rgba(6, 78, 59, 0.45), 0 0 26px rgba(11, 107, 58, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.7);
+      border-color: #043D2E;
+      box-shadow: 0 14px 34px rgba(6, 78, 59, 0.45), 0 0 26px rgba(11, 107, 58, 0.35);
     }
     .ona-ai-launcher:active {
       transform: translateY(0) scale(0.98);

@@ -176,7 +176,7 @@
       border-color: #064E3B;
       color: #022C22;
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(6, 78, 59, 0.16), 0 0 16px rgba(11, 107, 58, 0.14), inset 0 1px 2px rgba(255, 255, 255, 0.95);
+      box-shadow: 0 8px 20px rgba(6, 78, 59, 0.16), 0 0 16px rgba(11, 107, 58, 0.14);
     }
     
     .button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(11,107,58,0.2); outline-offset: 3px; }
@@ -210,27 +210,120 @@
       position: relative;
     }
 
-    /* Ambient Fluid Mesh Aura for WebGL Refraction */
-    .hero-liquid-backdrop {
+    /* Glass Scenery: Background Scene Designed to Visibly Showcase Glass Refraction */
+    .hero-glass-scenery {
       position: absolute;
-      top: -24px;
-      left: -24px;
-      width: min(100%, 650px);
-      height: calc(100% + 48px);
-      background: radial-gradient(circle at 20% 25%, rgba(16, 185, 129, 0.28) 0%, rgba(6, 78, 59, 0.14) 40%, rgba(248, 250, 252, 0) 70%),
-                  radial-gradient(circle at 85% 65%, rgba(242, 169, 0, 0.18) 0%, rgba(254, 240, 138, 0) 55%),
-                  radial-gradient(circle at 45% 95%, rgba(6, 78, 59, 0.22) 0%, rgba(248, 250, 252, 0) 70%);
-      filter: blur(48px);
-      border-radius: 44px;
+      inset: -20px -30px;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.95;
-      animation: liquidPulse 9s ease-in-out infinite alternate;
+      overflow: hidden;
+      border-radius: 36px;
     }
-    @keyframes liquidPulse {
-      0% { transform: scale(0.97) translate(0, 0); opacity: 0.82; }
-      50% { transform: scale(1.03) translate(12px, -8px); opacity: 1; }
-      100% { transform: scale(1) translate(-8px, 6px); opacity: 0.88; }
+
+    /* Fine Precision Coordinate Grid - Visibly Bends Under Glass Refraction */
+    .scenery-grid {
+      position: absolute;
+      inset: 0;
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(6, 78, 59, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(6, 78, 59, 0.08) 1px, transparent 1px);
+      mask-image: radial-gradient(circle at 42% 48%, black 35%, rgba(0,0,0,0.5) 65%, transparent 85%);
+      -webkit-mask-image: radial-gradient(circle at 42% 48%, black 35%, rgba(0,0,0,0.5) 65%, transparent 85%);
+      opacity: 0.85;
+    }
+
+    /* Architectural Coordinate Ticks */
+    .scenery-coords {
+      position: absolute;
+      top: 16px;
+      left: 28px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.72rem;
+      font-weight: 750;
+      color: rgba(6, 78, 59, 0.38);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      user-select: none;
+    }
+
+    /* Rich Floating Liquid Orbs (Apple VisionOS / Stripe Style) */
+    .liquid-orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      will-change: transform;
+    }
+    .orb-emerald {
+      width: 340px;
+      height: 340px;
+      top: -40px;
+      left: -30px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.55) 0%, rgba(16, 185, 129, 0.18) 45%, transparent 70%);
+      filter: blur(36px);
+      animation: driftEmerald 11s ease-in-out infinite alternate;
+    }
+    .orb-amber {
+      width: 290px;
+      height: 290px;
+      bottom: -30px;
+      left: 35%;
+      background: radial-gradient(circle, rgba(242, 169, 0, 0.48) 0%, rgba(217, 119, 6, 0.16) 45%, transparent 70%);
+      filter: blur(34px);
+      animation: driftAmber 13s ease-in-out infinite alternate;
+    }
+    .orb-forest {
+      width: 380px;
+      height: 380px;
+      top: 30%;
+      left: 15%;
+      background: radial-gradient(circle, rgba(6, 78, 59, 0.42) 0%, rgba(4, 61, 46, 0.14) 50%, transparent 70%);
+      filter: blur(42px);
+      animation: driftForest 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes driftEmerald {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(45px, 35px) scale(1.08); }
+      100% { transform: translate(15px, 60px) scale(0.95); }
+    }
+    @keyframes driftAmber {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-35px, -40px) scale(1.12); }
+      100% { transform: translate(25px, -20px) scale(0.96); }
+    }
+    @keyframes driftForest {
+      0% { transform: translate(0, 0) scale(0.96); }
+      50% { transform: translate(30px, -25px) scale(1.06); }
+      100% { transform: translate(-25px, 20px) scale(1.02); }
+    }
+
+    /* Interactive Cursor Spotlight Under Glass */
+    .liquid-cursor-glow {
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(52, 211, 153, 0.50) 0%, rgba(16, 185, 129, 0.16) 45%, transparent 70%);
+      filter: blur(28px);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s ease;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    /* Subtle Scales Watermark Behind Glass */
+    .scenery-watermark {
+      position: absolute;
+      right: 18%;
+      top: 25%;
+      font-size: 8.5rem;
+      opacity: 0.065;
+      filter: blur(1.5px);
+      transform: rotate(-10deg);
+      user-select: none;
+      line-height: 1;
     }
 
     /* WebGL-Enhanced Liquid Glass Background Tile for Hero Words */
@@ -1255,7 +1348,7 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="/motion.css?v=20261028c" />
+  <link rel="stylesheet" href="/motion.css?v=20261029a" />
 </head>
 <body>
   <header class="site-header" id="home">
@@ -1288,8 +1381,16 @@
       </nav>
 
       <div class="hero" id="hero-glass-root">
-        <!-- Ambient animated fluid mesh aura for WebGL refraction shaders -->
-        <div class="hero-liquid-backdrop" aria-hidden="true"></div>
+        <!-- Background Scenery specifically crafted to be visibly refracted through the glass -->
+        <div class="hero-glass-scenery" aria-hidden="true">
+          <div class="scenery-grid"></div>
+          <div class="scenery-coords">1.2921° S, 36.8219° E &nbsp;·&nbsp; NAIROBI JURISDICTION &nbsp;·&nbsp; ARTICLE 49</div>
+          <div class="liquid-orb orb-emerald"></div>
+          <div class="liquid-orb orb-amber"></div>
+          <div class="liquid-orb orb-forest"></div>
+          <div class="liquid-cursor-glow" id="hero-cursor-glow"></div>
+          <div class="scenery-watermark">⚖️</div>
+        </div>
 
         <div class="hero-content-tile" id="hero-glass-tile">
           <div class="live-pill" aria-label="System activity status">
@@ -1936,17 +2037,33 @@
             }
           });
 
-          // Gentle mouse tilt sheen effect
+          // Interactive Mouse Glow & Tilt Sheen Effect
+          const cursorGlow = document.getElementById('hero-cursor-glow');
+
           heroRoot.addEventListener('mousemove', (e) => {
-            const rect = glassTile.getBoundingClientRect();
-            if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
-              const xNorm = (e.clientX - rect.left) / rect.width - 0.5;
-              const yNorm = (e.clientY - rect.top) / rect.height - 0.5;
+            const rootRect = heroRoot.getBoundingClientRect();
+            const relX = e.clientX - rootRect.left;
+            const relY = e.clientY - rootRect.top;
+
+            if (cursorGlow) {
+              cursorGlow.style.left = `${relX}px`;
+              cursorGlow.style.top = `${relY}px`;
+              cursorGlow.style.opacity = '1';
+            }
+
+            const tileRect = glassTile.getBoundingClientRect();
+            if (e.clientX >= tileRect.left && e.clientX <= tileRect.right && e.clientY >= tileRect.top && e.clientY <= tileRect.bottom) {
+              const xNorm = (e.clientX - tileRect.left) / tileRect.width - 0.5;
+              const yNorm = (e.clientY - tileRect.top) / tileRect.height - 0.5;
               glassTile.style.transform = `perspective(1000px) rotateY(${xNorm * 4}deg) rotateX(${-yNorm * 4}deg)`;
             }
           });
+
           heroRoot.addEventListener('mouseleave', () => {
             glassTile.style.transform = '';
+            if (cursorGlow) {
+              cursorGlow.style.opacity = '0';
+            }
           });
         }
       } catch (err) {
