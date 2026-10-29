@@ -328,6 +328,67 @@
 
 
     /* Hero Visual with Warm Ambient Glow */
+    
+    /* Hero Primary Artwork Frame */
+    .hero-artwork-frame {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      border-radius: 26px;
+      overflow: hidden;
+      border: 1.5px solid rgba(226, 232, 240, 0.95);
+      background: #FFFFFF;
+      box-shadow: 
+        0 4px 6px -1px rgba(15, 23, 42, 0.04), 
+        0 24px 48px -6px rgba(6, 78, 59, 0.14),
+        0 12px 24px -6px rgba(15, 23, 42, 0.06);
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.32s ease;
+    }
+    .hero-artwork-frame:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 8px 14px -2px rgba(15, 23, 42, 0.06), 
+        0 32px 64px -8px rgba(6, 78, 59, 0.20),
+        0 16px 32px -8px rgba(15, 23, 42, 0.08);
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+    .hero-artwork-picture,
+    .hero-artwork-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      aspect-ratio: 4 / 3;
+      border-radius: 24px;
+    }
+    .hero-artwork-badge {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.2px solid rgba(226, 232, 240, 0.95);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 750;
+      color: #0F172A;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.09);
+      z-index: 2;
+      letter-spacing: -0.01em;
+      user-select: none;
+    }
+    .hero-artwork-badge.top-right {
+      top: 14px;
+      right: 14px;
+    }
+    .hero-artwork-badge.bottom-left {
+      bottom: 14px;
+      left: 14px;
+    }
+
     .hero-visual-wrapper { 
       position: relative; 
       z-index: 1; 
@@ -1231,6 +1292,29 @@
         max-width: 100%;
         box-sizing: border-box;
       }
+
+      .hero-artwork-frame {
+        max-width: 100%;
+        border-radius: 18px;
+      }
+      .hero-artwork-picture,
+      .hero-artwork-img {
+        border-radius: 16px;
+      }
+      .hero-artwork-badge {
+        font-size: 0.72rem;
+        padding: 5px 10px;
+        gap: 5px;
+      }
+      .hero-artwork-badge.top-right {
+        top: 10px;
+        right: 10px;
+      }
+      .hero-artwork-badge.bottom-left {
+        bottom: 10px;
+        left: 10px;
+      }
+
       .hero-visual-wrapper {
         width: 100%;
         max-width: 100%;
@@ -1385,34 +1469,32 @@
           </div>
         </div>
 
-        <div class="hero-visual-wrapper" id="hero-simulator-wrap" aria-label="Interactive case tracking preview">
+        <div class="hero-visual-wrapper" id="hero-artwork-wrap" aria-label="Sovereign justice emblem">
           <div class="hero-visual-bg"></div>
 
-          <div class="report-preview-clean" id="report-preview-card">
-            <div class="preview-head-clean">
-              <h3 id="sim-case-id">Case OP-2026-1842</h3>
-              <span class="badge-review-clean" id="sim-badge">Under review</span>
+          <!-- Primary Hero Visual Artwork -->
+          <div class="hero-artwork-frame">
+            <picture class="hero-artwork-picture">
+              <source srcset="/hero-shield-justice.webp" type="image/webp" />
+              <img 
+                src="/hero-shield-justice.jpg" 
+                alt="The Sovereign Shield and Scales of Justice" 
+                class="hero-artwork-img" 
+                width="1200" 
+                height="896"
+                loading="eager"
+              />
+            </picture>
+            
+            <!-- Floating Trust Badges over the artwork -->
+            <div class="hero-artwork-badge top-right">
+              <span class="live-pulse-dot" style="width: 6px; height: 6px;"></span>
+              <span>Article 49 & 29 Protected</span>
             </div>
-
-            <!-- Horizontal Step Tracker matching mockup -->
-            <div class="step-track-wrapper">
-              <div class="step-track-bar">
-                <div class="step-track-fill" id="sim-track-fill" style="width: 50%;"></div>
-              </div>
-              <div class="step-dots-row">
-                <div class="step-dot-wrap" id="sim-step-0" role="button" tabindex="0" data-stage="0" style="cursor: pointer;">
-                  <div class="step-dot done" id="sim-dot-0">✓</div>
-                  <span class="step-label" id="sim-lbl-0">1. Filed ✓</span>
-                </div>
-                <div class="step-dot-wrap" id="sim-step-1" role="button" tabindex="0" data-stage="1" style="cursor: pointer;">
-                  <div class="step-dot active" id="sim-dot-1"></div>
-                  <span class="step-label active" id="sim-lbl-1">2. Under Review</span>
-                </div>
-                <div class="step-dot-wrap" id="sim-step-2" role="button" tabindex="0" data-stage="2" style="cursor: pointer;">
-                  <div class="step-dot pending" id="sim-dot-2"></div>
-                  <span class="step-label" id="sim-lbl-2">3. Legal Escalation</span>
-                </div>
-              </div>
+            
+            <div class="hero-artwork-badge bottom-left">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+              <span>Verified LSK Panel</span>
             </div>
           </div>
 
@@ -1420,7 +1502,7 @@
           <div class="concept-bottom-badges">
             <div class="concept-badge">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-              <span>Encrypted</span>
+              <span>End-to-End Encrypted</span>
             </div>
             <div class="concept-badge">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
