@@ -326,44 +326,32 @@
       line-height: 1;
     }
 
-    /* WebGL-Enhanced Liquid Glass Background Tile for Hero Words */
+    /* Single Unified Liquid Glass Background Tile for Hero Words */
     .hero-content-tile {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.62) 45%, rgba(240, 253, 244, 0.75) 100%);
-      backdrop-filter: blur(20px) saturate(160%);
-      -webkit-backdrop-filter: blur(20px) saturate(160%);
-      border: 1.5px solid rgba(226, 232, 240, 0.9);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.52) 48%, rgba(240, 253, 244, 0.65) 100%);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1.5px solid rgba(255, 255, 255, 0.88);
       border-radius: 28px;
       padding: 42px 40px;
       box-shadow: 
-        0 24px 54px rgba(15, 23, 42, 0.05),
-        0 4px 18px rgba(6, 78, 59, 0.04),
-        inset 0 1px 1px rgba(255, 255, 255, 0.95);
+        0 24px 54px rgba(15, 23, 42, 0.07),
+        0 4px 18px rgba(6, 78, 59, 0.05);
       position: relative;
       overflow: hidden;
       box-sizing: border-box;
       z-index: 1;
-      transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.22s ease-out;
     }
     .hero-content-tile:hover {
       box-shadow: 
-        0 32px 68px rgba(15, 23, 42, 0.08),
-        0 8px 24px rgba(6, 78, 59, 0.07),
-        inset 0 1px 1px rgba(255, 255, 255, 1);
-      border-color: rgba(167, 243, 208, 0.85);
+        0 32px 68px rgba(15, 23, 42, 0.10),
+        0 8px 24px rgba(6, 78, 59, 0.08);
+      border-color: rgba(167, 243, 208, 0.95);
     }
-    /* Ensure all text and buttons remain crisp and interactive above WebGL canvas */
-    .hero-content-tile > *:not(canvas) {
+    .hero-content-tile > * {
       position: relative;
-      z-index: 3;
-    }
-    .hero-content-tile canvas {
-      position: absolute;
-      inset: 0;
-      width: 100% !important;
-      height: 100% !important;
-      border-radius: 28px;
-      pointer-events: none;
-      z-index: 1;
+      z-index: 2;
     }
     .hero-content-tile h1 {
       margin-top: 0;
@@ -1995,79 +1983,39 @@
   </script>
   <script src="/motion.js?v=20261027b" defer></script>
   <script src="/ai-companion.js" defer></script>
-  <!-- WebGL LiquidGlass Physical Optics Shader -->
-  <script type="module">
-    (async function initHeroLiquidGlass() {
-      try {
-        const { LiquidGlass } = await import('/liquidglass.js');
-        const heroRoot = document.getElementById('hero-glass-root');
-        const glassTile = document.getElementById('hero-glass-tile');
+  <!-- Hero Interactive Liquid Light & Tilt Sheen -->
+  <script>
+    (function initHeroInteractive() {
+      const heroRoot = document.getElementById('hero-glass-root');
+      const glassTile = document.getElementById('hero-glass-tile');
+      const cursorGlow = document.getElementById('hero-cursor-glow');
 
-        if (heroRoot && glassTile && (window.WebGLRenderingContext || window.WebGL2RenderingContext)) {
-          glassTile.dataset.config = JSON.stringify({
-            blurAmount: 0.20,
-            refraction: 0.74,
-            chromAberration: 0.08,
-            edgeHighlight: 0.18,
-            specular: 0.32,
-            fresnel: 1.0,
-            distortion: 0.035,
-            cornerRadius: 28,
-            zRadius: 38,
-            opacity: 0.98,
-            saturation: 0.06,
-            tintStrength: 0.04,
-            brightness: 0.02,
-            shadowOpacity: 0.14,
-            shadowSpread: 12,
-            shadowOffsetY: 6,
-            floating: false,
-            button: false
-          });
+      if (heroRoot && glassTile) {
+        heroRoot.addEventListener('mousemove', (e) => {
+          const rootRect = heroRoot.getBoundingClientRect();
+          const relX = e.clientX - rootRect.left;
+          const relY = e.clientY - rootRect.top;
 
-          const instance = await LiquidGlass.init({
-            root: heroRoot,
-            glassElements: [glassTile],
-            defaults: {
-              cornerRadius: 28,
-              refraction: 0.74,
-              chromAberration: 0.08,
-              edgeHighlight: 0.18,
-              specular: 0.32
-            }
-          });
+          if (cursorGlow) {
+            cursorGlow.style.left = relX + 'px';
+            cursorGlow.style.top = relY + 'px';
+            cursorGlow.style.opacity = '1';
+          }
 
-          // Interactive Mouse Glow & Tilt Sheen Effect
-          const cursorGlow = document.getElementById('hero-cursor-glow');
+          const tileRect = glassTile.getBoundingClientRect();
+          if (e.clientX >= tileRect.left && e.clientX <= tileRect.right && e.clientY >= tileRect.top && e.clientY <= tileRect.bottom) {
+            const xNorm = (e.clientX - tileRect.left) / tileRect.width - 0.5;
+            const yNorm = (e.clientY - tileRect.top) / tileRect.height - 0.5;
+            glassTile.style.transform = 'perspective(1000px) rotateY(' + (xNorm * 3.5) + 'deg) rotateX(' + (-yNorm * 3.5) + 'deg)';
+          }
+        });
 
-          heroRoot.addEventListener('mousemove', (e) => {
-            const rootRect = heroRoot.getBoundingClientRect();
-            const relX = e.clientX - rootRect.left;
-            const relY = e.clientY - rootRect.top;
-
-            if (cursorGlow) {
-              cursorGlow.style.left = `${relX}px`;
-              cursorGlow.style.top = `${relY}px`;
-              cursorGlow.style.opacity = '1';
-            }
-
-            const tileRect = glassTile.getBoundingClientRect();
-            if (e.clientX >= tileRect.left && e.clientX <= tileRect.right && e.clientY >= tileRect.top && e.clientY <= tileRect.bottom) {
-              const xNorm = (e.clientX - tileRect.left) / tileRect.width - 0.5;
-              const yNorm = (e.clientY - tileRect.top) / tileRect.height - 0.5;
-              glassTile.style.transform = `perspective(1000px) rotateY(${xNorm * 4}deg) rotateX(${-yNorm * 4}deg)`;
-            }
-          });
-
-          heroRoot.addEventListener('mouseleave', () => {
-            glassTile.style.transform = '';
-            if (cursorGlow) {
-              cursorGlow.style.opacity = '0';
-            }
-          });
-        }
-      } catch (err) {
-        console.info('LiquidGlass WebGL shader fallback to CSS backdrop-filter:', err);
+        heroRoot.addEventListener('mouseleave', () => {
+          glassTile.style.transform = '';
+          if (cursorGlow) {
+            cursorGlow.style.opacity = '0';
+          }
+        });
       }
     })();
   </script>
