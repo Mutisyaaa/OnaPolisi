@@ -45,7 +45,10 @@ if (!pool) {
 }
 
 app.use(express.json({ limit: '1mb' }));
-app.use(express.static(__dirname, {
+const viewsDir = path.join(__dirname, 'views');
+const publicDir = path.join(__dirname, 'public');
+
+app.use(express.static(publicDir, {
   etag: false,
   maxAge: 0,
   setHeaders: (res, path) => {
@@ -298,15 +301,15 @@ function createCaseId() {
 }
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Index.html'));
+  res.sendFile(path.join(viewsDir, 'Index.html'));
 });
 
 app.get('/report', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Report.html'));
+  res.sendFile(path.join(viewsDir, 'Report.html'));
 });
 
 app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Login.html'));
+  res.sendFile(path.join(viewsDir, 'Login.html'));
 });
 
 async function requireAdminPage(req, res, next) {
@@ -330,7 +333,7 @@ async function requireAdminPage(req, res, next) {
 }
 
 app.get('/for-advocates', (req, res) => {
-  res.sendFile(path.join(__dirname, 'ForAdvocates.html'));
+  res.sendFile(path.join(viewsDir, 'ForAdvocates.html'));
 });
 
 app.get(['/verification', '/advocate/apply', '/advocate/status'], async (req, res) => {
@@ -340,37 +343,37 @@ app.get(['/verification', '/advocate/apply', '/advocate/status'], async (req, re
       return res.redirect('/lawyer/available');
     }
   } catch (_) {}
-  res.sendFile(path.join(__dirname, 'Verification.html'));
+  res.sendFile(path.join(viewsDir, 'Verification.html'));
 });
 
 app.use('/admin', requireAdminPage);
 
 app.get(['/admin', '/admin/moderation'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'Admin.html'));
+  res.sendFile(path.join(viewsDir, 'Admin.html'));
 });
 
 app.get('/admin/verification', (req, res) => {
-  res.sendFile(path.join(__dirname, 'VerificationAdmin.html'));
+  res.sendFile(path.join(viewsDir, 'VerificationAdmin.html'));
 });
 
 app.get('/lawyer/available', (req, res) => {
-  res.sendFile(path.join(__dirname, 'LawyerAvailable.html'));
+  res.sendFile(path.join(viewsDir, 'LawyerAvailable.html'));
 });
 
 app.get('/lawyer/my-cases', (req, res) => {
-  res.sendFile(path.join(__dirname, 'LawyerMyCases.html'));
+  res.sendFile(path.join(viewsDir, 'LawyerMyCases.html'));
 });
 
 app.get('/my-reports', (req, res) => {
-  res.sendFile(path.join(__dirname, 'MyReports.html'));
+  res.sendFile(path.join(viewsDir, 'MyReports.html'));
 });
 
 app.get(['/case/:caseId/receipt', '/receipt', '/receipt/:caseId'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'Receipt.html'));
+  res.sendFile(path.join(viewsDir, 'Receipt.html'));
 });
 
 app.get(['/case', '/case/:caseId'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'Case.html'));
+  res.sendFile(path.join(viewsDir, 'Case.html'));
 });
 
 app.get('/api/health', async (req, res) => {

@@ -7,3 +7,8 @@ npm-debug.log*
 *.log
 .DS_Store
 Thumbs.db
+
+doc_assets/
+extracted_images/
+*.docx
+*.pdf
