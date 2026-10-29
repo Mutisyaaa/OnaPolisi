@@ -1410,6 +1410,94 @@
         min-height: 48px;
       }
     }
+
+    /* Ona Advocate AI Legal Co-Pilot & Smart Messaging */
+    .ai-msg-assist-bar {
+      padding: 10px 14px;
+      background: #F8FAFC;
+      border-top: 1px solid #E2E8F0;
+      border-bottom: 1px solid #E2E8F0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .ai-quick-msg-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 12px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #064E3B;
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ai-quick-msg-chip:hover {
+      background: #D1FAE5;
+      border-color: #34D399;
+      transform: translateY(-1px);
+    }
+    .ai-draft-preview-box {
+      background: #FFFFFF;
+      border: 1.5px solid #10B981;
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 4px 14px rgba(6, 78, 59, 0.08);
+      animation: fadeInDraft 0.24s ease-out;
+    }
+    @keyframes fadeInDraft {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .ai-draft-textarea {
+      width: 100%;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 85px;
+      box-sizing: border-box;
+      color: #0F172A;
+    }
+    .ai-draft-textarea:focus {
+      outline: none;
+      border-color: #064E3B;
+      box-shadow: 0 0 0 3px rgba(6, 78, 59, 0.12);
+    }
+    .ai-brief-assistant-box {
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%);
+      border: 1.5px solid #A7F3D0;
+      border-radius: 14px;
+    }
+    .ai-assessment-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 24px;
+      line-height: 1.6;
+      color: #1E293B;
+    }
+    .ai-assessment-card h4 {
+      margin: 18px 0 8px;
+      color: #064E3B;
+      font-size: 1.05rem;
+    }
+    .ai-assessment-card ul {
+      margin: 0 0 14px 20px;
+      padding: 0;
+    }
+    .ai-assessment-card li {
+      margin-bottom: 6px;
+    }
+
   </style>
   <link rel="stylesheet" href="/motion.css?v=20261029b" />
 </head>
@@ -1559,6 +1647,27 @@
             Record what transpired during the court session. This brief will appear immediately on the complainant's live tracking receipt, in their case activity timeline, and in direct case messages.
           </p>
 
+          <!-- Ona Advocate AI Auto-Draft Assistant -->
+          <div class="ai-brief-assistant-box">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; font-weight: 750; font-size: 0.88rem; color: #064E3B;">
+                <span style="display: inline-grid; place-items: center; width: 22px; height: 22px; background: #10B981; color: #FFF; border-radius: 50%; font-size: 0.72rem;">✨</span>
+                <span>Ona AI · Auto-Draft Court Brief</span>
+              </div>
+              <span style="font-size: 0.74rem; color: #047857; font-weight: 700; background: #D1FAE5; padding: 2px 8px; border-radius: 999px;">Kenyan Criminal Procedure</span>
+            </div>
+            <p style="margin: 0 0 10px; font-size: 0.82rem; color: #065F46; line-height: 1.45;">
+              Enter quick bullet points or notes from the courtroom (or leave blank to auto-generate from case facts). AI will structure the proceedings summary with statutory citations (Art 49, CPC), judicial orders, and citizen guidance.
+            </p>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="ai-brief-rough-notes" class="input" style="flex: 1; border: 1px solid #6EE7B7; border-radius: 8px; padding: 8px 12px; font-size: 0.86rem; background: #FFFFFF;" placeholder="e.g. bail granted 20k cash, argued Art 49 fixed abode, mention in 2 wks" />
+              <button type="button" id="ai-brief-draft-btn" class="button" style="background: #064E3B; color: #FFFFFF; font-size: 0.82rem; font-weight: 750; padding: 0 16px; border-radius: 8px; border: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+                <span>✨ Draft & Fill</span>
+              </button>
+            </div>
+            <div id="ai-brief-status" style="display: none; margin-top: 8px; font-size: 0.8rem; color: #047857; font-weight: 600;"></div>
+          </div>
+
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
             <div>
               <label for="brief-court-name" class="stage-modal-label">
@@ -1629,6 +1738,34 @@
       </form>
     </div>
   </div>
+  <!-- AI Legal Assessment Modal Backdrop -->
+  <div class="stage-modal-backdrop" id="ai-assess-modal-backdrop" style="display: none;">
+    <div class="stage-modal-card" role="dialog" aria-modal="true" aria-labelledby="ai-assess-title" style="max-width: 680px; width: 100%;">
+      <div class="stage-modal-header">
+        <h3 id="ai-assess-title" style="display: flex; align-items: center; gap: 8px;">
+          <span style="display: inline-grid; place-items: center; width: 26px; height: 26px; background: #10B981; color: #FFF; border-radius: 50%; font-size: 0.82rem;">✨</span>
+          <span>AI Case Legal Assessment & Strategy</span>
+        </h3>
+        <button type="button" class="stage-modal-close" id="ai-assess-close" aria-label="Close dialog" title="Close dialog (Esc)">✕</button>
+      </div>
+      <div class="stage-modal-body" style="padding-top: 14px;">
+        <p class="stage-modal-desc" id="ai-assess-subtitle">
+          Tactical legal breakdown under Kenyan law (Constitution 2010 Arts 29, 49, 50; NPS Act 2011; CPC Cap 75) to assist your courtroom representation.
+        </p>
+        <div id="ai-assess-content" class="ai-assessment-card" style="min-height: 200px;">
+          <div class="empty" style="padding: 40px 0; text-align: center; color: #64748B;">
+            <span style="display: block; font-size: 1.6rem; margin-bottom: 8px;">⏳</span>
+            <span>Analyzing case facts, constitutional provisions, and evidentiary priorities...</span>
+          </div>
+        </div>
+      </div>
+      <div class="stage-modal-actions" style="margin-top: 16px;">
+        <button type="button" class="button secondary" id="ai-assess-copy-btn" style="min-height: 42px; padding: 0 18px;">📋 Copy Assessment</button>
+        <button type="button" class="button primary" id="ai-assess-done-btn" style="min-height: 42px; padding: 0 22px;">Done</button>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Advance Stage Modal -->
   <div class="stage-modal-backdrop" id="stage-modal-backdrop" style="display: none;">
@@ -1910,12 +2047,14 @@
             <a class="button primary" href="/case/${encodeURIComponent(item.case_id)}/receipt" target="_blank">📄 Official Receipt&nbsp; →</a>
             <a class="button secondary" href="/case/${encodeURIComponent(item.case_id)}">🔍 Case Timeline</a>
             <button class="button secondary" data-chat-toggle>💬 Review Dialogue</button>
+            <button class="button secondary" data-ai-assess style="border-color: #10B981; color: #064E3B; font-weight: 750;"><span style="color:#10B981;">✨</span> AI Assessment</button>
           `;
         } else {
           actionsHtml = `
             <a class="button primary" href="/case/${encodeURIComponent(item.case_id)}">Open tracking page&nbsp; →</a>
             <button class="button secondary" data-court-brief style="border-color: #064E3B; color: #064E3B; font-weight: 750;">🏛️ Add Court Brief</button>
             <button class="button secondary" data-chat-toggle>💬 Chat with Applicant</button>
+            <button class="button secondary" data-ai-assess style="border-color: #10B981; color: #064E3B; font-weight: 750;"><span style="color:#10B981;">✨</span> AI Assessment</button>
             ${contactAction(item)}
             <a class="button secondary" href="/case/${encodeURIComponent(item.case_id)}/receipt" target="_blank" title="View or print official receipt">📄 Receipt</a>
             <button class="button tertiary" data-release>Release case</button>
@@ -1970,6 +2109,35 @@
               <div class="chat-thread" data-chat-thread>
                 <div class="chat-empty">Loading conversation...</div>
               </div>
+              <!-- Ona Advocate AI Smart Messaging Assistant -->
+              <div class="ai-msg-assist-bar" data-ai-msg-bar>
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
+                  <span style="font-size: 0.78rem; font-weight: 750; color: #064E3B; display: inline-flex; align-items: center; gap: 5px;">
+                    <span style="color: #10B981;">✨</span> AI Message Copilot (Send to Reporter):
+                  </span>
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    <button type="button" class="ai-quick-msg-chip" data-ai-intent="request_evidence" title="Request Occurrence Book (OB) number, P3 form, or transaction evidence">📋 Request Evidence / P3</button>
+                    <button type="button" class="ai-quick-msg-chip" data-ai-intent="bail_update" title="Inform client of bail rights under Article 49 and bail status">⚖️ Bail Status</button>
+                    <button type="button" class="ai-quick-msg-chip" data-ai-intent="court_prep" title="Instruct client on court arrival, dress, and documents">🏛️ Court Instructions</button>
+                    <button type="button" class="ai-quick-msg-chip" data-ai-intent="reassurance_next_steps" title="Empathetic update explaining that counsel is actively handling their matter">🤝 Reassurance</button>
+                    <button type="button" class="ai-quick-msg-chip" data-ai-intent="custom" title="Instruct AI with specific points to write to applicant on your behalf">✍️ Custom AI Draft...</button>
+                  </div>
+                </div>
+
+                <!-- Active AI Draft Box (Shown when AI generates a message) -->
+                <div class="ai-draft-preview-box" data-ai-draft-box style="display: none;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="font-size: 0.78rem; font-weight: 750; color: #064E3B;">🤖 AI Drafted on Your Behalf (Review or Edit):</span>
+                    <button type="button" class="ai-draft-dismiss-btn" data-ai-draft-dismiss style="background: none; border: none; font-size: 1.1rem; color: #64748B; cursor: pointer;">✕</button>
+                  </div>
+                  <textarea class="ai-draft-textarea" data-ai-draft-text placeholder="AI message generating..."></textarea>
+                  <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                    <button type="button" class="button secondary ai-draft-insert-btn" data-ai-draft-insert style="min-height: 34px; padding: 0 14px; font-size: 0.82rem;">✏️ Put in Chat Input</button>
+                    <button type="button" class="button primary ai-draft-send-behalf-btn" data-ai-draft-send style="min-height: 34px; padding: 0 16px; font-size: 0.82rem; background: #064E3B; color: #FFF; font-weight: 750;">🚀 Approve & Send on My Behalf</button>
+                  </div>
+                </div>
+              </div>
+
               <form class="chat-form" data-chat-form>
                 <input type="text" class="chat-input" placeholder="Type a message or clarifying question for the applicant..." required />
                 <button type="submit" class="chat-send-btn" aria-label="Send message" title="Send message">
@@ -2122,7 +2290,271 @@
           const response=await fetch(`/api/cases/${encodeURIComponent(caseId)}/contact-request`,{method:'POST'});
           const payload=await response.json();
           if(!response.ok)throw new Error(payload.error||'The contact request could not be sent.');
-          load();
+      
+    // ==========================================
+    // ADVOCATE AI CO-PILOT CONTROLLER
+    // ==========================================
+
+    // 1. Court Brief Auto-Draft with AI
+    const aiBriefNotes = document.getElementById('ai-brief-rough-notes');
+    const aiBriefDraftBtn = document.getElementById('ai-brief-draft-btn');
+    const aiBriefStatus = document.getElementById('ai-brief-status');
+
+    if (aiBriefDraftBtn) {
+      aiBriefDraftBtn.addEventListener('click', async () => {
+        const caseId = briefCaseId.value;
+        if (!caseId) return;
+
+        aiBriefDraftBtn.disabled = true;
+        aiBriefDraftBtn.textContent = '✨ Drafting...';
+        aiBriefStatus.style.display = 'block';
+        aiBriefStatus.style.color = '#047857';
+        aiBriefStatus.textContent = 'Analyzing courtroom notes & Kenyan criminal procedure...';
+
+        try {
+          const res = await fetch('/api/ai/lawyer/assist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'draft_court_brief',
+              caseId,
+              payload: {
+                courtName: briefCourtName.value.trim(),
+                hearingType: briefHearingType.value,
+                magistrate: briefMagistrate.value.trim(),
+                rawNotes: aiBriefNotes.value.trim()
+              }
+            })
+          });
+
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Failed to auto-draft court brief.');
+
+          if (data.brief) {
+            if (data.brief.proceedings_summary) briefProceedings.value = data.brief.proceedings_summary;
+            if (data.brief.court_orders) briefOrders.value = data.brief.court_orders;
+            if (data.brief.instructions_to_applicant) briefInstructions.value = data.brief.instructions_to_applicant;
+            aiBriefStatus.textContent = '✅ Auto-filled with statutory citations & client guidance! Review and submit below.';
+          }
+        } catch (err) {
+          aiBriefStatus.style.color = '#DC2626';
+          aiBriefStatus.textContent = '❌ ' + (err.message || 'Auto-draft failed.');
+        } finally {
+          aiBriefDraftBtn.disabled = false;
+          aiBriefDraftBtn.textContent = '✨ Draft & Fill';
+        }
+      });
+    }
+
+    // 2. AI Smart Message Quick Chips & Sending on Behalf
+    queue.addEventListener('click', async (event) => {
+      // AI Quick Message Chip Clicked
+      const chip = event.target.closest('.ai-quick-msg-chip');
+      if (chip) {
+        const card = chip.closest('[data-case]');
+        if (!card) return;
+        const caseId = card.dataset.case;
+        const draftBox = card.querySelector('[data-ai-draft-box]');
+        const draftTextarea = card.querySelector('[data-ai-draft-text]');
+        if (!draftBox || !draftTextarea) return;
+
+        const intent = chip.dataset.aiIntent;
+        let customPrompt = '';
+
+        if (intent === 'custom') {
+          customPrompt = prompt('What specific message or instructions would you like AI to draft and send to the applicant on your behalf?');
+          if (!customPrompt || !customPrompt.trim()) return;
+        }
+
+        chip.disabled = true;
+        const origChipText = chip.innerHTML;
+        chip.innerHTML = '⏳ Drafting...';
+        draftBox.style.display = 'block';
+        draftTextarea.value = 'Drafting personalized message to complainant based on verified case records...';
+
+        try {
+          const res = await fetch('/api/ai/lawyer/assist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'draft_reporter_message',
+              caseId,
+              payload: {
+                intent,
+                customPrompt: customPrompt ? customPrompt.trim() : '',
+                language: 'english'
+              }
+            })
+          });
+
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Failed to draft AI message.');
+          draftTextarea.value = data.draft || '';
+          draftTextarea.focus();
+        } catch (err) {
+          draftTextarea.value = '❌ Error: ' + err.message;
+        } finally {
+          chip.disabled = false;
+          chip.innerHTML = origChipText;
+        }
+        return;
+      }
+
+      // Dismiss AI Draft Box
+      const dismissBtn = event.target.closest('[data-ai-draft-dismiss]');
+      if (dismissBtn) {
+        const draftBox = dismissBtn.closest('[data-ai-draft-box]');
+        if (draftBox) draftBox.style.display = 'none';
+        return;
+      }
+
+      // Put AI Draft into Chat Input
+      const insertBtn = event.target.closest('[data-ai-draft-insert]');
+      if (insertBtn) {
+        const card = insertBtn.closest('[data-case]');
+        const draftBox = card?.querySelector('[data-ai-draft-box]');
+        const draftTextarea = card?.querySelector('[data-ai-draft-text]');
+        const input = card?.querySelector('.chat-input');
+        if (draftTextarea && input) {
+          input.value = draftTextarea.value;
+          input.focus();
+          if (draftBox) draftBox.style.display = 'none';
+        }
+        return;
+      }
+
+      // Send on My Behalf Button Clicked
+      const sendBehalfBtn = event.target.closest('[data-ai-draft-send]');
+      if (sendBehalfBtn) {
+        const card = sendBehalfBtn.closest('[data-case]');
+        const caseId = card?.dataset.case;
+        const draftBox = card?.querySelector('[data-ai-draft-box]');
+        const draftTextarea = card?.querySelector('[data-ai-draft-text]');
+        const thread = card?.querySelector('[data-chat-thread]');
+        if (!caseId || !draftTextarea) return;
+
+        const msgText = draftTextarea.value.trim();
+        if (!msgText) {
+          alert('Message cannot be empty.');
+          return;
+        }
+
+        sendBehalfBtn.disabled = true;
+        sendBehalfBtn.textContent = '🚀 Sending to applicant...';
+
+        try {
+          const res = await fetch('/api/ai/lawyer/assist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'send_reporter_message',
+              caseId,
+              payload: {
+                messageText: msgText
+              }
+            })
+          });
+
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Failed to dispatch message to applicant.');
+
+          if (draftBox) draftBox.style.display = 'none';
+          if (thread) await loadChatMessages(caseId, thread);
+
+          // Confirmation banner
+          message.className = 'message ok';
+          message.textContent = `Confidential message dispatched to applicant for case ${caseId} on your behalf.`;
+          message.classList.add('is-visible');
+          setTimeout(() => message.classList.remove('is-visible'), 5000);
+        } catch (err) {
+          alert('Failed to send on behalf: ' + err.message);
+        } finally {
+          sendBehalfBtn.disabled = false;
+          sendBehalfBtn.textContent = '🚀 Approve & Send on My Behalf';
+        }
+        return;
+      }
+
+      // AI Legal Assessment Clicked
+      const assessBtn = event.target.closest('[data-ai-assess]');
+      if (assessBtn) {
+        const card = assessBtn.closest('[data-case]');
+        const caseId = card?.dataset.case;
+        if (!caseId) return;
+        openAiAssessModal(caseId);
+        return;
+      }
+    });
+
+    // 3. AI Legal Assessment Modal Controller
+    const aiAssessModalBackdrop = document.getElementById('ai-assess-modal-backdrop');
+    const aiAssessClose = document.getElementById('ai-assess-close');
+    const aiAssessDone = document.getElementById('ai-assess-done-btn');
+    const aiAssessCopy = document.getElementById('ai-assess-copy-btn');
+    const aiAssessContent = document.getElementById('ai-assess-content');
+    const aiAssessTitle = document.getElementById('ai-assess-title');
+    let currentAssessmentRaw = '';
+
+    function openAiAssessModal(caseId) {
+      aiAssessTitle.innerHTML = `<span style="display:inline-grid;place-items:center;width:26px;height:26px;background:#10B981;color:#FFF;border-radius:50%;font-size:0.82rem;">✨</span> AI Legal Assessment (${caseId})`;
+      aiAssessContent.innerHTML = `
+        <div style="padding: 40px 0; text-align: center; color: #64748B;">
+          <span style="display: block; font-size: 1.8rem; margin-bottom: 8px;">⏳</span>
+          <strong style="color: #064E3B;">Analyzing case facts, statutory provisions, and defense strategies...</strong>
+        </div>`;
+      aiAssessModalBackdrop.style.display = 'flex';
+
+      fetch('/api/ai/lawyer/assist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'case_legal_assessment',
+          caseId
+        })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (!data.success) throw new Error(data.error || 'Failed to generate legal assessment.');
+        currentAssessmentRaw = data.assessment;
+        // Simple markdown formatting
+        const formatted = currentAssessmentRaw
+          .replace(/### (.*?)\n/g, '<h4>$1</h4>')
+          .replace(/## (.*?)\n/g, '<h4>$1</h4>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/^\* (.*?)$/gm, '<li>$1</li>')
+          .replace(/^\- (.*?)$/gm, '<li>$1</li>')
+          .replace(/\n\n/g, '<br><br>');
+        aiAssessContent.innerHTML = `<div style="font-size: 0.94rem; line-height: 1.6;">${formatted}</div>`;
+      })
+      .catch(err => {
+        aiAssessContent.innerHTML = `<div style="color: #DC2626; padding: 20px;">Failed to load legal assessment: ${escapeHtml(err.message)}</div>`;
+      });
+    }
+
+    function closeAiAssessModal() {
+      aiAssessModalBackdrop.style.display = 'none';
+      currentAssessmentRaw = '';
+    }
+
+    if (aiAssessClose) aiAssessClose.addEventListener('click', closeAiAssessModal);
+    if (aiAssessDone) aiAssessDone.addEventListener('click', closeAiAssessModal);
+    if (aiAssessModalBackdrop) {
+      aiAssessModalBackdrop.addEventListener('click', (e) => {
+        if (e.target === aiAssessModalBackdrop) closeAiAssessModal();
+      });
+    }
+
+    if (aiAssessCopy) {
+      aiAssessCopy.addEventListener('click', () => {
+        if (!currentAssessmentRaw) return;
+        navigator.clipboard.writeText(currentAssessmentRaw).then(() => {
+          aiAssessCopy.textContent = '✅ Copied to Clipboard!';
+          setTimeout(() => aiAssessCopy.textContent = '📋 Copy Assessment', 2200);
+        });
+      });
+    }
+
+    load();
         }catch(error){
           showError(error.message);
           requestButton.disabled=false;
@@ -2406,5 +2838,6 @@
     load();
   </script>
   <script src="/motion.js?v=20261027b" defer></script>
+  <script src="/ai-companion.js" defer></script>
 </body>
 </html>

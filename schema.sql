@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(320) NOT NULL,
   password_hash TEXT NOT NULL,
   role VARCHAR(30) NOT NULL DEFAULT 'public'
-    CHECK (role IN ('public', 'lawyer', 'journalist', 'admin')),
+    CHECK (role IN ('public', 'lawyer', 'admin')),
   verification_status VARCHAR(30) NOT NULL DEFAULT 'unverified'
     CHECK (verification_status IN ('unverified', 'pending', 'verified', 'suspended')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -96,9 +96,9 @@ CREATE TABLE IF NOT EXISTS verification_requests (
   id BIGSERIAL PRIMARY KEY,
   user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   requested_role VARCHAR(30) NOT NULL
-    CHECK (requested_role IN ('lawyer', 'journalist')),
+    CHECK (requested_role IN ('lawyer')),
   credential_type VARCHAR(40) NOT NULL
-    CHECK (credential_type IN ('LSK number', 'Press credential')),
+    CHECK (credential_type IN ('LSK number')),
   credential_number VARCHAR(120) NOT NULL,
   organization VARCHAR(180),
   review_status VARCHAR(30) NOT NULL DEFAULT 'Pending'

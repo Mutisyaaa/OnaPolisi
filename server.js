@@ -11,7 +11,7 @@ const { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } = re
 const sharp = require('sharp');
 const net = require('node:net');
 const { promisify } = require('node:util');
-const { handleAiAssistantQuery } = require('./lib/aiAssistant');
+const { handleAiAssistantQuery, handleLawyerAiAssist } = require('./lib/aiAssistant');
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
@@ -277,7 +277,7 @@ function requireRole(...roles) {
   };
 }
 
-const requireSignedIn = requireRole('public', 'lawyer', 'journalist', 'admin');
+const requireSignedIn = requireRole('public', 'lawyer', 'admin');
 
 async function canAccessIncident(user, incidentId) {
   if (!user) return false;
@@ -363,10 +363,6 @@ app.get('/lawyer/my-cases', (req, res) => {
 
 app.get('/my-reports', (req, res) => {
   res.sendFile(path.join(__dirname, 'MyReports.html'));
-});
-
-app.get('/press/exports', (req, res) => {
-  res.sendFile(path.join(__dirname, 'PressExports.html'));
 });
 
 app.get(['/case/:caseId/receipt', '/receipt', '/receipt/:caseId'], (req, res) => {
@@ -660,10 +656,10 @@ app.post('/api/verification/requests', requireSignedIn, async (req, res) => {
   const credentialType = cleanText(req.body?.credential_type, 40);
   const credentialNumber = cleanText(req.body?.credential_number, 120);
   const organization = cleanText(req.body?.organization, 180) || null;
-  const expectedCredential = requestedRole === 'lawyer' ? 'LSK number' : requestedRole === 'journalist' ? 'Press credential' : '';
+  const expectedCredential = requestedRole === 'lawyer' ? 'LSK number' : '';
 
-  if (!['lawyer', 'journalist'].includes(requestedRole) || credentialType !== expectedCredential) {
-    return res.status(400).json({ error: 'Choose a lawyer with an LSK number or a journalist with a press credential.' });
+  if (requestedRole !== 'lawyer' || credentialType !== expectedCredential) {
+    return res.status(400).json({ error: 'Choose a lawyer with an LSK number.' });
   }
   if (credentialNumber.length < 3) return res.status(400).json({ error: 'Enter the credential number or reference.' });
 
@@ -795,7 +791,7 @@ app.post('/api/admin/users/manual-verify', requireRole('admin'), async (req, res
   const targetEmail = normalizeEmail(req.body?.email);
   const targetRole = cleanText(req.body?.role, 30);
   if (!targetEmail) return res.status(400).json({ error: 'Enter a valid email address.' });
-  if (!['lawyer', 'journalist', 'admin', 'public'].includes(targetRole)) {
+  if (!['lawyer', 'admin', 'public'].includes(targetRole)) {
     return res.status(400).json({ error: 'Select a valid role.' });
   }
 
@@ -1033,46 +1029,6 @@ app.patch('/api/my-reports/:caseId/contact-requests/:requestId', requireSignedIn
     return res.status(500).json({ error: 'The contact request could not be updated.' });
   } finally {
     client.release();
-  }
-});
-
-const pressExportThreshold = 5;
-
-async function getPressSummaryRows() {
-  const result = await pool.query(
-    `SELECT TO_CHAR(DATE_TRUNC('month', created_at), 'YYYY-MM') AS report_month,
-            category, status, COUNT(*)::int AS report_count
-     FROM incidents
-     GROUP BY DATE_TRUNC('month', created_at), category, status
-     HAVING COUNT(*) >= $1
-     ORDER BY DATE_TRUNC('month', created_at), category, status`,
-    [pressExportThreshold],
-  );
-  return result.rows;
-}
-
-app.get('/api/press/exports/preview', requireRole('journalist'), async (req, res) => {
-  try {
-    return res.json({ threshold: pressExportThreshold, rows: await getPressSummaryRows() });
-  } catch (error) {
-    console.error('Press export preview failed:', error.message);
-    return res.status(500).json({ error: 'The anonymized summary could not be loaded.' });
-  }
-});
-
-app.get('/api/press/exports/incidents.csv', requireRole('journalist'), async (req, res) => {
-  try {
-    const rows = await getPressSummaryRows();
-    const csv = [
-      'report_month,category,status,report_count',
-      ...rows.map((row) => [row.report_month, row.category, row.status, row.report_count].map(csvEscape).join(',')),
-    ].join('\n') + '\n';
-    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition', 'attachment; filename="ona-polisi-anonymized-report-summary.csv"');
-    return res.send(csv);
-  } catch (error) {
-    console.error('Press CSV export failed:', error.message);
-    return res.status(500).json({ error: 'The anonymized export could not be generated.' });
   }
 });
 
@@ -1768,6 +1724,80 @@ app.post('/api/ai/assistant', async (req, res) => {
 
   if (!userMessage) {
     return res.status(400).json({ error: 'Please enter a message or case code.' });
+
+app.post('/api/ai/lawyer/assist', requireRole('lawyer'), async (req, res) => {
+  const action = cleanText(req.body?.action, 50);
+  const caseId = req.body?.caseId ? cleanText(req.body.caseId, 25).toUpperCase() : null;
+  const payload = req.body?.payload || {};
+
+  try {
+    // If advocate requested to send a message directly on their behalf
+    if (action === 'send_reporter_message') {
+      if (!caseId) return res.status(400).json({ error: 'Case ID is required to send a message.' });
+
+      const incidentResult = await pool.query('SELECT id, status FROM incidents WHERE case_id = $1', [caseId]);
+      if (!incidentResult.rowCount) return res.status(404).json({ error: 'Case not found.' });
+      const incident = incidentResult.rows[0];
+
+      const claimResult = await pool.query(
+        `SELECT 1 FROM case_claims WHERE incident_id = $1 AND lawyer_id = $2 AND status = 'Active'`,
+        [incident.id, req.user.id]
+      );
+      if (!claimResult.rowCount) {
+        return res.status(403).json({ error: 'You must claim this case before sending messages as an advocate.' });
+      }
+
+      let messageText = payload.messageText ? cleanText(payload.messageText, 3000) : null;
+      if (!messageText) {
+        const aiRes = await handleLawyerAiAssist({
+          action: 'draft_reporter_message',
+          caseId,
+          pool,
+          user: req.user,
+          payload
+        });
+        if (!aiRes.success) return res.status(500).json({ error: aiRes.error || 'Failed to draft AI message.' });
+        messageText = aiRes.draft;
+      }
+
+      const insertResult = await pool.query(
+        `INSERT INTO case_messages (incident_id, sender_id, sender_role, sender_name, message)
+         VALUES ($1, $2, 'lawyer', $3, $4)
+         RETURNING id, sender_role, sender_name, message, created_at`,
+        [incident.id, req.user.id, `Advocate (${req.user.email.split('@')[0]})`, messageText]
+      );
+
+      await pool.query(
+        `INSERT INTO case_events (incident_id, status, title, note)
+         VALUES ($1, $2, 'Advocate message sent', 'A verified legal advocate sent a confidential follow-up message to the complainant.')`,
+        [incident.id, incident.status]
+      );
+
+      const newMsg = insertResult.rows[0];
+      newMsg.is_mine = true;
+
+      return res.json({ success: true, message: newMsg });
+    }
+
+    // For drafting messages, court briefs, or case legal assessment
+    const result = await handleLawyerAiAssist({
+      action,
+      caseId,
+      pool,
+      user: req.user,
+      payload
+    });
+
+    if (!result.success) {
+      return res.status(400).json({ error: result.error || 'AI assistance failed.' });
+    }
+
+    return res.json(result);
+  } catch (error) {
+    console.error('[Lawyer AI Assist API Error]:', error.message);
+    return res.status(500).json({ error: 'Advocate AI Assistant is temporarily unavailable. Please try again.' });
+  }
+});
   }
 
   try {

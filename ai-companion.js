@@ -717,6 +717,47 @@
     ask: sendQuery
   };
 
+  
+  // Advocate Mode check (URL or Role)
+  let isAdvocateMode = window.location.pathname.startsWith('/lawyer');
+
+  function applyAdvocateMode() {
+    isAdvocateMode = true;
+    launcher.querySelector('span:last-child').textContent = 'Advocate AI Copilot';
+    const titleEl = drawer.querySelector('.ona-ai-title');
+    const subEl = drawer.querySelector('.ona-ai-sub span:last-child');
+    if (titleEl) titleEl.textContent = 'Ona AI · Advocate Co-Pilot';
+    if (subEl) subEl.textContent = 'LSK Verified Counsel · Kenyan Law & Procedure';
+
+    const botContent = drawer.querySelector('.ona-ai-bot-content');
+    if (botContent) {
+      botContent.innerHTML = `
+        <p><strong>Counsel, welcome to your Ona AI Legal Co-Pilot.</strong></p>
+        <p>I assist verified advocates in <strong>documenting court hearing briefs</strong>, analyzing statutory and constitutional violations under Kenyan law, and <strong>drafting/sending direct guidance to case complainants on your behalf</strong>.</p>
+        <p style="margin-bottom: 6px;"><strong>Advocate Quick Research:</strong></p>
+        <div class="ona-ai-chips-wrap">
+          <button class="ona-ai-chip" type="button" data-prompt="What are the essential constitutional grounds for cash bail under Article 49(1)(h) and the 2015 Guidelines?">⚖️ Bail Grounds (Art. 49)</button>
+          <button class="ona-ai-chip" type="button" data-prompt="How do I file for Habeas Corpus under Article 23 if client is held over 24 hours without charge?">⏱️ 24-Hour Rule & Habeas Corpus</button>
+          <button class="ona-ai-chip" type="button" data-prompt="What evidentiary checklist is needed from the police station for arbitrary arrest (OB extract, custody log, P3)?">📋 Station Evidence Checklist</button>
+          <button class="ona-ai-chip" type="button" data-prompt="Explain police misconduct liabilities under Section 88 and Sixth Schedule of the National Police Service Act 2011.">🛡️ NPS Act 2011 S.88</button>
+        </div>
+      `;
+    }
+  }
+
+  if (isAdvocateMode) {
+    applyAdvocateMode();
+  } else {
+    fetch('/api/auth/me')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data?.user?.role === 'lawyer') {
+          applyAdvocateMode();
+        }
+      })
+      .catch(() => {});
+  }
+
   console.log('Ona AI Case Companion successfully initialized.');
 })();
 
