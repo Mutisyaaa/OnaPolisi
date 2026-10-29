@@ -1,3 +1,98 @@
+
+/* ==========================================================================
+   Animate On Scroll (AOS) Engine - Silky Smooth Scroll-Driven Reveal System
+   ========================================================================== */
+:root {
+  --aos-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --aos-duration: 720ms;
+}
+
+[data-aos] {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition-property: transform, opacity;
+  transition-duration: var(--aos-duration);
+  transition-timing-function: var(--aos-ease);
+}
+
+/* Fade Up (Default & Most Natural) */
+[data-aos="fade-up"] {
+  transform: translateY(32px);
+}
+[data-aos="fade-up"].aos-animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade Down */
+[data-aos="fade-down"] {
+  transform: translateY(-32px);
+}
+[data-aos="fade-down"].aos-animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade Right (Enters smoothly from the left) */
+[data-aos="fade-right"] {
+  transform: translateX(-36px);
+}
+[data-aos="fade-right"].aos-animate {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Fade Left (Enters smoothly from the right) */
+[data-aos="fade-left"] {
+  transform: translateX(36px);
+}
+[data-aos="fade-left"].aos-animate {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Zoom In */
+[data-aos="zoom-in"] {
+  transform: scale(0.92);
+}
+[data-aos="zoom-in"].aos-animate {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Zoom In Up (Rich for CTA cards) */
+[data-aos="zoom-in-up"] {
+  transform: translateY(30px) scale(0.95);
+}
+[data-aos="zoom-in-up"].aos-animate {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Precision Stagger Delays */
+[data-aos][data-aos-delay="50"]  { transition-delay: 50ms; }
+[data-aos][data-aos-delay="80"]  { transition-delay: 80ms; }
+[data-aos][data-aos-delay="100"] { transition-delay: 100ms; }
+[data-aos][data-aos-delay="120"] { transition-delay: 120ms; }
+[data-aos][data-aos-delay="150"] { transition-delay: 150ms; }
+[data-aos][data-aos-delay="180"] { transition-delay: 180ms; }
+[data-aos][data-aos-delay="200"] { transition-delay: 200ms; }
+[data-aos][data-aos-delay="240"] { transition-delay: 240ms; }
+[data-aos][data-aos-delay="270"] { transition-delay: 270ms; }
+[data-aos][data-aos-delay="300"] { transition-delay: 300ms; }
+[data-aos][data-aos-delay="360"] { transition-delay: 360ms; }
+[data-aos][data-aos-delay="400"] { transition-delay: 400ms; }
+[data-aos][data-aos-delay="500"] { transition-delay: 500ms; }
+
+/* Accessible Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 /* Ona Polisi interaction layer: calm depth, tactile controls, and respectful motion. */
 :root {
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
