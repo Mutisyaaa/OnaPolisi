@@ -204,10 +204,50 @@
     .hero { 
       display: grid; 
       grid-template-columns: minmax(0, 1.15fr) minmax(380px, 0.85fr); 
-      gap: 60px; 
+      gap: 50px; 
       align-items: center; 
-      padding: 60px 0 90px;
+      padding: 50px 0 80px;
       position: relative;
+    }
+
+    /* Liquid Glass Background Tile for Hero Words */
+    .hero-content-tile {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0.68) 45%, rgba(240, 253, 244, 0.78) 100%);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1.5px solid rgba(226, 232, 240, 0.88);
+      border-radius: 28px;
+      padding: 42px 40px;
+      box-shadow: 
+        0 24px 54px rgba(15, 23, 42, 0.05),
+        0 4px 18px rgba(6, 78, 59, 0.04),
+        inset 0 1px 1px rgba(255, 255, 255, 0.95);
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    }
+    .hero-content-tile:hover {
+      box-shadow: 
+        0 30px 64px rgba(15, 23, 42, 0.08),
+        0 8px 24px rgba(6, 78, 59, 0.07),
+        inset 0 1px 1px rgba(255, 255, 255, 1);
+      border-color: rgba(167, 243, 208, 0.85);
+    }
+    /* Liquid Refractive Sheen */
+    .hero-content-tile::before {
+      content: "";
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-content-tile h1 {
+      margin-top: 0;
     }
     .hero-title-accent { color: #074023; font-weight: 900; }
     .hero-copy { max-width: 500px; margin-bottom: 34px; color: #334155; font-size: 1.15rem; line-height: 1.55; font-weight: 450; }
@@ -221,7 +261,9 @@
       color: #475569;
       font-size: 0.86rem;
       font-weight: 600;
-      padding-top: 6px;
+      padding-top: 18px;
+      margin-top: 6px;
+      border-top: 1px dashed rgba(203, 213, 225, 0.85);
     }
     .hero-trust-sep { color: #CBD5E1; }
 
@@ -1104,6 +1146,10 @@
       }
 
       /* Hero mobile adjustments */
+      .hero-content-tile {
+        padding: 28px 22px;
+        border-radius: 22px;
+      }
       .hero {
         padding: 24px 0 50px;
         gap: 36px;
@@ -1216,7 +1262,7 @@
       </nav>
 
       <div class="hero">
-        <div>
+        <div class="hero-content-tile">
           <div class="live-pill" aria-label="System activity status">
             <span class="live-pulse-dot"></span>
             <span class="live-pill-tag">LIVE SYSTEM</span>
