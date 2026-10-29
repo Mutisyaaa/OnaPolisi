@@ -210,12 +210,35 @@
       position: relative;
     }
 
-    /* Liquid Glass Background Tile for Hero Words */
+    /* Ambient Fluid Mesh Aura for WebGL Refraction */
+    .hero-liquid-backdrop {
+      position: absolute;
+      top: -24px;
+      left: -24px;
+      width: min(100%, 650px);
+      height: calc(100% + 48px);
+      background: radial-gradient(circle at 20% 25%, rgba(16, 185, 129, 0.28) 0%, rgba(6, 78, 59, 0.14) 40%, rgba(248, 250, 252, 0) 70%),
+                  radial-gradient(circle at 85% 65%, rgba(242, 169, 0, 0.18) 0%, rgba(254, 240, 138, 0) 55%),
+                  radial-gradient(circle at 45% 95%, rgba(6, 78, 59, 0.22) 0%, rgba(248, 250, 252, 0) 70%);
+      filter: blur(48px);
+      border-radius: 44px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.95;
+      animation: liquidPulse 9s ease-in-out infinite alternate;
+    }
+    @keyframes liquidPulse {
+      0% { transform: scale(0.97) translate(0, 0); opacity: 0.82; }
+      50% { transform: scale(1.03) translate(12px, -8px); opacity: 1; }
+      100% { transform: scale(1) translate(-8px, 6px); opacity: 0.88; }
+    }
+
+    /* WebGL-Enhanced Liquid Glass Background Tile for Hero Words */
     .hero-content-tile {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0.68) 45%, rgba(240, 253, 244, 0.78) 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.62) 45%, rgba(240, 253, 244, 0.75) 100%);
       backdrop-filter: blur(20px) saturate(160%);
       -webkit-backdrop-filter: blur(20px) saturate(160%);
-      border: 1.5px solid rgba(226, 232, 240, 0.88);
+      border: 1.5px solid rgba(226, 232, 240, 0.9);
       border-radius: 28px;
       padding: 42px 40px;
       box-shadow: 
@@ -225,26 +248,29 @@
       position: relative;
       overflow: hidden;
       box-sizing: border-box;
+      z-index: 1;
       transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
     }
     .hero-content-tile:hover {
       box-shadow: 
-        0 30px 64px rgba(15, 23, 42, 0.08),
+        0 32px 68px rgba(15, 23, 42, 0.08),
         0 8px 24px rgba(6, 78, 59, 0.07),
         inset 0 1px 1px rgba(255, 255, 255, 1);
       border-color: rgba(167, 243, 208, 0.85);
     }
-    /* Liquid Refractive Sheen */
-    .hero-content-tile::before {
-      content: "";
+    /* Ensure all text and buttons remain crisp and interactive above WebGL canvas */
+    .hero-content-tile > *:not(canvas) {
+      position: relative;
+      z-index: 3;
+    }
+    .hero-content-tile canvas {
       position: absolute;
-      top: -30px;
-      right: -30px;
-      width: 180px;
-      height: 180px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
-      border-radius: 50%;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 28px;
       pointer-events: none;
+      z-index: 1;
     }
     .hero-content-tile h1 {
       margin-top: 0;
@@ -1261,8 +1287,11 @@
         </div>
       </nav>
 
-      <div class="hero">
-        <div class="hero-content-tile">
+      <div class="hero" id="hero-glass-root">
+        <!-- Ambient animated fluid mesh aura for WebGL refraction shaders -->
+        <div class="hero-liquid-backdrop" aria-hidden="true"></div>
+
+        <div class="hero-content-tile" id="hero-glass-tile">
           <div class="live-pill" aria-label="System activity status">
             <span class="live-pulse-dot"></span>
             <span class="live-pill-tag">LIVE SYSTEM</span>
@@ -1865,5 +1894,65 @@
   </script>
   <script src="/motion.js?v=20261027b" defer></script>
   <script src="/ai-companion.js" defer></script>
+  <!-- WebGL LiquidGlass Physical Optics Shader -->
+  <script type="module">
+    (async function initHeroLiquidGlass() {
+      try {
+        const { LiquidGlass } = await import('/liquidglass.js');
+        const heroRoot = document.getElementById('hero-glass-root');
+        const glassTile = document.getElementById('hero-glass-tile');
+
+        if (heroRoot && glassTile && (window.WebGLRenderingContext || window.WebGL2RenderingContext)) {
+          glassTile.dataset.config = JSON.stringify({
+            blurAmount: 0.20,
+            refraction: 0.74,
+            chromAberration: 0.08,
+            edgeHighlight: 0.18,
+            specular: 0.32,
+            fresnel: 1.0,
+            distortion: 0.035,
+            cornerRadius: 28,
+            zRadius: 38,
+            opacity: 0.98,
+            saturation: 0.06,
+            tintStrength: 0.04,
+            brightness: 0.02,
+            shadowOpacity: 0.14,
+            shadowSpread: 12,
+            shadowOffsetY: 6,
+            floating: false,
+            button: false
+          });
+
+          const instance = await LiquidGlass.init({
+            root: heroRoot,
+            glassElements: [glassTile],
+            defaults: {
+              cornerRadius: 28,
+              refraction: 0.74,
+              chromAberration: 0.08,
+              edgeHighlight: 0.18,
+              specular: 0.32
+            }
+          });
+
+          // Gentle mouse tilt sheen effect
+          heroRoot.addEventListener('mousemove', (e) => {
+            const rect = glassTile.getBoundingClientRect();
+            if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+              const xNorm = (e.clientX - rect.left) / rect.width - 0.5;
+              const yNorm = (e.clientY - rect.top) / rect.height - 0.5;
+              glassTile.style.transform = `perspective(1000px) rotateY(${xNorm * 4}deg) rotateX(${-yNorm * 4}deg)`;
+            }
+          });
+          heroRoot.addEventListener('mouseleave', () => {
+            glassTile.style.transform = '';
+          });
+        }
+      } catch (err) {
+        console.info('LiquidGlass WebGL shader fallback to CSS backdrop-filter:', err);
+      }
+    })();
+  </script>
 </body>
 </html>
