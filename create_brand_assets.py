@@ -42,16 +42,13 @@ print("Saved logo-icon.svg")
 scale = 4
 lw, lh = 220 * scale, 54 * scale
 logo_img = Image.new('RGBA', (lw, lh), (0, 0, 0, 0))
-# Shield target height = 46 * scale
 target_sh_h = int(46 * scale)
 target_sh_w = int(round(shield.width * (target_sh_h / shield.height)))
 scaled_sh = shield.resize((target_sh_w, target_sh_h), Image.Resampling.LANCZOS)
 logo_img.paste(scaled_sh, (int(6 * scale), int(4 * scale)), scaled_sh)
 
-# Render font for logo.png
 draw = ImageDraw.Draw(logo_img)
 font = None
-# Try system fonts
 font_names = ["segoeuib.ttf", "arialbd.ttf", "calibrib.ttf", "arial.ttf"]
 for fn in font_names:
     try:
@@ -63,7 +60,6 @@ if font is None:
     font = ImageFont.load_default()
 
 draw.text((int(46 * scale), int(14 * scale)), "Ona Polisi", font=font, fill=(15, 20, 25, 255))
-# Downsample to 220x54 for retina / crisp look
 logo_final = logo_img.resize((440, 108), Image.Resampling.LANCZOS)
 logo_final.save(r'c:\Users\Admin\Desktop\OnaPolisi\logo.png')
 print("Saved logo.png")
@@ -78,6 +74,15 @@ logo_white_final.save(r'c:\Users\Admin\Desktop\OnaPolisi\logo-white.png')
 print("Saved logo-white.png")
 
 # 6. Favicons
+# 16x16 favicon
+fav16 = Image.new('RGBA', (16, 16), (0, 0, 0, 0))
+target_h = 15
+target_w = int(round(shield.width * (target_h / shield.height)))
+scaled_16 = shield.resize((target_w, target_h), Image.Resampling.LANCZOS)
+fav16.paste(scaled_16, ((16 - target_w) // 2, (16 - target_h) // 2), scaled_16)
+fav16.save(r'c:\Users\Admin\Desktop\OnaPolisi\favicon-16.png')
+print("Saved favicon-16.png")
+
 # 32x32 favicon
 fav32 = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
 target_h = 30
@@ -87,7 +92,16 @@ fav32.paste(scaled_32, ((32 - target_w) // 2, (32 - target_h) // 2), scaled_32)
 fav32.save(r'c:\Users\Admin\Desktop\OnaPolisi\favicon.png')
 print("Saved favicon.png")
 
-# 192x192 favicon
+# 180x180 apple touch icon
+fav_apple = Image.new('RGBA', (180, 180), (0, 0, 0, 0))
+target_h = 168
+target_w = int(round(shield.width * (target_h / shield.height)))
+scaled_apple = shield.resize((target_w, target_h), Image.Resampling.LANCZOS)
+fav_apple.paste(scaled_apple, ((180 - target_w) // 2, (180 - target_h) // 2), scaled_apple)
+fav_apple.save(r'c:\Users\Admin\Desktop\OnaPolisi\apple-touch-icon.png')
+print("Saved apple-touch-icon.png")
+
+# 192x192 favicon (Android PWA)
 fav192 = Image.new('RGBA', (192, 192), (0, 0, 0, 0))
 target_h = 180
 target_w = int(round(shield.width * (target_h / shield.height)))
@@ -96,7 +110,7 @@ fav192.paste(scaled_192, ((192 - target_w) // 2, (192 - target_h) // 2), scaled_
 fav192.save(r'c:\Users\Admin\Desktop\OnaPolisi\favicon-192.png')
 print("Saved favicon-192.png")
 
-# 512x512 favicon
+# 512x512 favicon (PWA splash / high-res)
 fav512 = Image.new('RGBA', (512, 512), (0, 0, 0, 0))
 target_h = 480
 target_w = int(round(shield.width * (target_h / shield.height)))
@@ -105,13 +119,12 @@ fav512.paste(scaled_512, ((512 - target_w) // 2, (512 - target_h) // 2), scaled_
 fav512.save(r'c:\Users\Admin\Desktop\OnaPolisi\favicon-512.png')
 print("Saved favicon-512.png")
 
-# Multi-res favicon.ico
-fav16 = fav32.resize((16, 16), Image.Resampling.LANCZOS)
+# Multi-res favicon.ico (16, 32, 48)
 fav48 = fav192.resize((48, 48), Image.Resampling.LANCZOS)
 fav16.save(r'c:\Users\Admin\Desktop\OnaPolisi\favicon.ico', format='ICO', sizes=[(16, 16), (32, 32), (48, 48)], append_images=[fav32, fav48])
 print("Saved favicon.ico")
 
-# Standalone logo-icon.png
+# Standalone logo-icon.png (256x256)
 logo_icon = Image.new('RGBA', (256, 256), (0, 0, 0, 0))
 target_h = 240
 target_w = int(round(shield.width * (target_h / shield.height)))
@@ -119,4 +132,3 @@ scaled_icon = shield.resize((target_w, target_h), Image.Resampling.LANCZOS)
 logo_icon.paste(scaled_icon, ((256 - target_w) // 2, (256 - target_h) // 2), scaled_icon)
 logo_icon.save(r'c:\Users\Admin\Desktop\OnaPolisi\logo-icon.png')
 print("Saved logo-icon.png")
-
