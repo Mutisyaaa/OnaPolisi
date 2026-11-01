@@ -285,15 +285,26 @@ const requireSignedIn = requireRole('public', 'lawyer', 'admin');
 async function canAccessIncident(user, incidentId) {
   if (!user) return false;
   if (user.role === 'admin') return true;
-  const incidentResult = await pool.query('SELECT reporter_id FROM incidents WHERE id = $1', [incidentId]);
+  const incidentResult = await pool.query('SELECT reporter_id, status FROM incidents WHERE id = $1', [incidentId]);
   if (!incidentResult.rowCount) return false;
   if (incidentResult.rows[0].reporter_id === user.id) return true;
   if (user.role !== 'lawyer') return false;
+  
+  // Lawyer has claimed the case:
   const claimResult = await pool.query(
     `SELECT 1 FROM case_claims WHERE incident_id = $1 AND lawyer_id = $2`,
     [incidentId, user.id],
   );
-  return claimResult.rowCount > 0;
+  if (claimResult.rowCount > 0) return true;
+
+  // Lawyer is inspecting an unclaimed case in the available advocate feed:
+  const availableResult = await pool.query(
+    `SELECT 1 FROM incidents 
+     LEFT JOIN case_claims ON case_claims.incident_id = incidents.id AND case_claims.status = 'Active'
+     WHERE incidents.id = $1 AND case_claims.id IS NULL AND incidents.status IN ('Filed', 'Under review', 'Escalated')`,
+    [incidentId],
+  );
+  return availableResult.rowCount > 0;
 }
 
 function createCaseId() {
@@ -829,7 +840,21 @@ app.get('/api/lawyer/available', requireRole('lawyer'), async (req, res) => {
               incidents.status,
               incidents.created_at,
               incidents.confidential_contact_status AS contact_status,
-              (SELECT COUNT(*)::int FROM evidence WHERE evidence.incident_id = incidents.id) AS evidence_count
+              (SELECT COUNT(*)::int FROM evidence WHERE evidence.incident_id = incidents.id) AS evidence_count,
+              COALESCE((
+                SELECT json_agg(json_build_object(
+                  'id', evidence.id,
+                  'original_name', evidence.original_name,
+                  'mime_type', evidence.mime_type,
+                  'size_bytes', evidence.size_bytes,
+                  'security_scan_status', evidence.security_scan_status,
+                  'moderation_status', evidence.moderation_status,
+                  'created_at', evidence.created_at
+                ) ORDER BY evidence.created_at ASC)
+                FROM evidence
+                WHERE evidence.incident_id = incidents.id
+                  AND evidence.moderation_status NOT IN ('Rejected', 'Quarantined')
+              ), '[]'::json) AS evidence_files
        FROM incidents
        LEFT JOIN case_claims ON case_claims.incident_id = incidents.id AND case_claims.status = 'Active'
        WHERE case_claims.id IS NULL
@@ -865,7 +890,21 @@ app.get('/api/lawyer/my-cases', requireRole('lawyer'), async (req, res) => {
                   WHEN incidents.status IN ('Resolved', 'Closed', 'Rejected', 'Ignored') THEN 'previous'
                   WHEN case_claims.status = 'Released' THEN 'previous'
                   ELSE 'active'
-                END AS case_category
+                END AS case_category,
+                COALESCE((
+                  SELECT json_agg(json_build_object(
+                    'id', evidence.id,
+                    'original_name', evidence.original_name,
+                    'mime_type', evidence.mime_type,
+                    'size_bytes', evidence.size_bytes,
+                    'security_scan_status', evidence.security_scan_status,
+                    'moderation_status', evidence.moderation_status,
+                    'created_at', evidence.created_at
+                  ) ORDER BY evidence.created_at ASC)
+                  FROM evidence
+                  WHERE evidence.incident_id = incidents.id
+                    AND evidence.moderation_status NOT IN ('Rejected', 'Quarantined')
+                ), '[]'::json) AS evidence_files
          FROM case_claims
          JOIN incidents ON incidents.id = case_claims.incident_id
          WHERE case_claims.lawyer_id = $1
@@ -1387,7 +1426,7 @@ app.post('/api/cases/:caseId/messages', async (req, res) => {
   }
 });
 
-app.get('/api/evidence/:evidenceId/download', requireSignedIn, async (req, res) => {
+app.get(['/api/evidence/:evidenceId/download', '/api/evidence/:evidenceId/view'], requireSignedIn, async (req, res) => {
   const evidenceId = Number(req.params.evidenceId);
   if (!Number.isSafeInteger(evidenceId)) return res.status(400).json({ error: 'The evidence reference is invalid.' });
 
@@ -1404,16 +1443,21 @@ app.get('/api/evidence/:evidenceId/download', requireSignedIn, async (req, res) 
     if (!(await canAccessIncident(req.user, evidence.incident_id))) {
       return res.status(403).json({ error: 'You are not authorized to access this evidence.' });
     }
-    if (req.user.role !== 'admin' && evidence.moderation_status !== 'Approved') {
+    if (evidence.moderation_status === 'Rejected' || evidence.moderation_status === 'Quarantined') {
+      return res.status(403).json({ error: 'This file has been quarantined by automated security.' });
+    }
+    if (req.user.role !== 'admin' && req.user.role !== 'lawyer' && evidence.moderation_status !== 'Approved') {
       return res.status(403).json({ error: 'This evidence is not available until moderation is complete.' });
     }
 
+    const isView = req.path.endsWith('/view') || req.query.inline === 'true' || req.query.inline === '1';
+
     await pool.query(
       `INSERT INTO sensitive_access_logs (incident_id, accessor_id, action) VALUES ($1, $2, $3)`,
-      [evidence.incident_id, req.user.id, `Downloaded evidence ${evidence.id}`],
+      [evidence.incident_id, req.user.id, `${isView ? 'Viewed' : 'Downloaded'} evidence ${evidence.id}`],
     );
     res.setHeader('Content-Type', evidence.mime_type);
-    res.setHeader('Content-Disposition', `attachment; filename="${path.basename(evidence.original_name).replace(/"/g, '')}"`);
+    res.setHeader('Content-Disposition', `${isView ? 'inline' : 'attachment'}; filename="${path.basename(evidence.original_name).replace(/"/g, '')}"`);
     res.setHeader('X-Content-Type-Options', 'nosniff');
 
     if (evidence.storage_backend === 's3') {
@@ -1422,8 +1466,8 @@ app.get('/api/evidence/:evidenceId/download', requireSignedIn, async (req, res) 
     }
     return res.sendFile(path.join(evidenceDirectory, evidence.stored_name));
   } catch (error) {
-    console.error('Evidence download failed:', error.message);
-    return res.status(500).json({ error: 'The evidence could not be downloaded.' });
+    console.error('Evidence access failed:', error.message);
+    return res.status(500).json({ error: 'The evidence could not be retrieved.' });
   }
 });
 

@@ -597,6 +597,139 @@
       white-space: pre-wrap;
       line-height: 1.6;
     }
+
+    /* Evidence Section in My Cases */
+    .case-evidence-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 22px;
+    }
+    .case-evidence-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .case-evidence-head h3 {
+      margin: 0;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748B;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .case-evidence-badge {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: #EDF2F7;
+      color: #475569;
+    }
+    .case-evidence-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .evidence-empty-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      background: #FFFFFF;
+      border: 1px dashed #CBD5E1;
+      border-radius: 12px;
+      color: #64748B;
+      font-size: 0.88rem;
+    }
+    .evidence-file-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      transition: all 0.18s ease;
+    }
+    .evidence-file-row:hover {
+      border-color: #CBD5E1;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+    }
+    .evidence-thumb-link {
+      display: block;
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 1px solid #E2E8F0;
+      background: #0F172A;
+    }
+    .evidence-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.2s ease;
+    }
+    .evidence-thumb-link:hover .evidence-thumb {
+      transform: scale(1.08);
+    }
+    .evidence-file-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .evidence-file-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .evidence-file-name {
+      font-size: 0.9rem;
+      font-weight: 750;
+      color: #0F172A;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .evidence-file-meta {
+      font-size: 0.78rem;
+      color: #64748B;
+      font-weight: 500;
+    }
+    .evidence-file-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .evidence-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px !important;
+      min-height: 34px !important;
+      font-size: 0.8rem !important;
+      font-weight: 700 !important;
+      border-radius: 8px !important;
+      text-decoration: none !important;
+      white-space: nowrap !important;
+    }
     
     .actions {
       display: flex;
@@ -1799,6 +1932,13 @@
     const queue=document.getElementById('queue');const message=document.getElementById('message');
     function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
     function formatDate(value){return new Intl.DateTimeFormat('en-KE',{dateStyle:'medium'}).format(new Date(value))}
+    function formatBytes(bytes) {
+      if (!bytes || bytes <= 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
     function showError(text){message.textContent=text;message.classList.add('is-visible')}
     
     function contactAction(item){
@@ -2061,6 +2201,63 @@
           `;
         }
 
+        const files = Array.isArray(item.evidence_files) ? item.evidence_files : [];
+        let evidenceHtml = '';
+        if (files.length > 0) {
+          evidenceHtml = `
+            <div class="case-evidence-box">
+              <div class="case-evidence-head">
+                <h3>📎 Attached Evidence & Exhibits</h3>
+                <span class="case-evidence-badge">${files.length} file${files.length === 1 ? '' : 's'} attached</span>
+              </div>
+              <div class="case-evidence-list">
+                ${files.map(f => {
+                  const isImage = f.mime_type && f.mime_type.startsWith('image/');
+                  const isPdf = f.mime_type === 'application/pdf';
+                  const isVideo = f.mime_type && f.mime_type.startsWith('video/');
+                  const icon = isImage ? '🖼️' : (isPdf ? '📄' : (isVideo ? '🎥' : '📎'));
+                  const sizeStr = formatBytes(f.size_bytes);
+                  return `
+                    <div class="evidence-file-row">
+                      ${isImage ? `
+                        <a href="/api/evidence/${encodeURIComponent(f.id)}/view" target="_blank" class="evidence-thumb-link" title="Click to view full image in new tab">
+                          <img src="/api/evidence/${encodeURIComponent(f.id)}/view" alt="${escapeHtml(f.original_name)}" class="evidence-thumb" loading="lazy" />
+                        </a>
+                      ` : `
+                        <div class="evidence-file-icon">${icon}</div>
+                      `}
+                      <div class="evidence-file-info">
+                        <strong class="evidence-file-name" title="${escapeHtml(f.original_name)}">${escapeHtml(f.original_name)}</strong>
+                        <span class="evidence-file-meta">${sizeStr} • ${escapeHtml(f.mime_type || 'Unknown format')}</span>
+                      </div>
+                      <div class="evidence-file-actions">
+                        <a href="/api/evidence/${encodeURIComponent(f.id)}/view" target="_blank" class="button secondary evidence-action-btn">
+                          👁️ View
+                        </a>
+                        <a href="/api/evidence/${encodeURIComponent(f.id)}/download" class="button secondary evidence-action-btn">
+                          ⬇️ Download
+                        </a>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        } else {
+          evidenceHtml = `
+            <div class="case-evidence-box">
+              <div class="case-evidence-head">
+                <h3>📎 Attached Evidence & Exhibits</h3>
+                <span class="case-evidence-badge">0 files</span>
+              </div>
+              <div class="evidence-empty-box">
+                <span>🛡️ No initial evidence files submitted by reporter. Use the applicant chat below to request Occurrence Book (OB) entry or P3 medical examination forms.</span>
+              </div>
+            </div>
+          `;
+        }
+
         return `
           <article class="item ${isPrev ? 'is-previous' : ''}" data-case="${escapeHtml(item.case_id)}">
             <div class="item-head">
@@ -2084,6 +2281,8 @@
               <h3>Incident Description</h3>
               <p class="description">${escapeHtml(item.description)}</p>
             </div>
+
+            ${evidenceHtml}
 
             ${stageBoxHtml}
 
