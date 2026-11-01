@@ -1518,8 +1518,13 @@
           ? '<span class="tag tag-legal-aid">🛡️ Legal Aid Requested</span>'
           : '';
         const fullDesc = item.description || 'No detailed narrative provided.';
-        const isLong = fullDesc.length > 220;
-        const shortDesc = isLong ? fullDesc.slice(0, 210) + '…' : fullDesc;
+        const isLong = fullDesc.length > 130;
+        let shortDesc = fullDesc;
+        if (isLong) {
+          const sub = fullDesc.slice(0, 130);
+          const lastSpace = sub.lastIndexOf(' ');
+          shortDesc = (lastSpace > 40 ? sub.slice(0, lastSpace) : sub).trim() + '…';
+        }
 
         return `
           <article class="item" data-case="${escapeHtml(item.case_id)}">
@@ -1550,7 +1555,7 @@
               ${isLong ? `
                 <div>
                   <button type="button" class="entailment-readmore" data-toggle-desc="${escapeHtml(item.case_id)}">
-                    Read full narrative ▾
+                    Read more ▾
                   </button>
                 </div>
               ` : ''}
@@ -1603,7 +1608,7 @@
           const isExpanded = toggleBtn.dataset.expanded === 'true';
           if (isExpanded) {
             textEl.textContent = textEl.dataset.short;
-            toggleBtn.textContent = 'Read full narrative ▾';
+            toggleBtn.textContent = 'Read more ▾';
             toggleBtn.dataset.expanded = 'false';
           } else {
             textEl.textContent = textEl.dataset.full;

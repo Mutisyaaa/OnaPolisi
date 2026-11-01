@@ -619,6 +619,26 @@
       line-height: 1.6;
     }
 
+    .btn-read-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: transparent;
+      border: none;
+      padding: 4px 0 0;
+      color: #064E3B;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: color 0.15s ease, text-decoration 0.15s ease;
+      align-self: flex-start;
+      margin-top: 4px;
+    }
+    .btn-read-more:hover {
+      color: #043D2E;
+      text-decoration: underline;
+    }
+
     /* Evidence Section in My Cases */
     .case-evidence-box {
       background: #F8FAFC;
@@ -2110,6 +2130,14 @@
 
       queue.innerHTML = cases.map((item) => {
         const isPrev = item.case_category === 'previous';
+        const fullDesc = item.description || 'No detailed incident narrative was provided.';
+        const isLong = fullDesc.length > 130;
+        let shortDesc = fullDesc;
+        if (isLong) {
+          const sub = fullDesc.slice(0, 130);
+          const lastSpace = sub.lastIndexOf(' ');
+          shortDesc = (lastSpace > 40 ? sub.slice(0, lastSpace) : sub).trim() + '…';
+        }
         
         let prevBanner = '';
         if (isPrev) {
@@ -2307,7 +2335,12 @@
 
             <div class="description-area">
               <h3>Incident Description</h3>
-              <p class="description">${escapeHtml(item.description)}</p>
+              <p class="description" data-desc-text="${escapeHtml(item.case_id)}" data-full="${escapeHtml(fullDesc)}" data-short="${escapeHtml(shortDesc)}">${escapeHtml(shortDesc)}</p>
+              ${isLong ? `
+                <button type="button" class="btn-read-more" data-toggle-desc="${escapeHtml(item.case_id)}">
+                  Read more ▾
+                </button>
+              ` : ''}
             </div>
 
             ${evidenceHtml}
@@ -2488,6 +2521,24 @@
       const card=event.target.closest('[data-case]');
       if(!card)return;
       const caseId=card.dataset.case;
+
+      const toggleDescBtn = event.target.closest('[data-toggle-desc]');
+      if (toggleDescBtn) {
+        const textEl = card.querySelector(`[data-desc-text="${CSS.escape(caseId)}"]`);
+        if (textEl) {
+          const isExpanded = toggleDescBtn.dataset.expanded === 'true';
+          if (isExpanded) {
+            textEl.textContent = textEl.dataset.short;
+            toggleDescBtn.textContent = 'Read more ▾';
+            toggleDescBtn.dataset.expanded = 'false';
+          } else {
+            textEl.textContent = textEl.dataset.full;
+            toggleDescBtn.textContent = 'Show less ▴';
+            toggleDescBtn.dataset.expanded = 'true';
+          }
+        }
+        return;
+      }
       const chatToggle=event.target.closest('[data-chat-toggle]');
       const requestButton=event.target.closest('[data-contact-request]');
       const revealButton=event.target.closest('[data-reveal-contact]');
